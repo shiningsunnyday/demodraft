@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/once_again.jpg" width="30%" height="30%">
+    <img alt="Vue logo" src="./assets/once_again.jpg" width="100%" height="100%">
     <h1>{{msg}}</h1>
     <button type = "button" id = "get-politicians" @click = "fetchInit">Politicians</button>
     <ul id="politician-list" style="list-style: none;">
