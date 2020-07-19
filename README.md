@@ -46,7 +46,7 @@ Route 53: $12/year for demodraft.com domain
 
 Both frontend and backend folders are in this repo to keep everything in one place. Frontend devs can see backend logic. Backend devs can see how frontend devs load the data.
 
-Keep master branch always functional! To create any feature, create new branch then pull. Commit and pull often!
+Keep master branch always functional! To create any feature, create new branch then pull. Don't push to master unless it's README.md. Create pull requests often!
 
 Because backend and frontend is separate, there shouldn't be merge conflicts.
 
