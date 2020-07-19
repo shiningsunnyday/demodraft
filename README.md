@@ -2,7 +2,7 @@
 
 # Summary
 
-The static site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com).
+The static site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com). You will see a boilerplate app. It fetches the API for politicians in the database.
 
 The API endpoint is [here](http://www.ec2-18-144-155-31.us-west-1.compute.amazonaws.com).
 
@@ -15,6 +15,8 @@ The tech stack is **Vue.js => Django REST => AWS**.
 Install npm and yarn. Get [this](https://github.com/multiplegeorges/vue-cli-plugin-s3-deploy) for deploying to s3 (see below).
 
 # Backend
+
+Install requirements.txt. Michael will make a data model logic doc for the MVP.
 
 # AWS
 
@@ -52,7 +54,7 @@ When pulled into master, the repo's uses Actions automatically builds and deploy
 
 **Why Vue.js/Django/AWS?**
 
-It's to work maximally parallel. The backend and data model logic is separate from the frontend. Vue.js is a flexible JS framework for single-page applications with scalability and an easy learning curve. Components are decomposable. Vue.js supports importing HTML/CSS templates for easy design integration. 
+It's to work in parallel easily. The backend is separate from the frontend. Vue.js is a flexible JS framework for single-page applications with scalability and an easy learning curve. Components are decomposable. Vue.js supports importing HTML/CSS templates for easy design integration. 
 
 Django-REST is extension of Django, with scalability and easy learning curve. It easily integrates with SQL database engine.
 
