@@ -12,7 +12,7 @@ The tech stack is **Vue.js => Django REST => AWS**.
 
 # Frontend
 
-Install npm and yarn. Get [this](https://github.com/multiplegeorges/vue-cli-plugin-s3-deploy) for deploying to s3. Ping Michael for AWS credentials.
+Install npm and yarn. Get [this](https://github.com/multiplegeorges/vue-cli-plugin-s3-deploy) for deploying to s3 (see below).
 
 # Backend
 
@@ -21,13 +21,16 @@ Install npm and yarn. Get [this](https://github.com/multiplegeorges/vue-cli-plug
 We use the following services:
 
 EC2: Server-side
+  * ping Michael for .pem to ssh in
 
 S3: Host website and bucket to upload user content
+  * ping Michael for read/write permission to bucket
+  * ping Michael for aws credentials to deploy to bucket
 
 RDS: PostgresQL database
   * install pgadmin4 workbench
 
-Route 53: Domain name registration and possible routing logic
+Route 53: Domain name registration
 
 # Costs
 
@@ -35,7 +38,7 @@ EC2: $0/year (free-tier)
 
 S3: $0.023/GB/[month](https://aws.amazon.com/s3/pricing/)
 
-Route 53: $12/year for domain
+Route 53: $12/year for demodraft.com domain
 
 # Notes \[IMPORTANT\]
 
@@ -57,9 +60,14 @@ AWS is also scalable.
 
 **Helpful links**
 
-[Fetch API with Vue.js](https://rapidapi.com/blog/how-to-use-an-api-with-vue-js/)
+Frontend
 
-[Django REST quickstart](https://www.django-rest-framework.org/tutorial/quickstart/)
+  * [Fetch API with Vue.js](https://rapidapi.com/blog/how-to-use-an-api-with-vue-js/)
+  
+Backend
 
-[Server-side setup](https://www.youtube.com/watch?v=u0oEIqQV_-E)
+  * [Django REST](https://www.django-rest-framework.org/tutorial/quickstart/)
+
+  * [Server-side setup with Django](https://www.youtube.com/watch?v=u0oEIqQV_-E)
+  
 
