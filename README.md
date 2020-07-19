@@ -2,21 +2,21 @@
 
 # Summary
 
-The static site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com). You will see a boilerplate app. It fetches the API for politicians in the database.
+The static site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com). There's a boilerplate app. It fetches the API for politicians in the database.
 
 The API endpoint is [here](http://www.ec2-18-144-155-31.us-west-1.compute.amazonaws.com).
 
-The tech stack is **Vue.js => Django REST => AWS**.
+The tech stack is **Vue.js** => **Django REST** => **AWS**.
 
-# Design
+# Design (Courtney)
 
-# Frontend
+# Frontend (Alex)
 
 Install npm and yarn. Get [this](https://github.com/multiplegeorges/vue-cli-plugin-s3-deploy) for deploying to s3 (see below).
 
-# Backend
+# Backend (Michael)
 
-Install requirements.txt. Michael will make a data model logic doc for the MVP.
+Install requirements.txt. Michael will make a data model doc for the MVP (TODO).
 
 # AWS
 
@@ -38,17 +38,19 @@ Route 53: Domain name registration
 
 EC2: $0/year (free-tier)
 
-S3: $0.023/GB/[month](https://aws.amazon.com/s3/pricing/)
+S3: $[0.023](https://aws.amazon.com/s3/pricing/)/GB/month
 
 Route 53: $12/year for demodraft.com domain
 
 # Notes \[IMPORTANT\]
 
-Both frontend and backend folders are in this repo to keep everything in one place.
+Both frontend and backend folders are in this repo to keep everything in one place. Frontend devs can see backend logic. Backend devs can see how frontend devs load the data.
 
-Keep master branch always functional. To create any feature, create new branch then later pull. Because backend and frontend is separate, there shouldn't be merge conflicts. 
+Keep master branch always functional! To create any feature, create new branch then pull. Commit and pull often!
 
-When pulled into master, the repo's uses Actions automatically builds and deploys /forward_web to S3 bucket static hosting (frontend) and restarts server on EC2 instance (backend).
+Because backend and frontend is separate, there shouldn't be merge conflicts.
+
+When pulled into master, the repo uses Actions to automatically builds and deploys /forward_web to S3 bucket static hosting and restarts server on EC2 instance (TODO).
 
 # Notes \[OPTIONAL\]
 
