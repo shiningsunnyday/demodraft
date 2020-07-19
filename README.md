@@ -18,11 +18,13 @@ The tech stack is **Vue.js** => **Django REST** => **AWS**.
 
 Sec
 
-# Notes \[IMPORTANT\]
+# Dev Notes \[IMPORTANT\]
 
-Both frontend and backend folders are in this repo. See this to sync local git with just the relevant folder. When pushed to master, an Action automatically uploads to S3 bucket static hosting (frontend) and EC2 instance (backend).
+Keep master branch always functional. To create any feature, create new branch then later pull. Because backend and frontend is separate, there shouldn't be merge conflicts. When pulled into master, an Action automatically uploads to S3 bucket static hosting (frontend) and EC2 instance (backend).
 
-# Notes \[OPTIONAL\]
+Both frontend and backend folders are in this repo to keep everything in one place.
+
+# Dev Notes \[OPTIONAL\]
 
 **Why Vue.js/Django/AWS?**
 
