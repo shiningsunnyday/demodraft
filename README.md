@@ -46,7 +46,7 @@ Both frontend and backend folders are in this repo to keep everything in one pla
 
 Keep master branch always functional. To create any feature, create new branch then later pull. Because backend and frontend is separate, there shouldn't be merge conflicts. 
 
-When pulled into master, an Action automatically builds and deploys /forward_web to S3 bucket static hosting (frontend) and uses [this]() to restart server on EC2 instance (backend).
+When pulled into master, the repo's uses Actions automatically builds and deploys /forward_web to S3 bucket static hosting (frontend) and restarts server on EC2 instance (backend).
 
 # Notes \[OPTIONAL\]
 
