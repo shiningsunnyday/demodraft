@@ -62,7 +62,7 @@ It's to work in parallel easily. The backend is separate from the frontend. Vue.
 
 Django-REST is extension of Django, with scalability and easy learning curve. It easily integrates with SQL database engine.
 
-AWS is also scalable.
+AWS is a standard for startups. It has good docs and is cheap to start with (?).
 
 **Helpful links**
 
