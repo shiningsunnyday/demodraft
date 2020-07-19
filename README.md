@@ -54,6 +54,8 @@ When pulled into master, the repo uses Actions to automatically builds and deplo
 
 # Notes \[OPTIONAL\]
 
+Michael is a first-time dev lead, so no doubt he'll have many flaws. Feel free to shoot him any constructive suggestion/criticism to how he can manage the tech stack better.
+
 **Why Vue.js/Django/AWS?**
 
 It's to work in parallel easily. The backend is separate from the frontend. Vue.js is a flexible JS framework for single-page applications with scalability and an easy learning curve. Components are decomposable. Vue.js supports importing HTML/CSS templates for easy design integration. 
