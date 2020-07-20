@@ -17,7 +17,7 @@ export default {
   name: 'App',
   data() {
     return {
-        msg: "Humanity Forward!",
+        msg: "Humanity Forward!!",
         res: [],
         avail: false
     }
