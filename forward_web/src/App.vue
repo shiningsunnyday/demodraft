@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/once_again.jpg" width="100%" height="100%">
+    <img alt="Vue logo" src="./assets/once_again.jpg" width="30%" height="100%">
     <h1>{{msg}}</h1>
-    <button type = "button" id = "get-politicians" @click = "fetchInit">Politicians</button>
-    <ul id="politician-list" style="list-style: none;">
+    <button type="button" id="get-politicians" @click="fetchInit">Politicians</button>
+    <ul class="politician-list" id="politician-list">
       <li v-for="p in res" :key="p.name">
-        <p style="text-align: left;">{{p.name}}</p>
+        <p>{{p.name}}</p>
       </li>
     </ul>
   </div>
@@ -17,7 +17,7 @@ export default {
   name: 'App',
   data() {
     return {
-        msg: "Humanity Forward",
+        msg: "Humanity Forward!",
         res: [],
         avail: false
     }
@@ -53,5 +53,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.politician-list {
+  list-style: none;
+  padding: 0;
 }
 </style>
