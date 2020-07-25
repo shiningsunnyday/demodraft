@@ -10,6 +10,9 @@ The tech stack is **Vue.js** => **Django REST** => **AWS**.
 
 ## Design (Courtney)
 
+- Typography: Avenir Next
+- Color palette: 
+
 ## Frontend (Alex)
 
 - Make sure you have [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [yarn](https://classic.yarnpkg.com/en/docs/getting-started) installed
