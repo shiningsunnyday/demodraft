@@ -23,6 +23,7 @@ The tech stack is **Vue.js** => **Django REST** => **AWS**.
   - **ESLint** - *Integrates ESLint into VS Code. If you are new to ESLint check the [documentation](https://eslint.org/).*
   - **GitLens** - *GitLens simply helps you better understand code. Quickly glimpse into whom, why, and when a line or code block was changed.*
   - **Vetur** - *For Vue syntax-highlighting, snippet, emmet, intellisense, etc.*
+- More in-depth guidelines found here: **[Frontend Guidelines](https://docs.google.com/document/d/13D1f3rSPvM5YMqcQUdHwvcPw0sA0Hqfs_N4EYA5cMPs/edit?usp=sharing)**
 
 ## Backend (Michael)
 
