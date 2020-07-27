@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from forward_app.models import Politician
+from forward_app.core_models import Politician
 from rest_framework import serializers
 
 

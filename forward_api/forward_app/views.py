@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from forward_app.models import Politician
+from forward_app.core_models import Politician
 from forward_app.serializers import UserSerializer, GroupSerializer, PoliticianSerializer
 
 
