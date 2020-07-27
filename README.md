@@ -17,7 +17,7 @@ Keep master always functional and base work on dev branch off master. Make a pr 
 - Typography: Avenir Next
 - Color palette: 
 
-## Frontend (Alex)
+## Frontend (Alex, Jaytee)
 
 - Make sure you have [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [yarn](https://classic.yarnpkg.com/en/docs/getting-started) installed
 - Go through the `README.md` of [this repo](https://github.com/multiplegeorges/vue-cli-plugin-s3-deploy) and follow the steps for their prerequisites, installation, and usage. This will be used in cases of deploying to s3 bucket manually (see below)
@@ -29,7 +29,7 @@ Keep master always functional and base work on dev branch off master. Make a pr 
   - **Vetur** - *For Vue syntax-highlighting, snippet, emmet, intellisense, etc.*
 - More in-depth guidelines found here: **[Frontend Guidelines](https://docs.google.com/document/d/13D1f3rSPvM5YMqcQUdHwvcPw0sA0Hqfs_N4EYA5cMPs/edit?usp=sharing)**
 
-## Backend (Michael)
+## Backend (Michael, Brian)
 
 - Set up dependencies: python 3.7 virtualenv with requirements.txt
 - Go through [tech folder](https://drive.google.com/drive/u/1/folders/1mzIpEBgastJnrVOOt-JvNQSlSmSnBuAp)
