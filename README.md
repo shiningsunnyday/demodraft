@@ -4,9 +4,9 @@
 
 Our tech stack is **AWS -> Django REST -> Vue.js**. We use ec2 instance as our server, s3 bucket for static site hosting, and (soon) RDS PostgresQL db engine.
 
-The static development site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com). There's a boilerplate app. It fetches the API for politicians from the development server.
+The static development site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com). There's a boilerplate app. It fetches the API for politicians from the server.
 
-The production API endpoint (master) is [here](http://www.ec2-18-144-155-31.us-west-1.compute.amazonaws.com). It should be on track with master branch.
+The API endpoint (master) is [here](http://www.ec2-18-144-155-31.us-west-1.compute.amazonaws.com). It should be on track with master branch. It will always be online and working.
 
 The development API endpoint (api_dev) is [here](http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com). It should be on track with api_dev branch.
 
