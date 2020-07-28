@@ -48,7 +48,7 @@ class Signup(APIView):
     authentication_classes = [BasicAuthentication]
     parser_classes = [JSONParser]
 
-    def create(self, request, format=None):
+    def post(self, request, format=None):
         username, email, password = request.data["username"], request.data["email"], request.data["password"]
         user = User.objects.create_user(username, email, password)
         user.save()
