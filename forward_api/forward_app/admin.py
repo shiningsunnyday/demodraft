@@ -5,4 +5,4 @@ from forward_app.core_models import User
 
 # Register your models here.
 admin.site.register(Politician)
-admin.site.register(User)
+# admin.site.register(User)

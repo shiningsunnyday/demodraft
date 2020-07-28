@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 # """
 class Persona(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    users = models.ManyToManyField(User)
+    users = models.ManyToManyField(User, related_name='+')
     created = models.DateTimeField(auto_now_add=True)
     followers = models.IntegerField(default=0)
     status = models.CharField(max_length=100, blank=True, default='')
