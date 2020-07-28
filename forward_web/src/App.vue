@@ -1,57 +1,27 @@
 <template>
   <div id="app">
-    <img
-      alt="Vue logo"
-      src="./assets/once_again.jpg"
-      width="30%"
-      height="100%"
-    />
-    <h1>{{ msg }}</h1>
-    <button type="button" id="get-politicians" @click="fetchInit">
-      Politicians
-    </button>
-    <ul class="politician-list" id="politician-list">
-      <li v-for="p in res" :key="p.name">
-        <p>{{ p.name }}</p>
-      </li>
-    </ul>
+    <nav>
+      <router-link to="/">Home</router-link>
+      <router-link to="/login">Login</router-link>
+      <router-link to="/signup">Sign Up</router-link>
+    </nav>
+
+    <router-view />
   </div>
 </template>
 
 <script>
+import LoginView from "./views/LoginView";
+import HomeView from './views/HomeView';
+import SignUpView from './views/SignUpView';
+
 export default {
   name: "App",
-  data() {
-    return {
-      msg: "Humanity Forward!!!",
-      res: [],
-      avail: false,
-    };
+  components: {
+    LoginView,
+    HomeView,
+    SignUpView
   },
-  methods: {
-    fetchInit() {
-      fetch(
-        "http://ec2-18-144-155-31.us-west-1.compute.amazonaws.com/politicians",
-        {
-          method: "GET",
-        }
-      )
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          }
-        })
-        .then((res) => {
-          this.res = res;
-          this.avail = true;
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-  },
-  components: {},
 };
 </script>
 
@@ -68,5 +38,12 @@ export default {
 .politician-list {
   list-style: none;
   padding: 0;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
+  margin: 20px auto;
 }
 </style>
