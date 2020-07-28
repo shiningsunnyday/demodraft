@@ -20,6 +20,6 @@
       }
     ],
     "vue/script-indent": ["error", 2],
-    "semi": "warn"
+    "semi": "error"
   }
 }

@@ -1,19 +1,19 @@
 <template>
-  <div>
-    <h1>HomePage</h1>
+  <div class="home">
+    <h1 class="home__title">Home</h1>
 
-    <img
-      alt="Vue logo"
-      src="../assets/once_again.jpg"
-      width="30%"
-      height="100%"
-    />
-    <h1>{{ msg }}</h1>
-    <button type="button" id="get-politicians" @click="fetchInit">
+    <img class="home__picture" src="../assets/once_again.jpg" />
+    <h2>{{ msg }}</h2>
+    <b-button
+      type="button"
+      id="get-politicians"
+      class="home__button"
+      @click="fetchInit"
+    >
       Politicians
-    </button>
-    <ul class="politician-list" id="politician-list">
-      <li v-for="p in res" :key="p.name">
+    </b-button>
+    <ul class="home__politician-list" id="politician-list">
+      <li v-for="p in politicians" :key="p.name">
         <p>{{ p.name }}</p>
       </li>
     </ul>
@@ -21,39 +21,53 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
-  name: "HomeView",
+  name: 'HomeView',
   data() {
     return {
-      msg: "Humanity Forward!!!",
-      res: [],
+      msg: 'Humanity Forward!!!',
+      politicians: [],
       avail: false,
     };
   },
   methods: {
     fetchInit() {
-      fetch(
-        "http://ec2-18-144-155-31.us-west-1.compute.amazonaws.com/politicians",
-        {
-          method: "GET",
-        }
-      )
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          }
+      axios
+        .get(
+          'http://ec2-18-144-155-31.us-west-1.compute.amazonaws.com/politicians'
+        )
+        .then((response) => {
+          this.politicians = response.data;
         })
-        .then((res) => {
-          this.res = res;
-          this.avail = true;
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.log(error);
         });
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.home {
+  text-align: center;
+
+  &__picture {
+    max-width: 310px;
+    margin: 1em;
+
+    @media screen and (min-width: 768px) {
+      max-width: 410px;
+    }
+  }
+
+  &__button {
+    margin: 1em;
+  }
+
+  &__politician-list {
+    list-style: none;
+    padding: 0;
+  }
+}
+</style>
