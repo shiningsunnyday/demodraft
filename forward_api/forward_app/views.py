@@ -5,7 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from forward_app.core_models import Politician
-from forward_app.serializers import UserSerializer, PoliticianSerializer
+from forward_app.core_models import Policy
+from forward_app.serializers import UserSerializer, PoliticianSerializer, PolicySerializer
 from django.contrib.auth import authenticate, login
 from rest_framework.parsers import JSONParser
 
@@ -68,4 +69,27 @@ class Login(APIView):
             sz = UserSerializer(user)
             return Response(sz.data, status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class Policies(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = [BasicAuthentication]
+    parser_classes = [JSONParser]
+
+    def get(self, request, format=None):
+        c_id = request.data.get('category_id')
+        id = request.data.get('id')
+        if c_id != None and isinstance(c_id, int):
+            policies = Policy.objects.filter(category=c_id)
+            index = request.data.get('index')
+            if index != None and isinstance(index, int):
+                policy = policies[index]
+                sz = PolicySerializer(policy)
+                return Response(sz.data, status=status.HTTP_200_OK)
+        elif id != None and isinstance(id, int):
+            policies = Policy.objects.get(id=id)
+        else:
+            policies = Policy.objects.all()
+        sz = PolicySerializer(policies, many=True)
+        return Response(sz.data, status=status.HTTP_200_OK)
 

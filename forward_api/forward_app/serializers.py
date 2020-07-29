@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from forward_app.core_models import Politician
+from forward_app.core_models import Politician, Policy
 from rest_framework import serializers
 
 
@@ -21,4 +21,7 @@ class PoliticianSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['name']
 
 
-
+class PolicySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Policy
+        fields = ['created', 'category', 'name', 'statement']
