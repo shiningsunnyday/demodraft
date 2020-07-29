@@ -38,7 +38,7 @@ class Comment(models.Model):
         on_delete=models.CASCADE
     )
     username = models.ForeignKey(
-        User.username,
+        User,
         on_delete=models.CASCADE
     )
     content = models.CharField(max_length=1000, blank=True, default='')
