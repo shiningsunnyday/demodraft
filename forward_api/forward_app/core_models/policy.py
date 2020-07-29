@@ -1,14 +1,15 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 """
 Many-to-many relation w/ User
 """
 class Policy(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    category = models.CharField(max_length=100, blank=True, default='')
+    category = models.IntegerField() 
     name = models.CharField(max_length=100, blank=True, default='')
-    statement = models.CharField(max_length=200, blank=True, default='')
-    description = models.CharField(max_length=1000, blank=True, default='')
+    statement = models.CharField(max_length=500, blank=True, default='')
+    description = models.TextField(blank=True, default='')
     class Meta:
         ordering = ['created']
 
@@ -36,9 +37,12 @@ class Comment(models.Model):
         Popularity,
         on_delete=models.CASCADE
     )
+    username = models.ForeignKey(
+        User.username,
+        on_delete=models.CASCADE
+    )
     content = models.CharField(max_length=1000, blank=True, default='')
     time = models.DateTimeField(auto_now_add=True)
-    username = models.CharField(max_length=100, blank=True, default='')
     likes = models.IntegerField(default = 0)
     class Meta:
         ordering = ['time']

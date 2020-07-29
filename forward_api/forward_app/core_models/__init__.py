@@ -2,7 +2,7 @@ from django.db import models
 
 # from .politician import Politician, Campaign
 from .politician import Politician
-# from .policy import Policy, Popularity, Comment
+from .policy import Policy, Popularity, Comment
 # from .user import User, Persona
 
 
