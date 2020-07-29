@@ -81,11 +81,23 @@ class Policies(APIView):
         policies = Policy.objects.filter(category=c_id)
         index = request.data.get('index')
         if index != None and isinstance(index, int):
-            policy = policies[index]
-            sz = PolicySerializer(policy)
-            return Response(sz.data, status=status.HTTP_200_OK)
+            if len(policies) > index:
+                policy = policies[index]
+                sz = PolicySerializer(policy)
+                return Response(sz.data, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_204_NO_CONTENT)
         sz = PolicySerializer(policies, many=True)
         return Response(sz.data, status=status.HTTP_200_OK)
+
+
+    @staticmethod
+    def by_id(id):
+        policy = Policy.objects.get(id=id)
+        if policy:
+            sz = PolicySerializer(policy)
+            return Response(sz.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
     def get(self, request, format=None):
@@ -94,9 +106,6 @@ class Policies(APIView):
             return Policies.by_category(request, c_id)
         id = request.data.get('id')
         if id != None and isinstance(id, int):
-            policy = Policy.objects.get(id=id)
-            sz = PolicySerializer(policy)
-        else:
-            policies = Policy.objects.all()
-            sz = PolicySerializer(policies, many=True)
+            return Policies.by_id(id)
+        sz = PolicySerializer(Policy.objects.all(), status=status.HTTP_200_OK)
         return Response(sz.data, status=status.HTTP_200_OK)

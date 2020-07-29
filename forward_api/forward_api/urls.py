@@ -14,6 +14,5 @@ urlpatterns = [
     path('signup/', views.Signup.as_view(), name="signup"),
     path('login/', views.Login.as_view(), name="login"),
     path('policies/', views.Policies.as_view(), name="policies"),
-    path('policy/', views.Policy.as_view(), name="policy"),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
