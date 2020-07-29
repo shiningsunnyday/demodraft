@@ -9,6 +9,7 @@
 import LoginView from './views/LoginView';
 import HomeView from './views/HomeView';
 import SignUpView from './views/SignUpView';
+import PolicyView from './views/PolicyView';
 import NavBar from './components/NavBar';
 
 export default {
@@ -18,6 +19,7 @@ export default {
     HomeView,
     SignUpView,
     NavBar,
+    PolicyView
   },
 };
 </script>
