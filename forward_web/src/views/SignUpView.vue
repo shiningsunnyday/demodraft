@@ -1,56 +1,63 @@
 <template>
   <div class="signup">
     <h1 class="signup__title">Sign Up</h1>
-    <b-form class="signup__form" @submit.prevent="handleSubmit">
-      <b-form-group id="username-group" label="Username" label-for="username">
-        <b-form-input
+    <BForm class="signup__form" @submit.prevent="handleSubmit">
+      <BFormGroup id="username-group" label="Username" label-for="username">
+        <BFormInput
           id="username"
           v-model="user.username"
           type="text"
           required
-        ></b-form-input>
-      </b-form-group>
+        />
+      </BFormGroup>
 
-      <b-form-group
+      <BFormGroup
         id="email-group"
         label="Email address:"
         label-for="email"
         description="We'll never share your email with anyone else."
       >
-        <b-form-input
+        <BFormInput
           id="email"
           v-model="user.email"
           type="email"
           required
-        ></b-form-input>
-      </b-form-group>
+        />
+      </BFormGroup>
 
-      <b-form-group id="password-group" label="Password" label-for="password">
-        <b-form-input
+      <BFormGroup id="password-group" label="Password" label-for="password">
+        <BFormInput
           id="password"
           v-model="user.password"
           type="password"
           required
-        ></b-form-input>
-      </b-form-group>
+        />
+      </BFormGroup>
       
       <div class="signup__footer">
-        <b-button type="submit" variant="primary">
+        <BButton type="submit" variant="primary">
           Submit
-        </b-button>
+        </BButton>
         <router-link to="/login" class="signup__link">
           Already have an account? Login!
         </router-link>
       </div>
-    </b-form>
+    </BForm>
   </div>
 </template>
 
 <script>
+import { BButton, BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
 import axios from 'axios';
 
 export default {
   name: 'SignUpView',
+  components: {
+    'b-button': BButton,
+    'b-form': BForm,
+    'b-form-group': BFormGroup,
+    'b-form-input': BFormInput,
+  },
   data() {
     return {
       user: {
@@ -62,19 +69,25 @@ export default {
     };
   },
   methods: {
-    async handleSubmit(e) {
+    async handleSubmit() {
       this.submitted = true;
       const { username, email, password } = this.user;
-      console.log(username);
-      console.log(email);
-      console.log(password);
-      // await axios
-      //   .post(
-      //     'http://ec2-18-144-155-31.us-west-1.compute.amazonaws.com/users/',
-      //     { username, email, password }
-      //   )
-      //   .then((res) => console.log(res.data))
-      //   .catch((err) => console.log(err));
+      await axios ({
+        method: 'post',
+        url: 'http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com/signup/',
+        data: {
+          username: username, 
+          email: email, 
+          password: password
+        },
+        headers: {'content-type': 'application/json'},
+        auth: {
+          username: 'admin',
+          password: 'password'
+        }
+      })
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err));
     },
   },
 };

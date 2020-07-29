@@ -1,49 +1,79 @@
 <template>
   <div class="login">
     <h1 class="login__title">Login</h1>
-    <b-form class=login__form>
-      <b-form-group
-        id="email-group"
-        label="Email address:"
-        label-for="email"
+    <BForm class=login__form @submit.prevent="handleSubmit">
+      <BFormGroup
+        id="username-group"
+        label="Username:"
+        label-for="username"
       >
-        <b-form-input
-          id="email"
-          v-model="form.email"
-          type="email"
+        <BFormInput
+          id="username"
+          v-model="user.username"
+          type="text"
           required
-          placeholder="Enter email"
-        ></b-form-input>
-      </b-form-group>
+        />
+      </BFormGroup>
 
-      <b-form-group id="password-group" label="Password" label-for="password">
-        <b-form-input
+      <BFormGroup id="password-group" label="Password" label-for="password">
+        <BFormInput
           id="password"
-          v-model="form.password"
+          v-model="user.password"
           type="password"
           required
-        ></b-form-input>
-      </b-form-group>
+        />
+      </BFormGroup>
       <div class="login__footer">
-        <b-button type="submit" variant="primary">Submit</b-button>
+        <BButton type="submit" variant="primary">Submit</BButton>
         <router-link to="/signup" class="login__link">
           Don't have an account? Sign up!
         </router-link>
       </div>
-    </b-form>
+    </BForm>
   </div>
 </template>
 
 <script>
+import { BButton, BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
+import axios from 'axios';
 export default {
   name: 'LoginView',
+  components: {
+    'b-button': BButton,
+    'b-form': BForm,
+    'b-form-group': BFormGroup,
+    'b-form-input': BFormInput,
+  },
   data() {
     return {
-      form: {
+      user: {
+        username: '',
         email: '',
         password: '',
       },
     };
+  },
+  methods: {
+    async handleSubmit() {
+      const { username, email, password } = this.user;
+      console.log(username);
+      console.log(password);
+      await axios ({
+        method: 'get',
+        url: 'http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com/login/',
+        data: {
+          username: username, 
+          password: password
+        },
+        headers: {'content-type': 'application/json'},
+        auth: {
+          username: 'admin',
+          password: 'password'
+        }
+      })
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err));
+    },
   },
 };
 </script>
