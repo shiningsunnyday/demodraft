@@ -6,27 +6,32 @@
       :key="policy.id"
     >
       <router-link
+        class="policy__route"
         v-bind:to="{
           name: 'PolicyView',
           params: { id: policy.id, description: policy.body },
         }"
-        class="policy__route"
       >
-        <b-card title="Policy" class="mb-2 policy__card">
+        <BCard title="Policy" class="mb-2 policy__card">
           <b-card-text>
             {{ policy.title }}
           </b-card-text>
-
-          <!-- <b-button href="#" variant="primary">Go somewhere</b-button> -->
-        </b-card>
+          <BButton>Go somewhere</BButton>
+        </BCard>
       </router-link>
     </div>
   </div>
 </template>
 
 <script>
+import { BCard, BButton } from 'bootstrap-vue';
+
 export default {
   name: "Policies",
+  components: {
+    'b-button': BButton,
+    'b-card': BCard,
+  },
   props: {
     policies: {
       type: Array,
