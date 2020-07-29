@@ -13,6 +13,8 @@ class Policy(models.Model):
     class Meta:
         ordering = ['created']
 
+
+
 # """
 # One-to-one relation w/ Policy
 # """
@@ -29,6 +31,8 @@ class Popularity(models.Model):
     class Meta:
         ordering = ['created']
 
+
+
 # """
 # One-to-many relation w/ Popularity
 # """
@@ -43,6 +47,7 @@ class Comment(models.Model):
     )
     content = models.CharField(max_length=1000, blank=True, default='')
     time = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField(default = 0)
+    likes = models.IntegerField(default=0)
+
     class Meta:
         ordering = ['time']

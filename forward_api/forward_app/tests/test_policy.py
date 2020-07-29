@@ -16,9 +16,9 @@ class PolicyTest(TestCase):
         policy = Policy.objects.get(category=1)
         self.assertEqual(policy.category, 1)
 
-    # def testName(self):
-    #     policy = Policy.objects.get(name='Universal Health Care')
-    #     self.assertEqual(policy.name, 'Universal Health Care')
+    def testName(self):
+        policy = Policy.objects.get(name='Universal Health Care')
+        self.assertEqual(policy.statement, 'Healthcare for all')
 
     # def testDescription(self):
     #     policy = Policy.objects.get(description='Medical services to all citizens')
