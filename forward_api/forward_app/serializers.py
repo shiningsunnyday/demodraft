@@ -25,3 +25,9 @@ class PolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = Policy
         fields = ['created', 'category', 'name', 'statement']
+
+
+class PolicyDetailedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Policy
+        fields = ['created', 'category', 'name', 'statement', 'description']
