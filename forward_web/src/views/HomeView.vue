@@ -2,48 +2,36 @@
   <div class="home">
     <h1 class="home__title">Home</h1>
 
-    <img class="home__picture" src="../assets/once_again.jpg" />
-    <h2>{{ msg }}</h2>
-    <b-button
-      type="button"
-      id="get-politicians"
-      class="home__button"
-      @click="fetchInit"
-    >
-      Politicians
-    </b-button>
-    <ul class="home__politician-list" id="politician-list">
-      <li v-for="p in politicians" :key="p.name">
-        <p>{{ p.name }}</p>
-      </li>
-    </ul>
+    <div class="home__policies-container">
+      <Policies v-bind:policies="policies" />
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
+import Policies from "../components/Policies";
+
 export default {
-  name: 'HomeView',
+  name: "HomeView",
+  components: {
+    Policies,
+  },
   data() {
     return {
-      msg: 'Humanity Forward!!!',
-      politicians: [],
-      avail: false,
+      policies: [],
     };
   },
-  methods: {
-    fetchInit() {
-      axios
-        .get(
-          'http://ec2-18-144-155-31.us-west-1.compute.amazonaws.com/politicians'
-        )
-        .then((response) => {
-          this.politicians = response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
+  methods: {},
+  created() {
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts?_limit=10")
+      .then((response) => {
+        this.policies = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 </script>
@@ -63,11 +51,6 @@ export default {
 
   &__button {
     margin: 1em;
-  }
-
-  &__politician-list {
-    list-style: none;
-    padding: 0;
   }
 }
 </style>
