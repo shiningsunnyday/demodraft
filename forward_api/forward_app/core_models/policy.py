@@ -15,9 +15,6 @@ class Policy(models.Model):
 
 
 
-# """
-# One-to-one relation w/ Policy
-# """
 class Popularity(models.Model):
     policy = models.OneToOneField(
         Policy,
@@ -26,28 +23,31 @@ class Popularity(models.Model):
     )
     created = models.DateTimeField(auto_now_add=True)
     likes = models.IntegerField(default=0)
-    endrorsements = models.IntegerField(default=0)
-    visits = models.IntegerField(default=0)
     class Meta:
         ordering = ['created']
 
 
 
-# """
-# One-to-many relation w/ Popularity
-# """
-class Comment(models.Model):
+class Thread(models.Model):
     popularity = models.ForeignKey(
         Popularity,
         on_delete=models.CASCADE
     )
-    username = models.ForeignKey(
+    lead_comment_id = models.IntegerField(default=0)
+
+
+
+class Comment(models.Model):
+    time = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
         User,
         on_delete=models.CASCADE
     )
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    next_comment_id = models.IntegerField(default=0)
     content = models.CharField(max_length=1000, blank=True, default='')
-    time = models.DateTimeField(auto_now_add=True)
     likes = models.IntegerField(default=0)
-
     class Meta:
         ordering = ['time']
+
+
