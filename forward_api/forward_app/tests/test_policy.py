@@ -15,7 +15,7 @@ class PolicyTest(TestCase):
         Policy.objects.create(category=1, name='Universal Health Care', statement='Healthcare for all', description='Medical services to all citizens')
 
     def testCategory(self):
-        policy = Policy.objects.get(category=1)
+        policy = Policy.objects.get(name='Universal Health Care')
         self.assertEqual(policy.category, 1)
 
     def testStatement(self):
@@ -36,11 +36,10 @@ class PopularityTest(TestCase):
         Policy.objects.create(category=1, name='Universal Health Care', statement='Healthcare for all', description='Medical services to all citizens')
 
     def testPopularity(self):
-        policy1 = Policy.objects.get(category=1)
-        popularity = Popularity.objects.create(policy=policy1, likes=200, visits=1000)
-        self.assertEquals(popularity.likes,200)
-        self.assertEquals(popularity.visits, 1000)
-        self.assertEqual(popularity.policy, policy1)
+        policy = Policy.objects.get(name='Universal Health Care')
+        popularity = Popularity.objects.create(policy=policy, likes=200)
+        self.assertEquals(popularity.likes, 200)
+        self.assertEqual(popularity.policy, policy)
 
 """
 Tests for all functionality with Comment object
@@ -51,45 +50,41 @@ class CommentTest(TestCase):
     def setUp(self):
         Policy.objects.create(category=1, name='Universal Health Care', statement='Healthcare for all', description='Medical services to all citizens')
 
-    def testComments(self):
+    def testComment(self):
         user = User.objects.create_user(username='brian')
-        policy = Policy.objects.get(category=1)
-        popularity = Popularity.objects.create(policy=policy, likes=20, visits=1000)
-        comment = Comment.objects.create(popularity = popularity, username=user, content='good policy', likes=5)
-        self.assertEqual(comment.popularity, popularity)
-        self.assertEqual(comment.username,user)
-        self.assertEqual(comment.content,'good policy')
-        self.assertEquals(comment.likes,5)
+        policy = Policy.objects.get(name='Universal Health Care')
+        popularity = Popularity.objects.create(policy=policy, likes=20)
+        thread = Thread.objects.create(popularity=popularity)
 
-    def testCommentChain(self):
-        user = User.objects.create_user(username='brian')
-        policy = Policy.objects.get(category=1)
-        popularity = Popularity.objects.create(policy=policy, likes=20, visits=1000)
-        comment3 = Comment.objects.create(popularity=popularity, username=user, content='good policy', likes=5)
-        comment2 = Comment.objects.create(popularity=popularity, next_comment_id=comment3.id, username=user, content='I agree', likes=2)
-        comment1 = Comment.objects.create(popularity=popularity, next_comment_id=comment2.id, username=user, content='Yang Gang!', likes=7)
-        self.assertEqual(comment3.id,1)
-        self.assertEqual(comment3.next_comment_id, 0)
-        self.assertEqual(comment2.next_comment_id, comment3.id)
-        self.assertEqual(comment1.next_comment_id, comment2.id)
+        comment = Comment.objects.create(user=user, thread=thread, content='good policy', likes=5)
+        thread.lead_comment_id = comment.id
+        comment.next_comment_id = comment.id
 
-"""
-Tests for all functionality with Thread object
-"""
-class TestThread(TestCase):
+        self.assertEqual(thread.popularity, popularity)
+        self.assertEqual(comment.user, user)
+        self.assertEqual(comment.content, 'good policy')
+        self.assertEqual(comment.likes, 5)
 
-    def setUp(self):
-        Policy.objects.create(category=1, name='Universal Health Care', statement='Healthcare for all', description='Medical services to all citizens')
 
     def testThread(self):
         user = User.objects.create_user(username='brian')
-        policy = Policy.objects.get(category=1)
-        popularity = Popularity.objects.create(policy=policy, likes=20, visits=1000)
-        comment2 = Comment.objects.create(popularity=popularity, username=user, content='I like this', likes=2)
-        comment1 = Comment.objects.create(popularity=popularity, next_comment_id=comment2.id, username=user, content='I do not like this', likes=7)
-        thread = Thread.objects.create(popularity = popularity, lead_comment_id=comment1.id)
-        self.assertEqual(thread.lead_comment_id, 2)
-        self.assertEqual(thread.popularity, popularity)
+        policy = Policy.objects.get(name='Universal Health Care')
+        popularity = Popularity.objects.create(policy=policy, likes=20)
+        thread = Thread.objects.create(popularity=popularity)
+        comment = Comment.objects.create(user=user, thread=thread, content='good policy', likes=5)
+        thread.lead_comment_id = comment.id
+        comment.next_comment_id = comment.id
+
+        comment2 = Comment.objects.create(user=user, thread=thread, content='I agree', likes=2)
+        comment2.next_commend_id = comment2.id
+        comment.next_comment_id = comment2.id
+
+
+        self.assertEqual(Comment.objects.get(id=thread.lead_comment_id), comment)
+        self.assertEqual(comment.next_comment_id, comment2.id)
+
+
+
 
 
 
