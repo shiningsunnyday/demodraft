@@ -37,7 +37,7 @@ class PopularityTest(TestCase):
         self.assertEquals(popularity.visits, 1000)
         self.assertEqual(popularity.policy, policy1)
 
-class PolicyTest(TestCase):
+class CommentTest(TestCase):
 
     def setUp(self):
         Policy.objects.create(category=1, name='Universal Health Care', statement='Healthcare for all', description='Medical services to all citizens')
@@ -51,6 +51,20 @@ class PolicyTest(TestCase):
         self.assertEqual(comment.username,user)
         self.assertEqual(comment.content,'good policy')
         self.assertEquals(comment.likes,5)
+
+    def testCommentChain(self):
+        user = User.objects.create_user(username='brian')
+        policy = Policy.objects.get(category=1)
+        popularity = Popularity.objects.create(policy=policy, likes=20, visits=1000)
+        comment1 = Comment.objects.create(popularity=popularity, username=user, content='good policy', likes=5)
+        comment2 = Comment.objects.create(popularity=popularity, next_comment_id=comment1.id, username=user, content='I agree', likes=2)
+        comment3 = Comment.objects.create(popularity=popularity, next_comment_id=comment2.id, username=user, content='Yang Gang!', likes=7)
+        self.assert
+# class TestThread(TestCase):
+
+
+
+        
 
 
 
