@@ -56,23 +56,10 @@ export default {
   methods: {
     async handleSubmit() {
       const { username, email, password } = this.user;
-      console.log(username);
-      console.log(password);
-      await axios ({
-        method: 'get',
-        url: 'http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com/login/',
-        data: {
-          username: username, 
-          password: password
-        },
-        headers: {'content-type': 'application/json'},
-        auth: {
-          username: 'admin',
-          password: 'password'
-        }
-      })
-        .then(res => console.log(res.data))
-        .catch(err => console.log(err));
+      this.$store
+        .dispatch('login', { username, password })
+        .then(() => this.$router.push('/'))
+        .catch((err) => console.log(err));
     },
   },
 };
