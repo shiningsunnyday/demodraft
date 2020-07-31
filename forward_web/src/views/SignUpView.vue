@@ -17,12 +17,7 @@
         label-for="email"
         description="We'll never share your email with anyone else."
       >
-        <BFormInput
-          id="email"
-          v-model="user.email"
-          type="email"
-          required
-        />
+        <BFormInput id="email" v-model="user.email" type="email" required />
       </BFormGroup>
 
       <BFormGroup id="password-group" label="Password" label-for="password">
@@ -33,7 +28,7 @@
           required
         />
       </BFormGroup>
-      
+
       <div class="signup__footer">
         <BButton type="submit" variant="primary">
           Submit
@@ -72,22 +67,17 @@ export default {
     async handleSubmit() {
       this.submitted = true;
       const { username, email, password } = this.user;
-      await axios ({
-        method: 'post',
-        url: 'http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com/signup/',
-        data: {
-          username: username, 
-          email: email, 
-          password: password
-        },
-        headers: {'content-type': 'application/json'},
-        auth: {
-          username: 'admin',
-          password: 'password'
-        }
-      })
-        .then(res => console.log(res.data))
-        .catch(err => console.log(err));
+
+      let data = {
+        username: username,
+        email: email,
+        password: password,
+      };
+
+      this.$store
+        .dispatch('register', data)
+        .then(() => this.$router.push('/'))
+        .catch((err) => console.log('err', err));
     },
   },
 };

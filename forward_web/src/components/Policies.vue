@@ -55,7 +55,6 @@ export default {
   &__card {
     width: 300px;
     height: 300px;
-    // margin: 20px;
     cursor: pointer;
   }
 
