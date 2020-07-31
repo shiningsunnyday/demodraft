@@ -8,11 +8,14 @@
       <router-link
         class="policy__route"
         v-bind:to="{
-          name: 'PolicyView',
+          name: 'policy-page',
           params: { id: policy.id, description: policy.body },
         }"
       >
         <BCard title="Policy" class="mb-2 policy__card">
+          <b-card-text>
+            User ID: {{ policy.userId }}
+          </b-card-text>
           <b-card-text>
             {{ policy.title }}
           </b-card-text>
