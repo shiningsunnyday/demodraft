@@ -5,20 +5,28 @@
     <p>insert "favorite this policy" icon here</p>
 
     <h4>Description:</h4>
-    <p>{{ description }}</p>
+    <p>{{ policy.body }}</p>
 
-    <h5>Comments</h5>
+    <CommentList />
   </div>
 </template>
 
 <script>
+import CommentList from "../components/CommentList";
+import { ApiUtil } from "../_utils/api-utils";
+
 export default {
   name: "PolicyPage",
-  props: {
-    description: {
-      type: String,
-      required: true,
-    },
+  components: {
+    CommentList,
+  },
+  data() {
+    return {
+      policy: {},
+    };
+  },
+  async created() {
+    this.policy = await ApiUtil.getPolicy(this.$route.params.id);
   },
 };
 </script>
