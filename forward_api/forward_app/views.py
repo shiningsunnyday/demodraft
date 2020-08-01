@@ -100,7 +100,7 @@ class Policies(APIView, Meta):
 
 class PolicyV(APIView, Meta):
     def get(self, request):
-        id = request.data.get('id')
+        id = int(request.GET['id'])
         return Policies.by_id(id, detailed=True)
 
     def put(self, request):
