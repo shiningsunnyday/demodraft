@@ -68,9 +68,8 @@ export default {
 
     this.filteredPolicies = this.policies;
 
-    // *** May need to refactor code for better speed, efficiency, etc. ***
     // When the HomePage component is mounted, populate the filter list with options after the above axios call is made since the filtering options are linked to the incoming data
-    // At the moment, since dummy data is being used, the removeDuplicates() method removes duplicate filtering options
+    // The removeDuplicates() method removes duplicate filtering options
     await this.policies.forEach((policy) => this.options.push(policy.userId));
     this.removeDuplicates(this.options);
   },

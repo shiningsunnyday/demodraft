@@ -9,13 +9,15 @@
         class="policy__route"
         v-bind:to="{
           name: 'policy-page',
-          params: { id: policy.id, description: policy.body },
+          params: {
+            id: policy.id,
+            description: policy.body,
+            userId: policy.userId,
+          },
         }"
       >
         <BCard title="Policy" class="mb-2 policy__card">
-          <b-card-text>
-            User ID: {{ policy.userId }}
-          </b-card-text>
+          <b-card-text> User ID: {{ policy.userId }} </b-card-text>
           <b-card-text>
             {{ policy.title }}
           </b-card-text>
@@ -27,13 +29,13 @@
 </template>
 
 <script>
-import { BCard, BButton } from 'bootstrap-vue';
+import { BCard, BButton } from "bootstrap-vue";
 
 export default {
   name: "Policies",
   components: {
-    'b-button': BButton,
-    'b-card': BCard,
+    "b-button": BButton,
+    "b-card": BCard,
   },
   props: {
     filteredPolicies: {
@@ -41,7 +43,6 @@ export default {
       required: true,
     },
   },
-  methods: {},
 };
 </script>
 
