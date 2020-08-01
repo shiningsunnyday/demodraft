@@ -10,15 +10,13 @@
         v-bind:to="{
           name: 'policy-page',
           params: {
-            id: policy.id,
-            description: policy.body,
-            userId: policy.userId,
+            id: policy.id
           },
         }"
       >
-        <BCard title="Policy" class="mb-2 policy__card">
+        <BCard v-bind:title="policy.name" class="mb-2 policy__card">
           <b-card-text>
-            User ID: {{ policy.userId }}
+            Category: {{ policy.category }}
           </b-card-text>
           <b-card-text>
             {{ policy.title }}
