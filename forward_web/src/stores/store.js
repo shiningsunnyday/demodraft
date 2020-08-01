@@ -98,7 +98,6 @@ export const store = new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit('logout');
         localStorage.removeItem('token');
-        console.log('Logout: ', axios.defaults.headers.common['Authorization']);
         delete axios.defaults.headers.common['Authorization'];
         resolve();
       });
