@@ -24,8 +24,8 @@ SECRET_KEY = 'dkfhan$aj3)wt%3)y8v3@nc2lu09&n686h+f0mckutf5erx-4u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
 ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -41,6 +41,12 @@ INSTALLED_APPS = [
     'forward_app',
     'rest_framework'
 ]
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.BasicAuthentication',
+#     ]
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
