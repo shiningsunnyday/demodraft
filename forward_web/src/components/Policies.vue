@@ -17,7 +17,9 @@
         }"
       >
         <BCard title="Policy" class="mb-2 policy__card">
-          <b-card-text> User ID: {{ policy.userId }} </b-card-text>
+          <b-card-text>
+            User ID: {{ policy.userId }}
+          </b-card-text>
           <b-card-text>
             {{ policy.title }}
           </b-card-text>

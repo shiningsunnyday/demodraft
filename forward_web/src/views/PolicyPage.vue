@@ -27,7 +27,6 @@ export default {
   },
   async created() {
     this.policy = await ApiUtil.getPolicy(this.$route.params.id);
-    await console.log(this.policy);
   },
 };
 </script>
