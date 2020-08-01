@@ -143,7 +143,6 @@ class ThreadV(APIView, Meta):
             return Response("Please provide thread_id or policy_id.", status=status.HTTP_400_BAD_REQUEST)
 
 
-
     def post(self, request):
         if set(request.data.keys()) != {"policy_id", "username", "content"}:
             return Response("Please provide policy_id, username, and content.", status=status.HTTP_400_BAD_REQUEST)
