@@ -16,7 +16,7 @@ import CommentList from "../components/CommentList";
 import { ApiUtil } from "../_utils/api-utils";
 
 export default {
-  name: "PolicyPage",
+  name: "policy-page",
   components: {
     CommentList,
   },
