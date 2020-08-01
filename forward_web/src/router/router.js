@@ -2,10 +2,10 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { store } from '../stores/store';
 
-import LoginView from '../views/LoginView';
-import HomeView from '../views/HomeView';
-import SignUpView from '../views/SignUpView';
-import PolicyView from '../views/PolicyView';
+import LoginPage from '../views/LoginPage';
+import HomePage from '../views/HomePage';
+import SignUp from '../views/SignUp';
+import PolicyPage from '../views/PolicyPage';
 import AboutPage from '../views/AboutPage';
 
 Vue.use(VueRouter);
@@ -13,31 +13,31 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'HomeView',
-    component: HomeView, // change to HomePage
+    name: 'home-page',
+    component: HomePage,
     meta: {
       requiresAuth: true,
     },
   },
   {
     path: '/login',
-    name: 'LoginView',
-    component: LoginView, // change to LoginPage
+    name: 'login-page',
+    component: LoginPage,
   },
   {
     path: '/signup',
-    name: 'SignUpView',
-    component: SignUpView, // change to SignUp
+    name: 'signup',
+    component: SignUp,
   },
   {
     path: '/policy/:id',
-    name: 'PolicyView',
-    component: PolicyView, // change to PolicyPage
+    name: 'policy-page',
+    component: PolicyPage,
     props: true,
   },
   {
     path: '/about',
-    name: 'about-page', // should probably start standardizing this name format
+    name: 'about-page',
     component: AboutPage
   }
 ];

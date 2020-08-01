@@ -6,23 +6,23 @@
 </template>
 
 <script>
-import LoginView from './views/LoginView';
-import HomeView from './views/HomeView';
-import SignUpView from './views/SignUpView';
-import PolicyView from './views/PolicyView';
+import LoginPage from './views/LoginPage';
+import HomePage from './views/HomePage';
+import SignUp from './views/SignUp';
+import PolicyPage from './views/PolicyPage';
 import NavBar from './components/NavBar';
 
 export default {
   name: 'App',
   components: {
-    LoginView,
-    HomeView,
-    SignUpView,
+    LoginPage,
+    HomePage,
+    SignUp,
     NavBar,
-    PolicyView
+    PolicyPage
   },
   created() {
-    // itercept axios call to check for unauthorized repsonse
+    // intercept axios call to check for unauthorized repsonse
     this.$http.interceptors.response.use(undefined, function (err) {
       return new Promise(function (resolve, reject) {
         if (err.status === 401 && err.config && !err.config.__isRetryRequest) {

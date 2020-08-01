@@ -1,18 +1,23 @@
 <template>
-  <div class="login">
-    <h1 class="login__title">Login</h1>
-    <BForm class=login__form @submit.prevent="handleSubmit">
-      <BFormGroup
-        id="username-group"
-        label="Username:"
-        label-for="username"
-      >
+  <div class="signup">
+    <h1 class="signup__title">Sign Up</h1>
+    <BForm class="signup__form" @submit.prevent="handleSubmit">
+      <BFormGroup id="username-group" label="Username" label-for="username">
         <BFormInput
           id="username"
           v-model="user.username"
           type="text"
           required
         />
+      </BFormGroup>
+
+      <BFormGroup
+        id="email-group"
+        label="Email address:"
+        label-for="email"
+        description="We'll never share your email with anyone else."
+      >
+        <BFormInput id="email" v-model="user.email" type="email" required />
       </BFormGroup>
 
       <BFormGroup id="password-group" label="Password" label-for="password">
@@ -23,10 +28,13 @@
           required
         />
       </BFormGroup>
-      <div class="login__footer">
-        <BButton type="submit" variant="primary">Submit</BButton>
-        <router-link to="/signup" class="login__link">
-          Don't have an account? Sign up!
+
+      <div class="signup__footer">
+        <BButton type="submit" variant="primary">
+          Submit
+        </BButton>
+        <router-link to="/login" class="signup__link">
+          Already have an account? Login!
         </router-link>
       </div>
     </BForm>
@@ -35,9 +43,9 @@
 
 <script>
 import { BButton, BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
-import axios from 'axios';
+
 export default {
-  name: 'LoginView',
+  name: 'SignUp',
   components: {
     'b-button': BButton,
     'b-form': BForm,
@@ -51,22 +59,31 @@ export default {
         email: '',
         password: '',
       },
+      submitted: false,
     };
   },
   methods: {
     async handleSubmit() {
+      this.submitted = true;
       const { username, email, password } = this.user;
+
+      let data = {
+        username: username,
+        email: email,
+        password: password,
+      };
+
       this.$store
-        .dispatch('login', { username, password })
+        .dispatch('register', data)
         .then(() => this.$router.push('/'))
-        .catch((err) => console.log(err));
+        .catch((err) => console.log('err', err));
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.login {
+.signup {
   &__title {
     text-align: center;
     margin-bottom: 2rem;

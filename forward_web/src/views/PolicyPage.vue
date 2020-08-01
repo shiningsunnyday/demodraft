@@ -4,7 +4,7 @@
 
     <p>insert "favorite this policy" icon here</p>
 
-    <h3>Policy Description goes here</h3>
+    <h4>Description:</h4>
     <p>{{ description }}</p>
 
     <h5>Comments</h5>
@@ -13,12 +13,12 @@
 
 <script>
 export default {
-  name: "PolicyView",
+  name: "PolicyPage",
   props: {
     description: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 };
 </script>
