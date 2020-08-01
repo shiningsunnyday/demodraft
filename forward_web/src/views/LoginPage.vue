@@ -53,7 +53,7 @@ export default {
     };
   },
   methods: {
-    async handleSubmit() {
+    handleSubmit() {
       const { username, email, password } = this.user;
       this.$store
         .dispatch('login', { username, password })
