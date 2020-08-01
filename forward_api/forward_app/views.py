@@ -114,10 +114,9 @@ class PolicyV(APIView, Meta):
 
 
 class ThreadV(APIView, Meta):
-    def get(self, request):
-        if set(request.data.keys()) != {"thread_id"}:
-            return Response("Please provide thread_id.", status=status.HTTP_400_BAD_REQUEST)
-        thread = Thread.objects.get(id=request.data["thread_id"])
+    @staticmethod
+    def thread_comments(thread_id):
+        thread = Thread.objects.get(id=thread_id)
         comment = Comment.objects.get(id=thread.lead_comment_id)
         next_comment_id = comment.next_comment_id
         comments = [comment]
@@ -126,7 +125,27 @@ class ThreadV(APIView, Meta):
             next_comment_id = comment.next_comment_id
             comments.append(comment)
         sz = CommentSerializer(comments, many=True)
-        return Response(sz.data, status=status.HTTP_200_OK)
+        return sz
+
+    def get(self, request):
+
+        if set(request.data.keys()) not in [{"thread_id"}, {"policy_id"}]:
+            return Response("Please provide thread_id or policy_id.", status=status.HTTP_400_BAD_REQUEST)
+        if request.data.get("thread_id"):
+            sz = ThreadV.thread_comments(request.data["thread_id"])
+            return Response(sz.data, status=status.HTTP_200_OK)
+        else:
+            policy = Policy.objects.get(id=request.data["policy_id"])
+
+            threads = policy.popularity.thread_set.all()
+            all_threads = []
+            for thread in threads:
+
+                sz = ThreadV.thread_comments(thread.id)
+                all_threads.append(sz.data)
+            return Response(all_threads, status=status.HTTP_200_OK)
+
+
 
     def post(self, request):
         if set(request.data.keys()) != {"policy_id", "username", "content"}:
