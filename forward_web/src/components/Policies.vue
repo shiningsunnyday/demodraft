@@ -2,7 +2,7 @@
   <div class="policy">
     <div
       class="policy__card-wrapper"
-      v-for="policy in policies"
+      v-for="policy in filteredPolicies"
       :key="policy.id"
     >
       <router-link
@@ -36,7 +36,7 @@ export default {
     'b-card': BCard,
   },
   props: {
-    policies: {
+    filteredPolicies: {
       type: Array,
       required: true,
     },

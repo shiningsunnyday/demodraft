@@ -9,15 +9,16 @@
         @input="filterPolicies"
         :multiple="true"
         :options="options"
+        :close-on-select="false"
+        :preserve-search="true"
         select-label=""
         deselect-label=""
-        :close-on-select="false"
+        placeholder="Filter by User ID"
       />
-      <p>{{ selectedValues }}</p>
     </div>
 
     <div class="home__policies-container">
-      <Policies v-bind:policies="policies" />
+      <Policies v-bind:filteredPolicies="filteredPolicies" />
     </div>
   </div>
 </template>
@@ -35,9 +36,10 @@ export default {
   },
   data() {
     return {
-      policies: [],
-      options: [],
-      selectedValues: null,
+      policies: [], // holds all the policies coming from API in this component's state
+      filteredPolicies: [], // holds the policies currently rendered to browser
+      options: [], // holds all the values that populate the filter list
+      selectedValues: null, // holds the selected filtering options the user selects
     };
   },
   methods: {
@@ -45,27 +47,19 @@ export default {
       arr.splice(0, arr.length, ...new Set(arr));
     },
     async filterPolicies() {
-      // *** Figure out how to filter out policies based on an ARRAY of (aka, multiple) filter options ***
-      console.log(this.selectedValues.length);
-
       // If no filter options are selected, render all the policies
       // otherwise, only render policies whose 'userId' property match the currently selected filter option
+
       if (this.selectedValues.length === 0) {
-        await axios
-          .get("https://jsonplaceholder.typicode.com/posts?_limit=100")
-          .then((response) => {
-            this.policies = response.data;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        this.filteredPolicies = this.policies;
       } else {
-        await axios
-          .get(
-            `https://jsonplaceholder.typicode.com/posts/?userId=${this.selectedValues[0]}`
-          )
-          .then((response) => (this.policies = response.data))
-          .catch((error) => console.log(error));
+        // *** I think the best way to go about filtering out the policies based on what's selected is to use "URL querying", but this will have to be built into the backend API ***
+
+        let filteredResults = this.policies.filter(function(policy) {
+          return this.indexOf(policy.userId) > -1;
+        }, this.selectedValues);
+
+        this.filteredPolicies = filteredResults;
       }
     },
   },
@@ -78,6 +72,8 @@ export default {
       .catch((error) => {
         console.log(error);
       });
+
+    this.filteredPolicies = this.policies;
 
     // *** May need to refactor code for better speed, efficiency, etc. ***
     // When the HomePage component is mounted, populate the filter list with options after the above axios call is made since the filtering options are linked to the incoming data
