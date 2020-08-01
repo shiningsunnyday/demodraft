@@ -109,7 +109,7 @@ class NextCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'thread_id', 'username', 'comment']
+        fields = ['id', 'thread_id', 'username', 'content']
 
 
 # class AllThreads(serializers.ModelSerializer):
