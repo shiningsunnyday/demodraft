@@ -24,9 +24,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import Policies from "../components/Policies";
 import Multiselect from "vue-multiselect";
+import { ApiUtil } from "../_utils/api-utils";
 
 export default {
   name: "HomePage",
@@ -64,14 +64,7 @@ export default {
     },
   },
   async created() {
-    await axios
-      .get("https://jsonplaceholder.typicode.com/posts?_limit=100")
-      .then((response) => {
-        this.policies = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    this.policies = await ApiUtil.getPolicies();
 
     this.filteredPolicies = this.policies;
 

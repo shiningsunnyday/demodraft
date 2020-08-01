@@ -22,7 +22,7 @@ export default {
     PolicyPage
   },
   created() {
-    // itercept axios call to check for unauthorized repsonse
+    // intercept axios call to check for unauthorized repsonse
     this.$http.interceptors.response.use(undefined, function (err) {
       return new Promise(function (resolve, reject) {
         if (err.status === 401 && err.config && !err.config.__isRetryRequest) {

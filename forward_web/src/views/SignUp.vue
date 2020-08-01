@@ -43,7 +43,6 @@
 
 <script>
 import { BButton, BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
-import axios from 'axios';
 
 export default {
   name: 'SignUp',
