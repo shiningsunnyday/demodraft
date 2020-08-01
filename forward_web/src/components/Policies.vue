@@ -32,7 +32,7 @@
 import { BCard, BButton } from "bootstrap-vue";
 
 export default {
-  name: "Policies",
+  name: "policies",
   components: {
     "b-button": BButton,
     "b-card": BCard,

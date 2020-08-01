@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "CommentView",
+  name: "comment-list",
 };
 </script>
 
