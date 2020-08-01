@@ -1,62 +1,49 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/once_again.jpg" width="30%" height="100%">
-    <h1>{{msg}}</h1>
-    <button type="button" id="get-politicians" @click="fetchInit">Politicians</button>
-    <ul class="politician-list" id="politician-list">
-      <li v-for="p in res" :key="p.name">
-        <p>{{p.name}}</p>
-      </li>
-    </ul>
+    <NavBar />
+    <router-view :key='$route.fullPath' />
   </div>
 </template>
 
 <script>
+import LoginPage from "./views/LoginPage";
+import HomePage from "./views/HomePage";
+import SignUp from "./views/SignUp";
+import PolicyPage from "./views/PolicyPage";
+import NavBar from "./components/NavBar";
+import CommentList from "./components/CommentList";
+import Comment from "./components/Comment";
 
 export default {
-  name: 'App',
-  data() {
-    return {
-        msg: "Humanity Forward!!!",
-        res: [],
-        avail: false
-    }
-  },
-  methods: {
-        fetchInit() {
-            fetch("http://ec2-18-144-155-31.us-west-1.compute.amazonaws.com/politicians", {
-                "method": "GET",
-            }).then(res => {
-                if(res.ok){
-                    return res.json()
-                }
-            }).then(res => {
-                this.res = res;
-                this.avail = true;
-                console.log(res);
-            }).catch(err => {
-                console.log(err);
-            });
-        }
-    },
+  name: "App",
   components: {
-
-  }
-}
+    LoginPage,
+    HomePage,
+    SignUp,
+    NavBar,
+    PolicyPage,
+    CommentList,
+    Comment,
+  },
+  created() {
+    // intercept axios call to check for unauthorized repsonse
+    this.$http.interceptors.response.use(undefined, function(err) {
+      return new Promise(function(resolve, reject) {
+        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+          this.$store.dispatch("logout");
+        }
+        throw err;
+      });
+    });
+  },
+};
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
-}
-
-.politician-list {
-  list-style: none;
-  padding: 0;
 }
 </style>
