@@ -128,22 +128,19 @@ class ThreadV(APIView, Meta):
         return sz
 
     def get(self, request):
-
-        if set(request.data.keys()) not in [{"thread_id"}, {"policy_id"}]:
-            return Response("Please provide thread_id or policy_id.", status=status.HTTP_400_BAD_REQUEST)
-        if request.data.get("thread_id"):
-            sz = ThreadV.thread_comments(request.data["thread_id"])
+        if set(request.GET.keys()) == {"thread_id"}:
+            sz = ThreadV.thread_comments(int(request.GET["thread_id"]))
             return Response(sz.data, status=status.HTTP_200_OK)
-        else:
-            policy = Policy.objects.get(id=request.data["policy_id"])
-
+        elif set(request.GET.keys()) == {"policy_id"}:
+            policy = Policy.objects.get(id=int(request.GET["policy_id"]))
             threads = policy.popularity.thread_set.all()
             all_threads = []
             for thread in threads:
-
                 sz = ThreadV.thread_comments(thread.id)
                 all_threads.append(sz.data)
             return Response(all_threads, status=status.HTTP_200_OK)
+        else:
+            return Response("Please provide thread_id or policy_id.", status=status.HTTP_400_BAD_REQUEST)
 
 
 
