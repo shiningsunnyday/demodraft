@@ -26,7 +26,7 @@ class Signup(APIView, Meta):
 
 
 class Login(APIView, Meta):
-    def get(self, request):
+    def post(self, request):
         username, password = request.data["username"], request.data["password"]
         user = authenticate(username=username, password=password)
         if user:
