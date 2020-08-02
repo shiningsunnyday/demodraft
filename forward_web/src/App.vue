@@ -18,6 +18,7 @@ import CommentCard from "./components/CommentCard";
 export default {
   name: "App",
   components: {
+    AboutPage,
     LoginPage,
     HomePage,
     SignUp,
