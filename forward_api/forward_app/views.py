@@ -44,6 +44,7 @@ class Users(APIView, Meta):
 
 
 class Policies(APIView, Meta):
+    policy_attrs = {"category", "name", "statement", "description"}
     @staticmethod
     def by_category(request, c_id):
         policies = Policy.objects.filter(category=c_id)
@@ -70,7 +71,17 @@ class Policies(APIView, Meta):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request):
-        if set(request.data.keys()) != {"category", "name", "statement", "description"}:
+        if "policy_id" in set(request.data.keys()):
+            policy = Policy.objects.get(id=int(request.data['policy_id']))
+            for k in request.data.keys():
+                if k not in Policies.policy_attrs and k != 'policy_id':
+                    return Response("Please provide only category, name, statement and description.",
+                                    status=status.HTTP_400_BAD_REQUEST)
+                setattr(policy, k, request.data[k])
+            policy.save()
+            sz = PolicyDetailedSerializer(policy)
+            return Response(sz.data, status=status.HTTP_200_OK)
+        if set(request.data.keys()) != Policies.policy_attrs:
             return Response("Please provide category, name, statement and description.",
                             status=status.HTTP_400_BAD_REQUEST)
 
