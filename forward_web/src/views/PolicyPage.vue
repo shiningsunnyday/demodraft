@@ -2,7 +2,7 @@
   <div>
     <h1>{{ policy.name }}</h1>
 
-    <p>insert "favorite this policy" icon here</p>
+    <p>insert "Like this policy" icon here</p>
 
     <h4>{{ policy.statement }}</h4>
     <p>{{ policy.description }}</p>
