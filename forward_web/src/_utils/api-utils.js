@@ -41,12 +41,12 @@ export class ApiUtil {
   static async policyLike(id) {
     let response;
     try {
-      response = await axios.put(`${ApiUtil.api_url}/policy/`, {data: {id: id}});
+      response = await axios.put(`${ApiUtil.api_url}/policy/`, {id: id});
     } catch (error) {
       console.error(error.message);
     }
 
-    return response.data;
+    return response.data.likes;
   }
 
   static async commentLike(id) {
@@ -56,8 +56,7 @@ export class ApiUtil {
     } catch (error) {
       console.error(error.message);
     }
-    let data = response.data;
     
-    return data.likes;
+    return response.data;
   }
 }
