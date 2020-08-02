@@ -2,7 +2,7 @@
   <div>
     <h1>{{ policy.name }}</h1>
 
-    <p>insert "Like this policy" icon here</p>
+    <button @click="this.likePolicy">{{ `${this.likes} likes` }}</button>
     
     <h4>{{ policy.statement }}</h4>
     <p>{{ policy.description }}</p>
@@ -20,14 +20,21 @@ export default {
   components: {
     CommentList,
   },
+  methods: {
+    async likePolicy() {
+      this.likes = await ApiUtil.policyLike(this.$route.params.id);
+    }
+  },
   data() {
     return {
+      likes: 0,
       policy: {},
     };
   },
   async created() {
     this.policy = await ApiUtil.getPolicy(this.$route.params.id);
-  },
+    this.likes = this.policy.likes;
+  }
 };
 </script>
 
