@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>CommentList Component</h1>
+    <h1>Comments</h1>
 
     <div 
       class="comments-wrapper"

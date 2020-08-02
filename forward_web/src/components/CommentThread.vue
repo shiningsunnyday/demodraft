@@ -1,11 +1,15 @@
 <template>
   <!-- Leading comment -->
-  <div class="comments-wrapper__comment comments-wrapper__lead-comment">
+  <div v-bind:comment="comment" class="comments-wrapper__comment comments-wrapper__lead-comment">
     <p class="comments-wrapper__username">{{ comment[0].username }}</p>
     <p class="comments-wrapper__content">{{ comment[0].content }}</p>
+    
     <div class="comments-wrapper__like">
-      <BIconHandThumbsUp class="comments-wrapper__like-icon" variant="dark" />
-      <span>{{ comment[0].likes }}</span>
+      <button v-on:click="handleClick(0)">
+        <BIconHandThumbsUp class="comments-wrapper__like-icon" variant="dark" />
+        <span>{{ comment[0].likes }}</span>
+      </button>
+      
       <BButton 
         v-if="comment[1]"
         variant="link" 
@@ -14,19 +18,22 @@
         view replies
       </BButton>
     </div>
+
     
     <!-- replies to leading comment -->
     <div v-if="isViewReplies" v-for="replies in comment[1]" :key="replies.id">
       <div class="comments-wrapper__comment comments-wrapper__sub-comment">
         <p class="comments-wrapper__username">{{ replies.username }}</p>
         <p class="comments-wrapper__content">{{ replies.content }}</p>
-        <div class="comments-wrapper__like">
-          <BIconHandThumbsUp
-            class="comments-wrapper__like-icon"
-            variant="dark"
-          />
-          <span>{{ replies.likes }}</span>
-        </div>
+        <button v-on:click="handleClick(replies.id)">
+          <div class="comments-wrapper__like">
+            <BIconHandThumbsUp
+              class="comments-wrapper__like-icon"
+              variant="dark"
+            />
+            <span>{{ replies.likes }}</span>
+          </div>
+        </button>
       </div>
     </div>
   </div>
@@ -34,6 +41,7 @@
 
 <script>
 import { BButton, BIcon, BIconHandThumbsUp } from 'bootstrap-vue';
+import { ApiUtil } from '../_utils/api-utils';
 
 export default {
   name: 'CommentThread',
@@ -56,6 +64,9 @@ export default {
     handleViewReplies() {
       this.isViewReplies = !this.isViewReplies;
     },
+    async handleClick(id) {
+      let likes = await ApiUtil.commentLike(id);
+    }
   },
 };
 </script>

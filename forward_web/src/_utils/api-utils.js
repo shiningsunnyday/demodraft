@@ -52,11 +52,12 @@ export class ApiUtil {
   static async commentLike(id) {
     let response;
     try {
-      response = await axios.patch(`${ApiUtil.api_url}/comment`, {data: {comment_id: id}});
+      response = await axios.patch(`${ApiUtil.api_url}/comment/`, {comment_id: id});
     } catch (error) {
       console.error(error.message);
     }
+    console.log(response.data);
     
-    return response.data;
+    return response.data.likes;
   }
 }
