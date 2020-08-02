@@ -18,20 +18,20 @@
     </div>
 
     <div class="home__policies-container">
-      <Policies v-bind:filteredPolicies="filteredPolicies" />
+      <PolicyList v-bind:filteredPolicies="filteredPolicies" />
     </div>
   </div>
 </template>
 
 <script>
-import Policies from "../components/Policies";
+import PolicyList from "../components/PolicyList";
 import Multiselect from "vue-multiselect";
 import { ApiUtil } from "../_utils/api-utils";
 
 export default {
   name: "HomePage",
   components: {
-    Policies,
+    PolicyList,
     Multiselect,
   },
   data() {
@@ -56,7 +56,7 @@ export default {
         // *** I think the best way to go about filtering out the policies based on what's selected is to use "URL querying", but this will have to be built into the backend API ***
 
         let filteredResults = this.policies.filter(function(policy) {
-          return this.indexOf(policy.userId) > -1;
+          return this.indexOf(policy.category) > -1;
         }, this.selectedValues);
 
         this.filteredPolicies = filteredResults;
@@ -71,7 +71,7 @@ export default {
     // *** May need to refactor code for better speed, efficiency, etc. ***
     // When the HomePage component is mounted, populate the filter list with options after the above axios call is made since the filtering options are linked to the incoming data
     // At the moment, since dummy data is being used, the removeDuplicates() method removes duplicate filtering options
-    await this.policies.forEach((policy) => this.options.push(policy.userId));
+    await this.policies.forEach((policy) => this.options.push(policy.category));
     this.removeDuplicates(this.options);
   },
 };
