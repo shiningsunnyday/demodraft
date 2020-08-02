@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       comments: [],
-      allComments:[],
+      allComments:[], // this should only take in lead comments (fix later)
       isViewReplies: false,
     };
   },
