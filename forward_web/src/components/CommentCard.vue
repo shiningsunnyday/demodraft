@@ -34,8 +34,6 @@ export default {
     return {
       liked: false,
       likes: 0,
-      isViewReplies: false,
-      alreadyViewed: false,
     };
   },
   methods: {
