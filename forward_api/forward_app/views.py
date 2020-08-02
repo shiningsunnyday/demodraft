@@ -149,7 +149,8 @@ class ThreadV(APIView, Meta):
             all_threads = []
             for thread in threads:
                 sz = ThreadV.thread_comments(thread.id)
-                all_threads.append(sz.data)
+                data = [thread.id] + sz.data
+                all_threads.append(data)
             return Response(all_threads, status=status.HTTP_200_OK)
         else:
             return Response("Please provide thread_id or policy_id.", status=status.HTTP_400_BAD_REQUEST)
