@@ -29,7 +29,7 @@ import Multiselect from "vue-multiselect";
 import { ApiUtil } from "../_utils/api-utils";
 
 export default {
-  name: "HomePage",
+  name: "home-page",
   components: {
     PolicyList,
     Multiselect,
