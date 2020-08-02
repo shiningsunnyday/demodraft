@@ -13,7 +13,7 @@
         :preserve-search="true"
         select-label=""
         deselect-label=""
-        placeholder="Filter by User ID"
+        placeholder="Filter by Category"
       />
     </div>
 

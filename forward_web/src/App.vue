@@ -13,7 +13,6 @@ import PolicyPage from "./views/PolicyPage";
 import AboutPage from './views/AboutPage';
 import NavBar from "./components/NavBar";
 import CommentList from "./components/CommentList";
-import CommentCard from "./components/CommentCard";
 
 export default {
   name: "App",
@@ -25,7 +24,6 @@ export default {
     NavBar,
     PolicyPage,
     CommentList,
-    CommentCard,
   },
   created() {
     // intercept axios call to check for unauthorized repsonse
