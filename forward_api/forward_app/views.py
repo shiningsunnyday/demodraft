@@ -28,8 +28,9 @@ class Signup(APIView, Meta):
 class Login(APIView, Meta):
     def post(self, request):
         username, password = request.data["username"], request.data["password"]
-        user = authenticate(username=username, password=password)
-        if user:
+        exists = User.objects.filter(username=username, password=password).exists()
+        if exists:
+            user = User.objects.get(username=username, password=password)
             sz = UserSerializer(user)
             return Response(sz.data, status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
