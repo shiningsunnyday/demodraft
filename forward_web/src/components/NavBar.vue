@@ -30,7 +30,7 @@
 
 <script>
 export default {
-  name: 'NavBar',
+  name: 'nav-bar',
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;

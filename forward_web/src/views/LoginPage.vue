@@ -36,7 +36,7 @@
 <script>
 import { BButton, BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
 export default {
-  name: 'LoginPage',
+  name: 'login-page',
   components: {
     'b-button': BButton,
     'b-form': BForm,

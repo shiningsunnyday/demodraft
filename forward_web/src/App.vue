@@ -10,6 +10,7 @@ import LoginPage from "./views/LoginPage";
 import HomePage from "./views/HomePage";
 import SignUp from "./views/SignUp";
 import PolicyPage from "./views/PolicyPage";
+import AboutPage from './views/AboutPage';
 import NavBar from "./components/NavBar";
 import CommentList from "./components/CommentList";
 import CommentCard from "./components/CommentCard";
