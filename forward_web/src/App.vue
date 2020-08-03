@@ -10,20 +10,18 @@ import LoginPage from "./views/LoginPage";
 import HomePage from "./views/HomePage";
 import SignUp from "./views/SignUp";
 import PolicyPage from "./views/PolicyPage";
+import AboutPage from './views/AboutPage';
 import NavBar from "./components/NavBar";
-import CommentList from "./components/CommentList";
-import Comment from "./components/Comment";
 
 export default {
   name: "App",
   components: {
+    AboutPage,
     LoginPage,
     HomePage,
     SignUp,
     NavBar,
     PolicyPage,
-    CommentList,
-    Comment,
   },
   created() {
     // intercept axios call to check for unauthorized repsonse

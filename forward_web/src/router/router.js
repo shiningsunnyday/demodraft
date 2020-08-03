@@ -34,6 +34,9 @@ const routes = [
     name: 'policy-page',
     component: PolicyPage,
     props: true,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/about',

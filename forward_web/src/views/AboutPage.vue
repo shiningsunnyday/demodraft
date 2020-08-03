@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     <h2>About</h2>
-    <p>This should be landing page</p>
+    <p>General page</p>
   </div>
 </template>
 
