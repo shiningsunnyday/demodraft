@@ -27,6 +27,7 @@ export default {
   },
   data() {
     return {
+      liked: false,
       likes: 0,
       policy: {},
     };
@@ -37,7 +38,10 @@ export default {
   },
   methods: {
     async likePolicy() {
-      this.likes = await ApiUtil.policyLike(this.$route.params.id);
+      if (!this.liked) {
+        this.likes = await ApiUtil.policyLike(this.$route.params.id);
+        this.liked = true;
+      }
     }
   },
 };
