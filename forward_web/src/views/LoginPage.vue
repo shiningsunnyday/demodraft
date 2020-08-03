@@ -36,7 +36,7 @@
 <script>
 import { BButton, BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
 export default {
-  name: 'LoginPage',
+  name: 'login-page',
   components: {
     'b-button': BButton,
     'b-form': BForm,
@@ -53,7 +53,7 @@ export default {
     };
   },
   methods: {
-    async handleSubmit() {
+    handleSubmit() {
       const { username, email, password } = this.user;
       this.$store
         .dispatch('login', { username, password })

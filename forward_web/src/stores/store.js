@@ -31,50 +31,34 @@ export const store = new Vuex.Store({
     login({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request');
-
-        //////
-        ////  test data
-        // 
-        const token = 'token321';
-        const data = {
-          token: token,
-          user: {
-            username: 'test',
-            password: 'test'
+        axios({
+          url: 'http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com/login/',
+          data: user,
+          method: 'post',
+          headers: {'content-type': 'application/json'},
+          auth: {
+            username: 'demodraft',
+            password: 'darkmoney'
           }
-        };
-        
-        localStorage.setItem('token', token);
-        axios.defaults.headers.common['Authorization'] = token;
-        commit('auth_success', data);
-        resolve(user);
-        //
-        /// end test data
-        ////
-
-        
-        // axios({
-        //   url: 'http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com/login/',
-        //   data: user,
-        //   method: 'GET',
-        // })
-        //   .then((resp) => {
-        //     //const token = resp.data.token;
-        //     const token = 'token123';
-        //     const data = {
-        //       token: 'token123', 
-        //       user: resp.data
-        //     };
-        //     localStorage.setItem('token', token);
-        //     axios.defaults.headers.common['Authorization'] = token;
-        //     commit('auth_success', data);
-        //     resolve(resp);
-        //   })
-        //   .catch((err) => {
-        //     commit('auth_error');
-        //     localStorage.removeItem('token');
-        //     reject(err);
-        //   });
+        })
+          .then((resp) => {
+            const authString = resp.config.headers.Authorization;
+            const token = authString.split(' ')[1];
+            const data = {
+              token: token, 
+              user: resp.data
+            };
+            localStorage.setItem('token', token);
+            axios.defaults.headers.common['Authorization'] = token;
+            commit('auth_success', data);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit('auth_error');
+            localStorage.removeItem('token');
+            alert(`That wasn't correct. Try again?`);
+            reject(err);
+          });
       });
     },
     register({ commit }, user) {
@@ -86,26 +70,26 @@ export const store = new Vuex.Store({
           method: 'POST',
           headers: {'content-type': 'application/json'},
           auth: {
-            username: 'admin',
-            password: 'password'
+            username: 'demodraft',
+            password: 'darkmoney'
           }
         })
           .then((resp) => {
-            //const token = resp.data.token;
-            const token = 'token123';
+            const authString = resp.config.headers.Authorization;
+            const token = authString.split(' ')[1];
             const data = {
-              token: 'token123', 
+              token: token, 
               user: resp.data
             };
             localStorage.setItem('token', token);
             axios.defaults.headers.common['Authorization'] = token;
             commit('auth_success', data);
-            console.log(resp);
             resolve(resp);
           })
           .catch((err) => {
-            commit('auth_error', err);
+            commit('auth_error');
             localStorage.removeItem('token');
+            alert(`Incorrect credentials. Try again?`);
             reject(err);
           });
       });

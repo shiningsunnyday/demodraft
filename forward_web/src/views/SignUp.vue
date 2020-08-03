@@ -45,7 +45,7 @@
 import { BButton, BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
 
 export default {
-  name: 'SignUp',
+  name: 'signup',
   components: {
     'b-button': BButton,
     'b-form': BForm,
