@@ -18,7 +18,7 @@
 
 <script>
 import { BIcon, BIconHandThumbsUp } from 'bootstrap-vue';
-import { ApiUtil } from '../_utils/api-utils';
+import { ApiUtil } from "@/_utils/api-utils.js";
 
 export default {
   name: 'CommentCard',

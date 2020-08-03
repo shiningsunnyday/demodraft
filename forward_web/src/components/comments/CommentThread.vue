@@ -2,13 +2,13 @@
   <div class="comments-wrapper__comment">
     <!-- Leading comment -->
     <CommentCard
-      :comment="comment[0]"
+      :comment="comment"
       :className="`comments-wrapper__lead-comment`"
     >
       <BButton
-        v-if="comment[1]"
+        v-if="hasReplies"
+        @click="handleViewReplies(comment.thread_id)"
         variant="link"
-        @click="handleViewReplies(comment[0].id)"
       >
         view replies
       </BButton>
@@ -27,7 +27,7 @@
 <script>
 import { BButton, BIcon, BIconHandThumbsUp } from 'bootstrap-vue';
 import CommentCard from './CommentCard';
-import { ApiUtil } from '../_utils/api-utils';
+import { ApiUtil } from "@/_utils/api-utils.js";
 
 export default {
   name: 'CommentThread',
@@ -38,21 +38,27 @@ export default {
     CommentCard,
   },
   props: {
-    comment: Array,
+    comment: Object,
     className: String,
   },
   data() {
     return {
       isViewReplies: false,
+      hasReplies: false,
       thread: [],
     };
   },
+  async mounted () {
+    const { comment } = this; // props
+    this.thread = await ApiUtil.getThreadFromComment(comment.thread_id);
+    this.hasReplies = this.thread.length > 0 ? true : false;
+  },
   methods: {
-    async handleViewReplies(leadCommentId) {
+    async handleViewReplies(threadId) {
       // prevent unecessary api calls when closing replies
       if (!this.isViewReplies) {
-        console.log('fetch thread');
-        this.thread = await ApiUtil.getThreadFromComment(leadCommentId);
+        this.thread = await ApiUtil.getThreadFromComment(threadId);
+        //console.log('thread fetched');
       }
       this.isViewReplies = !this.isViewReplies;
     },

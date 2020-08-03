@@ -12,7 +12,6 @@ import SignUp from "./views/SignUp";
 import PolicyPage from "./views/PolicyPage";
 import AboutPage from './views/AboutPage';
 import NavBar from "./components/NavBar";
-import CommentList from "./components/CommentList";
 
 export default {
   name: "App",
@@ -23,7 +22,6 @@ export default {
     SignUp,
     NavBar,
     PolicyPage,
-    CommentList,
   },
   created() {
     // intercept axios call to check for unauthorized repsonse
