@@ -1,23 +1,12 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from forward_app.serializers import *
-from django.contrib.auth import authenticate
-from rest_framework.parsers import JSONParser
-
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import AllowAny
 from rest_framework import status
-
-
-class Meta(object):
-    permission_classes = [AllowAny]
-    authentication_classes = [BasicAuthentication]
-    parser_classes = [JSONParser]
+from .meta import Meta
 
 
 class Signup(APIView, Meta):
     def post(self, request):
-        username, email, password = request.data["username"], request.data["email"], request.data["password"]
         sz = UserSerializer(data=request.data)
         if sz.is_valid(raise_exception=True):
             sz.save()
@@ -184,7 +173,6 @@ class CommentV(APIView, Meta):
         if sz.is_valid(raise_exception=True):
             thread = Thread.objects.get(id=request.data["thread_id"])
             user = User.objects.get(username=request.data["username"])
-
             comment = Comment.objects.get(id=thread.lead_comment_id)
             next_comment_id = comment.next_comment_id
             comments = []

@@ -18,6 +18,7 @@ urlpatterns = [
     path('policy/', views.PolicyV.as_view(), name="policy"),
     path('thread/', views.ThreadV.as_view(), name="thread"),
     path('comment/', views.CommentV.as_view(), name="comment"),
+    path('address/', views.Address.as_view(), name="address"),
     # path('threads/', views.Threads.as_view(), name="threads"),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
