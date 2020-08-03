@@ -42,11 +42,6 @@ INSTALLED_APPS = [
     'rest_framework'
 ]
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework.authentication.BasicAuthentication',
-#     ]
-# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -133,5 +128,8 @@ STATIC_URL = '/static/'
 # CORS
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_METHODS = [
-    'GET'
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH'
 ]
