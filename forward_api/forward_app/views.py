@@ -148,8 +148,10 @@ class ThreadV(APIView, Meta):
             threads = policy.popularity.thread_set.all()
             all_threads = []
             for thread in threads:
-                sz = ThreadV.thread_comments(thread.id)
-                data = [thread.id] + sz.data
+                comment = Comment.objects.get(id=thread.lead_comment_id)
+                sz = LeadingCommentSerializer(comment)
+                data = sz.data
+                data['thread_id'] = thread.id
                 all_threads.append(data)
             return Response(all_threads, status=status.HTTP_200_OK)
         else:

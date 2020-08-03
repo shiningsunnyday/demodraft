@@ -57,6 +57,17 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'time', 'username', 'next_comment_id', 'content', 'likes']
 
 
+class LeadingCommentSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField("get_username")
+
+    def get_username(self, comment):
+        return comment.user.username
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'time', 'username', 'content', 'likes']
+
+
 class UpdatedCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
