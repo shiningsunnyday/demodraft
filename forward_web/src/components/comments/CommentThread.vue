@@ -72,16 +72,17 @@ export default {
   max-width: 700px;
   margin: 0 auto;
   &__comment {
-    padding: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   &__lead-comment {
+    padding: 10px;
     border: 1px solid rgb(224, 224, 224);
   }
 
   &__sub-comment {
     border: 1px solid rgb(224, 224, 224);
+    padding: 10px;
     margin-left: 2rem;
   }
 

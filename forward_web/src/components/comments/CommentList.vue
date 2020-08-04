@@ -1,7 +1,10 @@
 <template>
   <div>
     <h1>Comments</h1>
-
+    <CommentForm 
+      :policyId="policyId" 
+      :handleNewThread="handleNewThread"
+    ></CommentForm>
     <div 
       class="comments-wrapper"
       v-if="comments.length" 
@@ -10,6 +13,7 @@
     >
       <CommentThread :comment="comment"></CommentThread>
     </div>
+    
   </div>
 </template>
 
@@ -17,6 +21,7 @@
 import { BButton, BIcon, BIconHandThumbsUp } from "bootstrap-vue";
 import { ApiUtil } from "@/_utils/api-utils.js";
 import CommentThread from './CommentThread';
+import CommentForm from "@/components/comments/CommentForm";
 
 export default {
   name: "CommentList",
@@ -29,6 +34,10 @@ export default {
     BIcon,
     BIconHandThumbsUp,
     CommentThread,
+    CommentForm,
+  },
+  props: {
+    policyId: Number,
   },
   data() {
     return {
@@ -41,10 +50,18 @@ export default {
    * to more represent the order of events on component creation
    */
   async created() {
-    this.comments= await ApiUtil.getPolicyComments(
+    this.comments = await ApiUtil.getPolicyComments(
       this.$route.params.id
     );
   },
+  methods: {
+    async handleNewThread() {
+      // "diffing" allows efficient rerendering - instead of rerendering entire comment section
+      this.comments = await ApiUtil.getPolicyComments(
+        this.$route.params.id
+      );
+    }
+  }
 };
 </script>
 

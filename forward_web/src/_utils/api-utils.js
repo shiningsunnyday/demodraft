@@ -70,5 +70,13 @@ export class ApiUtil {
     
     return response.data.likes;
   }
+
+  static async addNewThread(data) {
+    try {
+      await axios.post(`${ApiUtil.api_url}/thread/`, data);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
 }
 
