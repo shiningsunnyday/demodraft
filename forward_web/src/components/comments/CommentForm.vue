@@ -22,7 +22,9 @@ export default {
   name: 'CommentForm',
   props: {
     policyId: Number,
-    handleNewThread: Function,
+    threadId: Number,
+    updateComments: Function,
+    isReply: Boolean,
   },
   data() {
     return {
@@ -31,16 +33,21 @@ export default {
   },
   methods: {
     async handleSave() {
-      const data = {
-        policy_id: this.policyId,
-        username: this.$store.getters.username,
-        content: this.text,
-      };
-      // adding new thread to database
-      await ApiUtil.addNewThread(data);
-      // updates comment section
-      await this.handleNewThread();
-      console.log(data);
+      if (this.isReply) {
+        await ApiUtil.addNewReply({
+          thread_id: this.threadId,
+          username: this.$store.getters.username,
+          content: this.text,
+        });
+      } else {
+        await ApiUtil.addNewThread({
+          policy_id: this.policyId,
+          username: this.$store.getters.username,
+          content: this.text,
+        });
+      }
+      await this.updateComments();
+      this.text = '';
     },
   },
 };

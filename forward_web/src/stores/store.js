@@ -46,7 +46,6 @@ export const store = new Vuex.Store({
           }
         })
           .then((resp) => {
-            console.log(resp.data);
             const authString = resp.config.headers.Authorization;
             const token = authString.split(' ')[1];
             const data = {

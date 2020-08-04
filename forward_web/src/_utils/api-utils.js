@@ -66,7 +66,6 @@ export class ApiUtil {
     } catch (error) {
       console.error(error.message);
     }
-    console.log(response.data);
     
     return response.data.likes;
   }
@@ -74,6 +73,14 @@ export class ApiUtil {
   static async addNewThread(data) {
     try {
       await axios.post(`${ApiUtil.api_url}/thread/`, data);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  static async addNewReply(data) {
+    try {
+      await axios.post(`${ApiUtil.api_url}/comment/`, data);
     } catch (error) {
       console.error(error.message);
     }

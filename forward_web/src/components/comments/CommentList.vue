@@ -2,8 +2,9 @@
   <div>
     <h1>Comments</h1>
     <CommentForm 
+      :updateComments="updateComments"
       :policyId="policyId" 
-      :handleNewThread="handleNewThread"
+      :isReply="false"
     ></CommentForm>
     <div 
       class="comments-wrapper"
@@ -11,7 +12,9 @@
       v-for="(comment, index) in comments" 
       :key="`comment-${index}`"
     >
-      <CommentThread :comment="comment"></CommentThread>
+      <CommentThread 
+        :comment="comment" 
+      ></CommentThread>
     </div>
     
   </div>
@@ -25,10 +28,6 @@ import CommentForm from "@/components/comments/CommentForm";
 
 export default {
   name: "CommentList",
-  /** 
-   * lets keep components at the top - underneath name:
-   * so we know what components are being used right away
-  */
   components: {
     "b-button": BButton,
     BIcon,
@@ -45,17 +44,13 @@ export default {
       isViewReplies: false,
     };
   },
-  /**
-   * lets keep life cycles methods above standard methods
-   * to more represent the order of events on component creation
-   */
   async created() {
     this.comments = await ApiUtil.getPolicyComments(
       this.$route.params.id
     );
   },
   methods: {
-    async handleNewThread() {
+    async updateComments() {
       // "diffing" allows efficient rerendering - instead of rerendering entire comment section
       this.comments = await ApiUtil.getPolicyComments(
         this.$route.params.id

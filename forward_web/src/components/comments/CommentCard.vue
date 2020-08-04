@@ -10,19 +10,20 @@
       />
       <span v-if="!liked">{{ comment.likes }}</span>
       <span v-else>{{ likes }}</span>
-      <slot></slot>
+      <slot name="buttons"></slot>
     </div>
-  </div>
+    <slot name="reply-form"></slot>
   </div>
 </template>
 
 <script>
-import { BIcon, BIconHandThumbsUp } from 'bootstrap-vue';
+import { BButton, BIcon, BIconHandThumbsUp } from 'bootstrap-vue';
 import { ApiUtil } from "@/_utils/api-utils.js";
 
 export default {
   name: 'CommentCard',
   components: {
+    BButton,
     BIcon,
     BIconHandThumbsUp,
   },
