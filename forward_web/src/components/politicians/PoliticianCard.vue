@@ -7,6 +7,11 @@
     img-top
     class="mb-2 politician-card"
   >
+    <b-card-text>
+      <BIconBuilding class="politician-card__icon" :scale="1.5" />
+      {{ politician.address.city }}
+    </b-card-text>
+
     <BButton href="#" variant="Link">
       <router-link
         class="politician-card__route"
@@ -24,10 +29,14 @@
 </template>
 
 <script>
+import { BIconBuilding } from "bootstrap-vue";
 import { BCard, BButton } from "bootstrap-vue";
 
 export default {
   name: "PoliticianCard",
+  components: {
+    BIconBuilding,
+  },
   props: {
     politician: {
       type: Object,
@@ -40,5 +49,9 @@ export default {
 <style lang="scss" scoped>
 .politician-card {
   margin: 20px;
+
+  &__icon {
+    margin-right: 8px;
+  }
 }
 </style>

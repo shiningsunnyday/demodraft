@@ -70,7 +70,6 @@ export class ApiUtil {
     return response.data.likes;
   }
 
-<<<<<<< HEAD
   static async addNewThread(data) {
     try {
       await axios.post(`${ApiUtil.api_url}/thread/`, data);
@@ -87,8 +86,6 @@ export class ApiUtil {
     }
   }
   
-=======
->>>>>>> 1fcacef... Created a Politicians Page that renders a list of Politician Cards
   static async getPoliticians() {
     let response;
 
@@ -100,13 +97,12 @@ export class ApiUtil {
 
     return response.data;
   }
-  
+
   static async getSelectedPolitician(id) {
     let response;
 
     try {
       response = await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`);
-      console.log(response.data);
     } catch (error) {
       console.error(error.message);
     }
