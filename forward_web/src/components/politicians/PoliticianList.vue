@@ -20,9 +20,6 @@ export default {
       required: true,
     },
   },
-  created() {
-    console.log(this.filteredPoliticians);
-  },
 };
 </script>
 

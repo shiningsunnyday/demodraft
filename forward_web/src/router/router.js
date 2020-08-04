@@ -54,6 +54,7 @@ const routes = [
     path: "/politicians/:id",
     name: "selected-politician",
     component: SelectedPolitician,
+    props: true,
   },
 ];
 

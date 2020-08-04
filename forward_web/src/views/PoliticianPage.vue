@@ -6,6 +6,8 @@
       <p id="filter">Filter:</p>
       <Multiselect
         v-model="selectedValues"
+        @input="filterPoliticians"
+        :multiple="true"
         :options="options"
         :preserve-search="true"
         select-label="Click to select"
@@ -39,8 +41,34 @@ export default {
   },
   async created() {
     this.politicians = await ApiUtil.getPoliticians();
-    this.filteredPoliticians = this.politicians;
-  }
+    this.filteredPoliticians = await this.politicians;
+
+    // Populates a components filter list with filtering options that are linked to the incoming data
+    let tempPoliticiansArr = [];
+    this.politicians.forEach((politician) => {
+      const location = politician.address.city;
+      tempPoliticiansArr.push(location);
+    });
+    // remove duplicate filtering options that populate the filtering lists
+    this.options = [...new Set(tempPoliticiansArr)];
+  },
+  methods: {
+    filterPoliticians() {
+      // If no filter options are selected, render all the policies
+      // otherwise, only render politicians whose 'location' property match the currently selected filter option
+      if (this.selectedValues.length === 0) {
+        this.filteredPoliticians = this.politicians;
+      } else {
+        let filteredResults = this.politicians.filter(function(politician) {
+          const location = politician.address.city;
+
+          return this.indexOf(location) > -1;
+        }, this.selectedValues);
+
+        this.filteredPoliticians = filteredResults;
+      }
+    },
+  },
 };
 </script>
 

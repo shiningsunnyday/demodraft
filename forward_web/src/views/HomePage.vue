@@ -24,9 +24,10 @@
 </template>
 
 <script>
-import PolicyList from "../components/PolicyList";
+import PolicyList from "@/components/PolicyList";
 import Multiselect from "vue-multiselect";
-import { ApiUtil } from "../_utils/api-utils";
+import { ApiUtil } from "@/_utils/api-utils";
+import { CommonUtils } from "@/_utils/common-utils";
 
 export default {
   name: "home-page",
@@ -44,28 +45,22 @@ export default {
   },
   async created() {
     this.policies = await ApiUtil.getPolicies();
-
     this.filteredPolicies = this.policies;
 
-    // *** May need to refactor code for better speed, efficiency, etc. ***
-    // When the HomePage component is mounted, populate the filter list with options after the above axios call is made since the filtering options are linked to the incoming data
-    // At the moment, since dummy data is being used, the removeDuplicates() method removes duplicate filtering options
-    await this.policies.forEach((policy) => this.options.push(policy.category));
-    this.removeDuplicates(this.options);
+    // Populates a components filter list with filtering options that are linked to the incoming data
+    let tempPoliciesArr = [];
+    this.policies.forEach(policy => tempPoliciesArr.push(policy.category));
+    // remove duplicate filtering options that populate the filtering lists
+    this.options = [...new Set(tempPoliciesArr)];
   },
   methods: {
-    removeDuplicates(arr) {
-      arr.splice(0, arr.length, ...new Set(arr));
-    },
-    async filterPolicies() {
+    filterPolicies() {
       // If no filter options are selected, render all the policies
       // otherwise, only render policies whose 'userId' property match the currently selected filter option
-
       if (this.selectedValues.length === 0) {
         this.filteredPolicies = this.policies;
       } else {
         // *** I think the best way to go about filtering out the policies based on what's selected is to use "URL querying", but this will have to be built into the backend API ***
-
         let filteredResults = this.policies.filter(function(policy) {
           return this.indexOf(policy.category) > -1;
         }, this.selectedValues);
