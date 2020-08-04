@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavBar />
-    <router-view :key='$route.fullPath' />
+    <router-view :key="$route.fullPath" />
   </div>
 </template>
 
@@ -10,8 +10,11 @@ import LoginPage from "./views/LoginPage";
 import HomePage from "./views/HomePage";
 import SignUp from "./views/SignUp";
 import PolicyPage from "./views/PolicyPage";
-import AboutPage from './views/AboutPage';
+import AboutPage from "./views/AboutPage";
 import NavBar from "./components/NavBar";
+import PoliticianList from "./components/politicians/PoliticianList";
+import PoliticianCard from "./components/politicians/PoliticianCard";
+import PoliticianPage from "./views/PoliticianPage";
 
 export default {
   name: "App",
@@ -22,6 +25,9 @@ export default {
     SignUp,
     NavBar,
     PolicyPage,
+    PoliticianList,
+    PoliticianCard,
+    PoliticianPage,
   },
   created() {
     // intercept axios call to check for unauthorized repsonse
