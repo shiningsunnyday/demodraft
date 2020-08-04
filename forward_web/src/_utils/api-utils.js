@@ -100,5 +100,18 @@ export class ApiUtil {
 
     return response.data;
   }
+  
+  static async getSelectedPolitician(id) {
+    let response;
+
+    try {
+      response = await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error.message);
+    }
+
+    return response.data;
+  }
 }
 

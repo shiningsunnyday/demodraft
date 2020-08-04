@@ -1,12 +1,25 @@
 <template>
   <BCard
     :title="politician.name"
-    img-src="https://via.placeholder.com/300"
+    img-src="https://i.picsum.photos/id/1062/5092/3395.jpg?hmac=o9m7qeU51uOLfXvepXcTrk2ZPiSBJEkiiOp-Qvxja-k"
     img-alt="Image"
+    style="max-width: 20rem;"
     img-top
     class="mb-2 politician-card"
   >
-    <BButton href="#" variant="Link">Learn More</BButton>
+    <BButton href="#" variant="Link">
+      <router-link
+        class="politician-card__route"
+        v-bind:to="{
+          name: 'selected-politician',
+          params: {
+            id: politician.id,
+          },
+        }"
+      >
+        Learn More
+      </router-link>
+    </BButton>
   </BCard>
 </template>
 
@@ -26,8 +39,6 @@ export default {
 
 <style lang="scss" scoped>
 .politician-card {
-  width: 300px;
-  height: 425x;
-  overflow: hidden;
+  margin: 20px;
 }
 </style>

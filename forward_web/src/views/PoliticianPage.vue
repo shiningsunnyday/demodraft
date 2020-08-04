@@ -39,7 +39,7 @@ export default {
   },
   async created() {
     this.politicians = await ApiUtil.getPoliticians();
-    this.filteredPoliticians = this.politicians;
+    this.filteredPoliticians = await this.politicians;
   }
 };
 </script>
