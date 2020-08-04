@@ -16,7 +16,6 @@
         :comment="comment" 
       ></CommentThread>
     </div>
-    <CommentThread :comment="comment"></CommentThread>
   </div>
   </div>
 </template>
