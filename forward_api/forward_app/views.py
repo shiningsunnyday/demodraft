@@ -110,5 +110,3 @@ class PolicyV(APIView, Meta):
         pop.save()
         sz = PopularitySerializer(pop)
         return Response(sz.data, status=status.HTTP_202_ACCEPTED)
-
-
