@@ -70,6 +70,7 @@ export class ApiUtil {
     return response.data.likes;
   }
 
+<<<<<<< HEAD
   static async addNewThread(data) {
     try {
       await axios.post(`${ApiUtil.api_url}/thread/`, data);
@@ -86,6 +87,8 @@ export class ApiUtil {
     }
   }
   
+=======
+>>>>>>> 1fcacef... Created a Politicians Page that renders a list of Politician Cards
   static async getPoliticians() {
     let response;
 
