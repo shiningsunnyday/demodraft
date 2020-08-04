@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="SelectedPolitician">
+    <h3>SelectedPolitician</h3>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'PolicyCard',
+  name: "SelectedPolitician",
 };
 </script>
 

@@ -12,18 +12,22 @@
       <h4 class="policy__statement">{{ policy.statement }}</h4>
       <p class="policy__description">{{ policy.description }}</p>
     </div>
-    <CommentList />
+    <hr/>
+    <!-- <CommentForm :policyId="policy.id"></CommentForm> -->
+    <CommentList :policyId="policy.id"/>
   </b-container>
 </template>
 
 <script>
 import CommentList from "@/components/comments/CommentList";
+import CommentForm from "@/components/comments/CommentForm";
 import { ApiUtil } from "@/_utils/api-utils";
 
 export default {
-  name: "policy-page",
+  name: "PolicyPage",
   components: {
     CommentList,
+    CommentForm,
   },
   data() {
     return {

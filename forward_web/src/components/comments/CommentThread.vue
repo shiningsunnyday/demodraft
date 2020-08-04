@@ -1,32 +1,43 @@
 <template>
   <div class="comments-wrapper__comment">
     <!-- Leading comment -->
-    <CommentCard
-      :comment="comment"
-      :className="`comments-wrapper__lead-comment`"
-    >
-      <BButton
-        v-if="hasReplies"
-        @click="handleViewReplies(comment.thread_id)"
-        variant="link"
-      >
-        view replies
-      </BButton>
-    </CommentCard>
+    <CommentCard :comment="comment" :className="`comments-wrapper__lead-comment`">
+      <!-- Card buttons -->
+      <template v-slot:buttons>
+        <BButton v-if="hasReplies" @click="handleViewReplies(comment.thread_id)" variant="link">
+          view replies
+        </BButton>
+        <BButton variant="link" @click="handleReplyClick"> reply </BButton>
+      </template>
+      <!-- End card buttons -->
 
-    <!-- replies to leading comment -->
+      <!-- Reply form -->
+      <template v-slot:reply-form v-if="isReplying">
+        <CommentForm
+          :updateComments="updateRepliesView"
+          :threadId="comment.thread_id"
+          :isReply="true"
+        ></CommentForm>
+      </template>
+      <!-- End reply form -->
+    </CommentCard>
+    <!-- End leading comment -->
+
+    <!-- Replies to leading comment -->
     <div v-if="isViewReplies" v-for="replies in thread" :key="replies.id">
       <CommentCard
         :comment="replies"
-        :className="`comments-wrapper__sub-comment `"
+        :className="`comments-wrapper__sub-comment`"
       ></CommentCard>
     </div>
+    <!-- End replies to leading comment -->
   </div>
 </template>
 
 <script>
 import { BButton, BIcon, BIconHandThumbsUp } from 'bootstrap-vue';
 import CommentCard from './CommentCard';
+import CommentForm from "@/components/comments/CommentForm";
 import { ApiUtil } from "@/_utils/api-utils.js";
 
 export default {
@@ -36,16 +47,19 @@ export default {
     BIcon,
     BIconHandThumbsUp,
     CommentCard,
+    CommentForm
   },
   props: {
     comment: Object,
     className: String,
+    updateComments: Function,
   },
   data() {
     return {
       isViewReplies: false,
       hasReplies: false,
       thread: [],
+      isReplying: false,
     };
   },
   async mounted () {
@@ -58,10 +72,24 @@ export default {
       // prevent unecessary api calls when closing replies
       if (!this.isViewReplies) {
         this.thread = await ApiUtil.getThreadFromComment(threadId);
-        //console.log('thread fetched');
       }
       this.isViewReplies = !this.isViewReplies;
     },
+    handleReplyClick() {
+      this.isReplying = !this.isReplying;
+    },
+    async updateRepliesView() {
+      this.thread = await ApiUtil.getThreadFromComment(
+        this.comment.thread_id
+      );
+      // when replying, keep 'replies view' open if already opend
+      // and to open 'replies view' if closed
+      // this looks so dumb lmao
+      if (!this.isViewReplies) {
+        this.isViewReplies = !this.isViewReplies;
+      }
+      this.hasReplies = true;
+    }
   },
 };
 </script>
@@ -72,16 +100,17 @@ export default {
   max-width: 700px;
   margin: 0 auto;
   &__comment {
-    padding: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   &__lead-comment {
+    padding: 10px;
     border: 1px solid rgb(224, 224, 224);
   }
 
   &__sub-comment {
     border: 1px solid rgb(224, 224, 224);
+    padding: 10px;
     margin-left: 2rem;
   }
 
