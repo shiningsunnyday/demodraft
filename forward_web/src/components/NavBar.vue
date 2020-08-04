@@ -4,14 +4,14 @@
       <router-link to="/about" class="navbar__link" v-if="!isLoggedIn">
         About
       </router-link>
+
       <router-link to="/" class="navbar__link" v-else>
         Home
       </router-link>
-      <router-link to="/politicians" class="navbar__link" v-if="!isLoggedIn">
-        Politicians
-      </router-link>
     </b-navbar-brand>
+
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
     <b-collapse id="nav-collapse" is-nav="">
       <b-navbar-nav>
         <b-nav-item>
@@ -19,14 +19,24 @@
             About
           </router-link>
         </b-nav-item>
+
         <b-nav-item>
           <router-link to="/politicians" class="navbar__link" v-if="isLoggedIn">
             Politicians
           </router-link>
         </b-nav-item>
+
+        <b-nav-item>
+          <router-link to="/campaign" class="navbar__link" v-if="isLoggedIn">
+            <span v-if="!campaignLaunchStatus">Launch Campaign</span>
+            <span v-else>My Campaign</span>
+          </router-link>
+        </b-nav-item>
+
         <b-nav-item v-if="isLoggedIn" @click="logout">
           Logout
         </b-nav-item>
+
         <b-nav-item>
           <router-link to="/login" class="navbar__link">
             <span v-if="!isLoggedIn">Login</span>
@@ -40,6 +50,12 @@
 <script>
 export default {
   name: "nav-bar",
+  props: {
+    campaignLaunchStatus: {
+      type: Boolean,
+      required: true,
+    },
+  },
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;

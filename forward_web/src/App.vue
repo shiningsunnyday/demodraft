@@ -1,7 +1,10 @@
 <template>
   <div id="app">
-    <NavBar />
-    <router-view :key="$route.fullPath" />
+    <NavBar :campaignLaunchStatus="campaignLaunchStatus" />
+    <router-view
+      :key="$route.fullPath"
+      :campaignLaunchStatus="campaignLaunchStatus"
+    />
   </div>
 </template>
 
@@ -15,6 +18,9 @@ import NavBar from "./components/NavBar";
 import PoliticianList from "./components/politicians/PoliticianList";
 import PoliticianCard from "./components/politicians/PoliticianCard";
 import PoliticianPage from "./views/PoliticianPage";
+import CampaignDetails from "./components/launch-campaign/CampaignDetails";
+import CampaignRegistration from "./components/launch-campaign/CampaignRegistration";
+import CampaignPage from "./views/CampaignPage";
 
 export default {
   name: "App",
@@ -28,6 +34,15 @@ export default {
     PoliticianList,
     PoliticianCard,
     PoliticianPage,
+    CampaignDetails,
+    CampaignRegistration,
+    CampaignPage,
+  },
+  data() {
+    return {
+      // *** Will move campaignLaunchStatus to VueX store ***
+      campaignLaunchStatus: false,
+    };
   },
   created() {
     // intercept axios call to check for unauthorized repsonse
