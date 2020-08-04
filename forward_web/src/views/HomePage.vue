@@ -11,8 +11,8 @@
         :options="options"
         :close-on-select="false"
         :preserve-search="true"
-        select-label=""
-        deselect-label=""
+        select-label="Click to select"
+        deselect-label="Click to deselect"
         placeholder="Filter by Category"
       />
     </div>
@@ -42,6 +42,17 @@ export default {
       selectedValues: null, // holds the selected filtering options the user selects
     };
   },
+  async created() {
+    this.policies = await ApiUtil.getPolicies();
+
+    this.filteredPolicies = this.policies;
+
+    // *** May need to refactor code for better speed, efficiency, etc. ***
+    // When the HomePage component is mounted, populate the filter list with options after the above axios call is made since the filtering options are linked to the incoming data
+    // At the moment, since dummy data is being used, the removeDuplicates() method removes duplicate filtering options
+    await this.policies.forEach((policy) => this.options.push(policy.category));
+    this.removeDuplicates(this.options);
+  },
   methods: {
     removeDuplicates(arr) {
       arr.splice(0, arr.length, ...new Set(arr));
@@ -62,17 +73,6 @@ export default {
         this.filteredPolicies = filteredResults;
       }
     },
-  },
-  async created() {
-    this.policies = await ApiUtil.getPolicies();
-
-    this.filteredPolicies = this.policies;
-
-    // *** May need to refactor code for better speed, efficiency, etc. ***
-    // When the HomePage component is mounted, populate the filter list with options after the above axios call is made since the filtering options are linked to the incoming data
-    // At the moment, since dummy data is being used, the removeDuplicates() method removes duplicate filtering options
-    await this.policies.forEach((policy) => this.options.push(policy.category));
-    this.removeDuplicates(this.options);
   },
 };
 </script>

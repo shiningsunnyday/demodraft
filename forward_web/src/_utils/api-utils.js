@@ -85,5 +85,17 @@ export class ApiUtil {
       console.error(error.message);
     }
   }
+  
+  static async getPoliticians() {
+    let response;
+
+    try {
+      response = await axios.get(`https://jsonplaceholder.typicode.com/users`);
+    } catch (error) {
+      console.error(error.message);
+    }
+
+    return response.data;
+  }
 }
 

@@ -24,7 +24,7 @@ import CommentForm from "@/components/comments/CommentForm";
 import { ApiUtil } from "@/_utils/api-utils";
 
 export default {
-  name: "policy-page",
+  name: "PolicyPage",
   components: {
     CommentList,
     CommentForm,
