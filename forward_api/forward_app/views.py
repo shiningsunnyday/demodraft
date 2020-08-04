@@ -28,8 +28,9 @@ class Signup(APIView, Meta):
 class Login(APIView, Meta):
     def post(self, request):
         username, password = request.data["username"], request.data["password"]
-        user = authenticate(username=username, password=password)
-        if user:
+        exists = User.objects.filter(username=username, password=password).exists()
+        if exists:
+            user = User.objects.get(username=username, password=password)
             sz = UserSerializer(user)
             return Response(sz.data, status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -43,6 +44,7 @@ class Users(APIView, Meta):
 
 
 class Policies(APIView, Meta):
+    policy_attrs = {"category", "name", "statement", "description"}
     @staticmethod
     def by_category(request, c_id):
         policies = Policy.objects.filter(category=c_id)
@@ -69,7 +71,17 @@ class Policies(APIView, Meta):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request):
-        if set(request.data.keys()) != {"category", "name", "statement", "description"}:
+        if "policy_id" in set(request.data.keys()):
+            policy = Policy.objects.get(id=int(request.data['policy_id']))
+            for k in request.data.keys():
+                if k not in Policies.policy_attrs and k != 'policy_id':
+                    return Response("Please provide only category, name, statement and description.",
+                                    status=status.HTTP_400_BAD_REQUEST)
+                setattr(policy, k, request.data[k])
+            policy.save()
+            sz = PolicyDetailedSerializer(policy)
+            return Response(sz.data, status=status.HTTP_200_OK)
+        if set(request.data.keys()) != Policies.policy_attrs:
             return Response("Please provide category, name, statement and description.",
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -136,8 +148,11 @@ class ThreadV(APIView, Meta):
             threads = policy.popularity.thread_set.all()
             all_threads = []
             for thread in threads:
-                sz = ThreadV.thread_comments(thread.id)
-                all_threads.append(sz.data)
+                comment = Comment.objects.get(id=thread.lead_comment_id)
+                sz = LeadingCommentSerializer(comment)
+                data = sz.data
+                data['thread_id'] = thread.id
+                all_threads.append(data)
             return Response(all_threads, status=status.HTTP_200_OK)
         else:
             return Response("Please provide thread_id or policy_id.", status=status.HTTP_400_BAD_REQUEST)
