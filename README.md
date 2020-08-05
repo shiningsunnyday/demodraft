@@ -19,7 +19,7 @@ Keep master always functional and base work on dev branch off master. Make a pr 
 
 ## Frontend (Alex, Jaytee)
 
-- Make sure you have [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [yarn](https://classic.yarnpkg.com/en/docs/getting-started) installed
+- Make sure you have [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) or [yarn](https://classic.yarnpkg.com/en/docs/getting-started) installed
 - Go through the `README.md` of [this repo](https://github.com/multiplegeorges/vue-cli-plugin-s3-deploy) and follow the steps for their prerequisites, installation, and usage. This will be used in cases of deploying to s3 bucket manually (see below)
 - [Visual Studio Code](https://code.visualstudio.com/) is the recommended editor with the following plugins/extensions:
   - **Auto Import** - *Automatically finds, parses and provides code actions and code completion for all available imports. Works with Typescript and TSX.*
@@ -28,6 +28,43 @@ Keep master always functional and base work on dev branch off master. Make a pr 
   - **GitLens** - *GitLens simply helps you better understand code. Quickly glimpse into whom, why, and when a line or code block was changed.*
   - **Vetur** - *For Vue syntax-highlighting, snippet, emmet, intellisense, etc.*
 - More in-depth guidelines found here: **[Frontend Guidelines](https://docs.google.com/document/d/13D1f3rSPvM5YMqcQUdHwvcPw0sA0Hqfs_N4EYA5cMPs/edit?usp=sharing)**
+
+### Project setup
+
+#### Set up config private variables
+
+```
+cd forward_web
+cd src
+cp config.json.example config.json
+```
+
+Inside `config.json` replace with:
+
+```json
+{
+  "GOOGLE_API_KEY": "AIzaSyCZEANXil1Gxu7RJK2bsDMQqRnqmuo5OD4",
+  "API_URL": "http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com"
+}
+```
+
+- As of now, using Alex's google api key and dev environment API_URL
+
+```javascript
+yarn install
+```
+
+#### Compiles and hot-reloads for development
+
+```javascript
+yarn serve
+```
+
+#### Compiles and minifies for production
+
+```javascript
+yarn build
+```
 
 ## Backend (Michael, Brian)
 
