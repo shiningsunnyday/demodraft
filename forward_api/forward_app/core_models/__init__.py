@@ -3,7 +3,7 @@ from django.db import models
 # from .politician import Politician, Campaign
 from .politician import Politician
 from .policy import Policy, Popularity, Comment, Thread
-# from .user import User, Persona
+from .user import Persona
 
 
 """

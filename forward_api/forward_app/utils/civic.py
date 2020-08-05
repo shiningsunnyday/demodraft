@@ -14,3 +14,8 @@ def fetch(address):
     for o in offices:
         names[o['levels'][0]].append({'name': o['name'], 'division_id': o['divisionId']})
     return names
+
+def fetchAddress(address):
+    r = requests.get('%s?key=%s&address=%s' % (URL, KEY, address))
+    normalizedInput = r.json()['normalizedInput']
+    return normalizedInput
