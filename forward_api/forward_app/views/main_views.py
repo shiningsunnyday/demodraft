@@ -6,10 +6,18 @@ from .meta import Meta
 
 
 class Signup(APIView, Meta):
+    def delete(self, request):
+        username, password = request.data["username"], request.data["password"]
+        user = User.objects.get(username=username, password=password)
+        user.delete()
+        return Response(status=status.HTTP_200_OK)
+
     def post(self, request):
         sz = UserSerializer(data=request.data)
         if sz.is_valid(raise_exception=True):
             sz.save()
+            user = User.objects.get(**sz.data)
+            persona = Persona.objects.create(user=user)
             return Response(sz.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

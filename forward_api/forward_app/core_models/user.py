@@ -14,7 +14,7 @@ class Persona(models.Model):
     line1 = models.CharField(max_length=200, blank=True, default='')
     city = models.CharField(max_length=200, blank=True, default='')
     state = models.CharField(max_length=20, blank=True, default='')
-    zipcode = models.IntegerField()
+    zipcode = models.IntegerField(default=0)
     class Meta:
         ordering = ['created']
 
