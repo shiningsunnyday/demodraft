@@ -18,8 +18,8 @@ import NavBar from "./components/NavBar";
 import PoliticianList from "./components/politicians/PoliticianList";
 import PoliticianCard from "./components/politicians/PoliticianCard";
 import PoliticianPage from "./views/PoliticianPage";
-import CampaignDetails from "./components/launch-campaign/CampaignDetails";
-import CampaignRegistration from "./components/launch-campaign/CampaignRegistration";
+import CampaignDetails from "./components/campaign/CampaignDetails";
+import CampaignRegistration from "./components/campaign/CampaignRegistration";
 import CampaignPage from "./views/CampaignPage";
 
 export default {

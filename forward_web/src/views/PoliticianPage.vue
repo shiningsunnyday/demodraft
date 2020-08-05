@@ -1,7 +1,5 @@
 <template>
   <div class="politician-page">
-    <h1>PoliticianPage</h1>
-
     <div class="politician-page__filter-container">
       <p id="filter">Filter:</p>
       <Multiselect
