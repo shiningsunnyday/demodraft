@@ -32,19 +32,13 @@ class PersonaTest(TestCase):
         follower1persona = Persona.objects.create(user=follower1, num_followers=1, stage=1, line1="1111 deerfield drive", city="Richmond", state="VA", zipcode=22911)
         follower1persona.save()
         follower1persona.users.add(mainAccount)
-        # include queryset w all 3 followers -- replace follower1 below w this
-        # self.assertEqual(mainpersona.users.all(),follower1)
+        self.assertEqual(mainpersona.users.get(username=follower1),follower1)
+        self.assertEqual(mainpersona.users.get(username=follower2),follower2)
+        self.assertEqual(mainpersona.users.get(username=follower3),follower3)
         self.assertEqual(mainpersona.user, mainAccount)
-        # self.assertEqual(list(mainpersona.user.followers.all()), follower1persona)
-        for e in mainpersona.user.followers.all():
-            self.assertEqual(e,follower1persona)
-
-        self.assertEqual(follower1persona.users.all(),mainAccount)
-        self.assertEqual(follower1persona.user, follower1)
-
-    #For testing the models use the "normalizedInput" return value from the Google API, which can be accessed from the response json
-    #Can be accessed r.json()['normalizedInput'] in the fetch method from utils/civic.py
-    # def testCivicAPI(self):
+        self.assertEqual(mainpersona.user.followers.get(), follower1persona)
 
 
-    
+
+
+
