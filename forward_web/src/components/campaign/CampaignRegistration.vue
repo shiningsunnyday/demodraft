@@ -28,6 +28,7 @@ export default {
     return {
       civicData: undefined,
       address: "",
+      status: null
     };
   },
   methods: {
@@ -43,11 +44,14 @@ export default {
       })
         .then((resp) => {
           this.civicData = JSON.stringify(resp.data, null, "\t");
+          this.campaignLaunchStatus = true;
         })
         .catch((err) => {
           alert("Please provide a valid address :-)");
           console.log(err);
         });
+
+      this.$store.dispatch('changeCampaignStatus');
     },
   },
 };

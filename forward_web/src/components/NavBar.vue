@@ -28,7 +28,7 @@
 
         <b-nav-item>
           <router-link to="/campaign" class="navbar__link" v-if="isLoggedIn">
-            <span v-if="!campaignLaunchStatus">Launch Campaign</span>
+            <span v-if="!userCampaignStatus">Launch Campaign</span>
             <span v-else>My Campaign</span>
           </router-link>
         </b-nav-item>
@@ -50,15 +50,12 @@
 <script>
 export default {
   name: "nav-bar",
-  props: {
-    campaignLaunchStatus: {
-      type: Boolean,
-      required: true,
-    },
-  },
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
+    },
+    userCampaignStatus() {
+      return this.$store.getters.userCampaignStatus;
     },
   },
   methods: {

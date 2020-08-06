@@ -1,10 +1,7 @@
 <template>
   <div id="app">
-    <NavBar :campaignLaunchStatus="campaignLaunchStatus" />
-    <router-view
-      :key="$route.fullPath"
-      :campaignLaunchStatus="campaignLaunchStatus"
-    />
+    <NavBar />
+    <router-view :key="$route.fullPath" />
   </div>
 </template>
 
@@ -37,12 +34,6 @@ export default {
     CampaignDetails,
     CampaignRegistration,
     CampaignPage,
-  },
-  data() {
-    return {
-      // *** Will move campaignLaunchStatus to VueX store ***
-      campaignLaunchStatus: false,
-    };
   },
   created() {
     // intercept axios call to check for unauthorized repsonse

@@ -1,8 +1,11 @@
 <template>
   <div>
     <h1>CampaignPage</h1>
-    <CampaignRegistration />
-    <CampaignDetails />
+    <CampaignRegistration v-if="!getCampaignStatus" />
+    <!-- ?? <SelectPositionComponent /> ?? 
+    After clicking the Launch button in the <CampaignRegistration /> component, send the data returned from the Google API call into this component where the user will be able to select the position(s?) they're interested in?
+    -->
+    <CampaignDetails v-if="getCampaignStatus" />
   </div>
 </template>
 
@@ -17,6 +20,11 @@ export default {
     CampaignRegistration,
     CampaignDetails,
   },
+  computed: {
+    getCampaignStatus() {
+      return this.$store.getters.userCampaignStatus;
+    }
+  }
 };
 </script>
 
