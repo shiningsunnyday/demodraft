@@ -1,22 +1,11 @@
 from django.db import models
-# from .user import User
 
 class Politician(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=100, blank=True, default='')
+    persona = models.OneToOneField('forward_app.Persona', on_delete=models.CASCADE)
+    office_id = models.IntegerField()
+    office_name = models.CharField(max_length=200, blank=True, default='')
+    fundraised = models.IntegerField(default=0)
+    fundraise_goal = models.IntegerField(default=0)
     class Meta:
         ordering = ['created']
-
-"""
-Can destroy current db.sqlite3 before migrating new Politician model
-Many-to-many relation w/ User
-"""
-# class Politician(models.Model):
-#     class Meta:
-#
-#
-# """
-# One-to-one relation w/ Politician
-# """
-# class Campaign(models.Model):
-#     class Meta:
