@@ -58,7 +58,7 @@ export default {
         username: '',
         email: '',
         password: '',
-        campaignLaunchStatus: false
+        campaignLaunchStatus: false // remove after backend established
       },
       submitted: false,
     };

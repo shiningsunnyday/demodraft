@@ -49,7 +49,7 @@ export default {
         username: '',
         email: '',
         password: '',
-        campaignLaunchStatus: false
+        campaignLaunchStatus: false // remove after backend established
       },
     };
   },
@@ -57,7 +57,7 @@ export default {
     handleSubmit() {
       const { username, email, password, campaignLaunchStatus } = this.user;
       this.$store
-        .dispatch('login', { username, password,campaignLaunchStatus })
+        .dispatch('login', { username, password, campaignLaunchStatus })
         .then(() => this.$router.push('/'))
         .catch((err) => console.log(err));
     },

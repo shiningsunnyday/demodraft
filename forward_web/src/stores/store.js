@@ -2,26 +2,26 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import createPersistedState from "vuex-persistedstate";
+import * as Config from '../config.json';
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   plugins: [
     createPersistedState({
-      storage: window.localStorage,
+      storage: window.localStorage, // temporary
     }),
   ],
   state: {
     status: "",
     token: localStorage.getItem("token") || "",
-    user: {},
+    user: {}, // holds username, email, campaignLaunchStatus
   },
   mutations: {
     auth_request(state) {
       state.status = "loading";
     },
     auth_success(state, data) {
-      // need more testing
       state.status = "success";
       state.token = data.token;
       state.user = data.user;
@@ -38,97 +38,94 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
-    login({ commit }, user) {
-      return new Promise((resolve, reject) => {
-        const userData = {
-          username: user.username,
-          email: user.email,
-          password: user.password,
-        };
+    /**
+     * @param {Object} user - Holds username, password, campaignLaunchStatus
+     */
+    async login({ commit }, user) {
+      const userData = {
+        username: user.username,
+        password: user.password,
+      };
+
+      try {
         commit("auth_request");
-        axios({
-          url:
-            "http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com/login/",
+        const response = await axios({
+          method: 'post',
+          url: `${Config.API_URL}/login/`,
           data: userData,
-          method: "post",
           headers: { "content-type": "application/json" },
-          auth: {
-            username: "demodraft",
-            password: "darkmoney",
-          },
-        })
-          .then((resp) => {
-            const authString = resp.config.headers.Authorization;
-            const token = authString.split(" ")[1];
-            // * remove these lines of code once backend is setup to accept campaignLaunchStatus
-            const newUser = resp.data;
-            newUser.campaignLaunchStatus = user.campaignLaunchStatus;
-            // *
-            const data = {
-              token: token,
-              user: newUser,
-            };
-            localStorage.setItem("token", token);
-            axios.defaults.headers.common["Authorization"] = token;
-            commit("auth_success", data);
-            resolve(resp);
-          })
-          .catch((err) => {
-            commit("auth_error");
-            localStorage.removeItem("token");
-            alert(`That wasn't correct. Try again?`);
-            reject(err);
-          });
-      });
+          auth: Config.API_AUTH
+        });
+
+        if (response) {
+          const { username, email, password } = response.data;
+          // temp token
+          const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
+          // remove campaignLaunchStatus after backend established
+          const authUser = {
+            username: username,
+            email: email,
+            campaignLaunchStatus: user.campaignLaunchStatus,
+          };
+          const stateData = { token: token, user: authUser };
+          localStorage.setItem("token", token);
+          // axios.defaults.headers.common["Authorization"] = token;
+          commit("auth_success", stateData);
+        }
+      } catch(error) {
+        commit("auth_error");
+        localStorage.removeItem("token");
+        alert(`Incorrect credentials. Try again?`);
+        console.error(error.message);
+      }
     },
-    register({ commit }, user) {
-      return new Promise((resolve, reject) => {
+    /**
+     * @param {Object} user - Holds username, email, password, campaignLaunchStatus
+     */
+    async register({ commit }, user) {
+      const userData = {
+        username: user.username,
+        email: user.email,
+        password: user.password,
+      };
+
+      try {
         commit("auth_request");
-        const userData = {
-          username: user.username,
-          email: user.email,
-          password: user.password,
-        };
-        axios({
-          url:
-            "http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com/signup/",
+        const response = await axios({
+          method: 'post',
+          url: `${Config.API_URL}/signup/`,
           data: userData,
-          method: "POST",
           headers: { "content-type": "application/json" },
-          auth: {
-            username: "demodraft",
-            password: "darkmoney",
-          },
-        })
-          .then((resp) => {
-            const authString = resp.config.headers.Authorization;
-            const token = authString.split(" ")[1];
-            // * remove these lines of code once backend is setup to accept campaignLaunchStatus
-            const newUser = resp.data;
-            newUser.campaignLaunchStatus = user.campaignLaunchStatus;
-            // *
-            const data = {
-              token: token,
-              user: newUser,
-            };
-            localStorage.setItem("token", token);
-            axios.defaults.headers.common["Authorization"] = token;
-            commit("auth_success", data);
-            resolve(resp);
-          })
-          .catch((err) => {
-            commit("auth_error");
-            localStorage.removeItem("token");
-            alert(`Incorrect credentials. Try again?`);
-            reject(err);
-          });
-      });
+          auth: Config.API_AUTH
+        });
+
+        if (response) {
+          const { username, email, password } = response.data;
+          // temp token
+          const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64'); 
+          // remove campaignLaunchStatus after backend established
+          const newUser = {
+            username: username,
+            email: email,
+            campaignLaunchStatus: user.campaignLaunchStatus,
+          };
+          const stateData = { token: token, user: newUser };
+          localStorage.setItem("token", token);
+          // axios.defaults.headers.common["Authorization"] = token;
+          commit("auth_success", stateData);
+        }
+      } catch(error) {
+        commit("auth_error");
+        localStorage.removeItem("token");
+        alert(`Incorrect credentials. Try again?`);
+        console.error(error.message);
+      }
     },
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         commit("logout");
         localStorage.removeItem("token");
-        delete axios.defaults.headers.common["Authorization"];
+        // delete axios.defaults.headers.common["Authorization"];
         resolve();
       });
     },
