@@ -21,7 +21,6 @@ class PersonaTest(TestCase):
         self.assertEqual(mainpersona.state,"VA")
         self.assertEqual(mainpersona.zipcode,22911)
 
-
     def testFollowers(self):
         mainAccount = User.objects.create_user(username='mainAccount')
         follower1 = User.objects.create_user(username='follower1')
@@ -36,7 +35,6 @@ class PersonaTest(TestCase):
         self.assertEqual(mainpersona.users.get(username=follower3),follower3)
         self.assertEqual(mainpersona.user, mainAccount)
         self.assertEqual(mainpersona.user.following.get(), follower1persona)
-
 
     def testcivicAPI(self):
         mainAccount = User.objects.create_user(username='mainAccount')

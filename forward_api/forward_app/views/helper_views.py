@@ -1,4 +1,4 @@
-from forward_app.utils.civic import fetchPositions, normalizeAddress, toAddress
+from forward_app.utils.civic import fetchPositions, normalizeAddress, toAddress, merge
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -30,7 +30,6 @@ class Address(APIView, Meta):
             return Response(address, status=status.HTTP_200_OK)
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
-
     def post(self, request):
         if set(request.data.keys()) != {"username", "password", "address"}:
             return Response("Please provide username and address.", status=status.HTTP_400_BAD_REQUEST)
@@ -48,7 +47,9 @@ class Address(APIView, Meta):
             return Response(positions, status=status.HTTP_200_OK)
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request):
+
+class PoliticianV(APIView, Meta):
+    def post(self, request):
         if set(request.data.keys()) != {"username", "scope", "index"}:
             return Response("Please provide username, one of local/state/country and index.",
                             status=status.HTTP_400_BAD_REQUEST)
@@ -57,11 +58,55 @@ class Address(APIView, Meta):
             user = User.objects.get(username=username)
             persona = user.persona
             address = toAddress(persona)
-            positions = fetchPositions(address)
+            positions = fetchPositions(address, indices=True)
             pos = positions[request.data['scope']][request.data['index']]
-            sz = UserSerializer(user)
-            data = sz.data
-            data['position'] = pos['name']
+            pol = Politician(persona=persona, office_id=pos['id'], name=pos['name'])
+            pol.save()
+            data = merge(UserSerializer(user).data, PoliticianSerializer(pol).data)
             return Response(data, status=status.HTTP_200_OK)
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
+
+    def put(self, request):
+        if set(request.data.keys()) != {"username", "password", "first", "last"}:
+            return Response("Please provide username, password, first name and last name.",
+                            status=status.HTTP_400_BAD_REQUEST)
+        if not Address.user_exists(request.data['username'], password=request.data['password']):
+            return Response("Either username or password is wrong.", status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(username=request.data['username'])
+        persona = user.persona
+        pol = persona.politician
+        if pol.approved:
+            sz = PoliticianSerializer(pol)
+            return Response(sz.data, status=status.HTTP_200_OK)
+        pol.approved = True
+        pol.first = request.data["first"]
+        pol.last = request.data["last"]
+        camp = Campaign(politician=pol)
+        pol.save()
+        camp.save()
+        sz = PoliticianSerializer(pol)
+        return Response(sz.data, status=status.HTTP_202_ACCEPTED)
+
+
+    def get(self, request):
+        if set(request.data.keys()) == {"id"}:
+            pol = Politician.objects.get(id=int(request.data['id']))
+            sz = CampaignSerializer(pol.campaign)
+        elif set(request.data.keys()) == set():
+            sz = PoliticianSerializer(Politician.objects.filter(approved=True), many=True)
+        else:
+            sz = PoliticianSerializer(Politician.objects.all(), many=True)
+        return Response(sz.data, status=status.HTTP_200_OK)
+
+
+class CampaignV(APIView, Meta):
+    def get(self, request):
+        if set(request.data.keys()) != {"politician_id"}:
+            return Response("Please provide politician id.", status=status.HTTP_400_BAD_REQUEST)
+        pol = Politician.objects.get(id=int(request.data['politician_id']))
+        if not pol.approved:
+            return Response("Politician not yet approved", status=status.HTTP_204_NO_CONTENT)
+        camp = pol.campaign
+        sz = CampaignSerializer(camp)
+        return Response(sz.data, status=status.HTTP_200_OK)
