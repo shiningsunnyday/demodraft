@@ -33,25 +33,9 @@ export default {
   },
   methods: {
     handleSubmit() {
-      // move this to api-uils
-      this.$http({
-        url: `https://www.googleapis.com/civicinfo/v2/representatives`,
-        method: "GET",
-        params: {
-          address: this.address,
-          key: Config.GOOGLE_API_KEY,
-        },
-      })
-        .then((resp) => {
-          this.civicData = JSON.stringify(resp.data, null, "\t");
-          this.campaignLaunchStatus = true;
-        })
-        .catch((err) => {
-          alert("Please provide a valid address :-)");
-          console.log(err);
-        });
-
-      this.$store.dispatch('changeCampaignStatus');
+      // POST /address/ 
+      // example request: {"address":"1263 Pacific Ave. Kansas City, KS"}
+      console.log("yippie!");
     },
   },
 };

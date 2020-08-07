@@ -1,11 +1,12 @@
 <template>
   <div>
     <h1>CampaignPage</h1>
-    <CampaignRegistration v-if="!getCampaignStatus" />
+    <b-button @click="toggleLaunchCampaign">Toggle Launch Campaign</b-button>
+    <CampaignRegistration v-if="!isCampaignLaunched" />
     <!-- ?? <SelectPositionComponent /> ?? 
     After clicking the Launch button in the <CampaignRegistration /> component, send the data returned from the Google API call into this component where the user will be able to select the position(s?) they're interested in?
     -->
-    <CampaignDetails v-if="getCampaignStatus" />
+    <CampaignDetails v-if="isCampaignLaunched" />
   </div>
 </template>
 
@@ -21,9 +22,15 @@ export default {
     CampaignDetails,
   },
   computed: {
-    getCampaignStatus() {
+    isCampaignLaunched() {
       return this.$store.getters.userCampaignStatus;
     }
+  },
+  methods: {
+    // for testing purposes
+    toggleLaunchCampaign() {
+      this.$store.dispatch('changeCampaignStatus');
+    },
   }
 };
 </script>
