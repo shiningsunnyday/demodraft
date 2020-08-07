@@ -22,10 +22,34 @@ class UserSerializer(serializers.ModelSerializer):
 #         fields = ['url', 'name']
 
 
-class PoliticianSerializer(serializers.HyperlinkedModelSerializer):
+class PoliticianSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField("get_username")
+
+    def get_username(self, pol):
+        return pol.persona.user.username
+    
     class Meta:
         model = Politician
-        fields = ['name']
+        fields = ['id', 'name', 'username', 'first', 'last', 'approved']
+
+
+class CampaignSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField("office_name")
+    first = serializers.SerializerMethodField("get_first")
+    last = serializers.SerializerMethodField("get_last")
+
+    def office_name(self, camp):
+        return camp.politician.name
+
+    def get_first(self, camp):
+        return camp.politician.first
+
+    def get_last(self, camp):
+        return camp.politician.last
+
+    class Meta:
+        model = Campaign
+        fields = ['id', 'first', 'last', 'name', 'fundraised', 'fundraise_goal']
 
 
 class PolicySerializer(serializers.ModelSerializer):
