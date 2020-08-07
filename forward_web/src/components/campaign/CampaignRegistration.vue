@@ -1,42 +1,17 @@
 <template>
   <div>
-    <CampaignAddressSearch :address="address" @handle-submit="handleSubmit" />
-
+    <div>{{ selectedPos }}</div>
+    <CampaignAddressSearch @handle-submit="handleSubmit" />
+    <hr>
     <b-form @submit.prevent="handleSubmitCampaign">
       <b-container>
-        <b-form-group>
-          <b-form-radio-group stacked>
-            <h4>City/County Positions</h4>
-            <CampaignFormGroup
-              label="City/County Positions"
-              :selectedPos="selectedPos"
-              :positions="cityPos"
-              @update-selected-pos="updateSelectedPos"
-            />
-
-            <h4>State Positions</h4>
-            <CampaignFormGroup
-              label="State Positions"
-              :selectedPos="selectedPos"
-              :positions="statePos"
-              @update-selected-pos="updateSelectedPos"
-            />
-
-            <h4>Federal Positions</h4>
-            <CampaignFormGroup
-              label="Federal Positions"
-              :selectedPos="selectedPos"
-              :positions="federalPos"
-              @update-selected-pos="updateSelectedPos"
-            />
-          </b-form-radio-group>
-        </b-form-group>
-
+        <CampaignFormGroup
+          :positions="positions"
+          @update-selected-pos="updateSelectedPos"
+        />
         <b-button type="submit">Launch</b-button>
       </b-container>
     </b-form>
-
-    <div>{{ selectedPos }}</div>
   </div>
 </template>
 
@@ -54,12 +29,10 @@ export default {
   },
   data() {
     return {
-      civicData: undefined,
+      civicData: {},
       address: '',
       status: null,
-      cityPos: [],
-      statePos: [],
-      federalPos: [],
+      positions: {},
       selectedPos: {},
     };
   },
@@ -67,33 +40,39 @@ export default {
     async handleSubmit(event) {
       // POST /address/
       // example request: {"address":"1263 Pacific Ave. Kansas City, KS"}
-      this.address = event; // update state
-      const data = { address: event }; // converting string to object for API purposes
-      this.civicData = await ApiUtil.postAddress(data);
-      this.statePos = [...new Set(this.civicData.data.administrativeArea1)];
-      this.federalPos = [...new Set(this.civicData.data.country)];
-
-      // *** May have to refactor or remove this originalCityArr related code later ***
-      // The API call will sometimes return duplicates of the same position titles, but with differnt division ids
-      // this forEach code prevents duplicate positions from being rendered in the list of selectable positions in the browser
-      const originalCityArr = this.civicData.data.administrativeArea2;
-      let tempSet = new Set();
-      originalCityArr.forEach((currObj) => {
-        if (!tempSet.has(currObj.name)) {
-          tempSet.add(currObj.name);
-          this.cityPos.push(currObj);
+      const response = await ApiUtil.postAddress({ address: event });
+      this.civicData = response.data;
+      this.positions = {
+        local: this.getUniquePositions(this.civicData.administrativeArea2),
+        state: this.getUniquePositions(this.civicData.administrativeArea1),
+        federal: this.getUniquePositions(this.civicData.country),
+      };
+    },
+    // *** May have to refactor or remove this method later ***
+    // The API call will sometimes return duplicates of the same position titles, but with unique division ids.
+    // This method prevents duplicate positions names from being rendered in the selectable list
+    getUniquePositions(position) { 
+      const set = new Set();
+      const result = [];
+      position.forEach(positionObject => {
+        if (!set.has(positionObject.name)) {
+          set.add(positionObject.name);
+          result.push(positionObject);
         }
       });
-    },
 
+      return result;
+    },
     async handleSubmitCampaign() {
-      let response = await ApiUtil.submitCampaign({
+      const data = {
         username: this.$store.getters.username,
         scope: this.selectedPos.scope,
-        index: this.selectedPos.index,
-      });
-    },
+        index: this.selectedPos.index,  
+      };
 
+      //let response = await ApiUtil.submitCampaign(data);
+      console.log(data);
+    },
     updateSelectedPos(event) {
       this.selectedPos = event;
     },

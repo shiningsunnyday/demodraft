@@ -24,20 +24,15 @@
 <script>
 export default {
   name: 'CampaignAddressSearch',
-  props: {
-    address: {
-      type: String,
-      required: true,
-    },
-  },
   data() {
     return {
-      internalAddress: this.address, // creating copy of props.address to prevent "mutation errors"
+      internalAddress: '',
     };
   },
   methods: {
     async handleSubmit() {
       this.$emit('handle-submit', this.internalAddress);
+      this.internalAddress = '';
     },
   },
 };
