@@ -1,20 +1,6 @@
 <template>
   <div>
-    <h1>CampaignRegistration</h1>
-
-    <b-container>
-      <b-form @submit.prevent="handleSubmit">
-        <b-form-group
-          id="address-group"
-          label="Address"
-          label-for="address"
-          description="(e.g. 1263 Pacific Ave. Kansas City, KS)"
-        >
-          <b-form-input id="address" v-model="address" type="text" required />
-        </b-form-group>
-        <b-button type="submit">Search</b-button>
-      </b-form>
-    </b-container>
+    <CampaignAddressSearch :address="address" @handle-submit="handleSubmit" />
 
     <b-form @submit.prevent="handleSubmitCampaign">
       <b-container>
@@ -25,9 +11,11 @@
             v-for="(position, index) in cityPos"
             :key="index"
           >
-            <b-form-radio :value="{ name: position.name, index: index, scope: 'local' }">{{
-              position.name
-            }}</b-form-radio>
+            <b-form-radio
+              :value="{ name: position.name, index: index, scope: 'local' }"
+            >
+              {{ position.name }}
+            </b-form-radio>
           </b-form-radio-group>
         </b-form-group>
 
@@ -38,9 +26,11 @@
             v-for="(position, index) in statePos"
             :key="index"
           >
-            <b-form-radio :value="{ name: position.name, index: index, scope: 'state' }">{{
-              position.name
-            }}</b-form-radio>
+            <b-form-radio
+              :value="{ name: position.name, index: index, scope: 'state' }"
+            >
+              {{ position.name }}
+            </b-form-radio>
           </b-form-radio-group>
         </b-form-group>
 
@@ -51,9 +41,11 @@
             v-for="(position, index) in federalPos"
             :key="index"
           >
-            <b-form-radio :value="{ name: position.name, index: index, scope: 'federal' }">{{
-              position.name
-            }}</b-form-radio>
+            <b-form-radio
+              :value="{ name: position.name, index: index, scope: 'federal' }"
+            >
+              {{ position.name }}
+            </b-form-radio>
           </b-form-radio-group>
         </b-form-group>
 
@@ -66,15 +58,19 @@
 </template>
 
 <script>
-import * as Config from "@/config.json";
-import { ApiUtil } from "@/_utils/api-utils";
+import CampaignAddressSearch from './CampaignAddressSearch';
+import * as Config from '@/config.json';
+import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
-  name: "CampaignRegistration",
+  name: 'CampaignRegistration',
+  components: {
+    CampaignAddressSearch
+  },
   data() {
     return {
       civicData: undefined,
-      address: "",
+      address: '',
       status: null,
       cityPos: [],
       statePos: [],
@@ -83,10 +79,11 @@ export default {
     };
   },
   methods: {
-    async handleSubmit() {
+    async handleSubmit(event) {
       // POST /address/
       // example request: {"address":"1263 Pacific Ave. Kansas City, KS"}
-      const data = { address: this.address };
+      this.address = event; // update state
+      const data = { address: event}; // converting string to object for API purposes
       this.civicData = await ApiUtil.postAddress(data);
       this.statePos = [...new Set(this.civicData.data.administrativeArea1)];
       this.federalPos = [...new Set(this.civicData.data.country)];
@@ -103,8 +100,13 @@ export default {
         }
       });
     },
+
     async handleSubmitCampaign() {
-      let response = await ApiUtil.submitCampaign({username: this.$store.getters.username, scope: this.selectedPos.scope, index: this.selectedPos.index});
+      let response = await ApiUtil.submitCampaign({
+        username: this.$store.getters.username,
+        scope: this.selectedPos.scope,
+        index: this.selectedPos.index,
+      });
 
       console.log(response);
     },

@@ -6,21 +6,22 @@
 </template>
 
 <script>
-import LoginPage from "./views/LoginPage";
-import HomePage from "./views/HomePage";
-import SignUp from "./views/SignUp";
-import PolicyPage from "./views/PolicyPage";
-import AboutPage from "./views/AboutPage";
-import NavBar from "./components/NavBar";
-import PoliticianList from "./components/politicians/PoliticianList";
-import PoliticianCard from "./components/politicians/PoliticianCard";
-import PoliticianPage from "./views/PoliticianPage";
-import CampaignDetails from "./components/campaign/CampaignDetails";
-import CampaignRegistration from "./components/campaign/CampaignRegistration";
-import CampaignPage from "./views/CampaignPage";
+import LoginPage from './views/LoginPage';
+import HomePage from './views/HomePage';
+import SignUp from './views/SignUp';
+import PolicyPage from './views/PolicyPage';
+import AboutPage from './views/AboutPage';
+import NavBar from './components/NavBar';
+import PoliticianList from './components/politicians/PoliticianList';
+import PoliticianCard from './components/politicians/PoliticianCard';
+import PoliticianPage from './views/PoliticianPage';
+import CampaignDetails from './components/campaign/CampaignDetails';
+import CampaignRegistration from './components/campaign/CampaignRegistration';
+import CampaignAddressSearch from './components/campaign/CampaignAddressSearch';
+import CampaignPage from './views/CampaignPage';
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     AboutPage,
     LoginPage,
@@ -33,6 +34,7 @@ export default {
     PoliticianPage,
     CampaignDetails,
     CampaignRegistration,
+    CampaignAddressSearch,
     CampaignPage,
   },
   created() {
@@ -40,7 +42,7 @@ export default {
     this.$http.interceptors.response.use(undefined, function(err) {
       return new Promise(function(resolve, reject) {
         if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-          this.$store.dispatch("logout");
+          this.$store.dispatch('logout');
         }
         throw err;
       });
