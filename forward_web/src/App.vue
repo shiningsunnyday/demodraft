@@ -18,6 +18,7 @@ import PoliticianPage from './views/PoliticianPage';
 import CampaignDetails from './components/campaign/CampaignDetails';
 import CampaignRegistration from './components/campaign/CampaignRegistration';
 import CampaignAddressSearch from './components/campaign/CampaignAddressSearch';
+import CampaignFormGroup from './components/campaign/CampaignFormGroup';
 import CampaignPage from './views/CampaignPage';
 
 export default {
@@ -35,6 +36,7 @@ export default {
     CampaignDetails,
     CampaignRegistration,
     CampaignAddressSearch,
+    CampaignFormGroup,
     CampaignPage,
   },
   created() {

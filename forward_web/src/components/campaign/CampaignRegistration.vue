@@ -4,48 +4,31 @@
 
     <b-form @submit.prevent="handleSubmitCampaign">
       <b-container>
-        <b-form-group label="City/County Positions">
-          <b-form-radio-group
-            stacked
-            v-model="selectedPos"
-            v-for="(position, index) in cityPos"
-            :key="index"
-          >
-            <b-form-radio
-              :value="{ name: position.name, index: index, scope: 'local' }"
-            >
-              {{ position.name }}
-            </b-form-radio>
-          </b-form-radio-group>
-        </b-form-group>
+        <b-form-group>
+          <b-form-radio-group stacked>
+            <h4>City/County Positions</h4>
+            <CampaignFormGroup
+              label="City/County Positions"
+              :selectedPos="selectedPos"
+              :positions="cityPos"
+              @update-selected-pos="updateSelectedPos"
+            />
 
-        <b-form-group label="State Positions">
-          <b-form-radio-group
-            stacked
-            v-model="selectedPos"
-            v-for="(position, index) in statePos"
-            :key="index"
-          >
-            <b-form-radio
-              :value="{ name: position.name, index: index, scope: 'state' }"
-            >
-              {{ position.name }}
-            </b-form-radio>
-          </b-form-radio-group>
-        </b-form-group>
+            <h4>State Positions</h4>
+            <CampaignFormGroup
+              label="State Positions"
+              :selectedPos="selectedPos"
+              :positions="statePos"
+              @update-selected-pos="updateSelectedPos"
+            />
 
-        <b-form-group label="Federal Positions">
-          <b-form-radio-group
-            stacked
-            v-model="selectedPos"
-            v-for="(position, index) in federalPos"
-            :key="index"
-          >
-            <b-form-radio
-              :value="{ name: position.name, index: index, scope: 'federal' }"
-            >
-              {{ position.name }}
-            </b-form-radio>
+            <h4>Federal Positions</h4>
+            <CampaignFormGroup
+              label="Federal Positions"
+              :selectedPos="selectedPos"
+              :positions="federalPos"
+              @update-selected-pos="updateSelectedPos"
+            />
           </b-form-radio-group>
         </b-form-group>
 
@@ -59,13 +42,15 @@
 
 <script>
 import CampaignAddressSearch from './CampaignAddressSearch';
+import CampaignFormGroup from './CampaignFormGroup';
 import * as Config from '@/config.json';
 import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
   name: 'CampaignRegistration',
   components: {
-    CampaignAddressSearch
+    CampaignAddressSearch,
+    CampaignFormGroup,
   },
   data() {
     return {
@@ -83,7 +68,7 @@ export default {
       // POST /address/
       // example request: {"address":"1263 Pacific Ave. Kansas City, KS"}
       this.address = event; // update state
-      const data = { address: event}; // converting string to object for API purposes
+      const data = { address: event }; // converting string to object for API purposes
       this.civicData = await ApiUtil.postAddress(data);
       this.statePos = [...new Set(this.civicData.data.administrativeArea1)];
       this.federalPos = [...new Set(this.civicData.data.country)];
@@ -107,8 +92,10 @@ export default {
         scope: this.selectedPos.scope,
         index: this.selectedPos.index,
       });
+    },
 
-      console.log(response);
+    updateSelectedPos(event) {
+      this.selectedPos = event;
     },
   },
 };
