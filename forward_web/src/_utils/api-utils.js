@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as Config from '../config.json';
+import * as Config from "../config.json";
 export class ApiUtil {
   static async getPolicies() {
     let response;
@@ -49,7 +49,7 @@ export class ApiUtil {
   static async policyLike(id) {
     let response;
     try {
-      response = await axios.put(`${Config.API_URL}/policy/`, {id: id});
+      response = await axios.put(`${Config.API_URL}/policy/`, { id: id });
     } catch (error) {
       console.error(error.message);
     }
@@ -59,11 +59,13 @@ export class ApiUtil {
   static async commentLike(id) {
     let response;
     try {
-      response = await axios.patch(`${Config.API_URL}/comment/`, {comment_id: id});
+      response = await axios.patch(`${Config.API_URL}/comment/`, {
+        comment_id: id,
+      });
     } catch (error) {
       console.error(error.message);
     }
-    
+
     return response.data.likes;
   }
 
@@ -82,7 +84,7 @@ export class ApiUtil {
       console.error(error.message);
     }
   }
-  
+
   static async getPoliticians() {
     let response;
 
@@ -99,12 +101,31 @@ export class ApiUtil {
     let response;
 
     try {
-      response = await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`);
+      response = await axios.get(
+        `https://jsonplaceholder.typicode.com/users/${id}`
+      );
     } catch (error) {
       console.error(error.message);
     }
 
     return response.data;
   }
-}
 
+  static async postAddress(data) {
+    try {
+      return await axios.post(`${Config.API_URL}/address/`, data);
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
+  }
+
+  static async submitCampaign(data) {
+    try {
+      return await axios.put(`${Config.API_URL}/address/`, data);
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
+  }
+}
