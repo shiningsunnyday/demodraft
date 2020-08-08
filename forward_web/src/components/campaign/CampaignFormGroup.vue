@@ -1,44 +1,39 @@
 <template>
-  <!-- <b-form-group :label="label"> -->
-  <!-- <b-form-radio-group stacked> -->
-  <div>
-    <b-form-radio
-      @change="selectPos"
-      v-model="internalSelectedPos"
-      v-for="(position, index) in positions"
-      :key="index"
-      :value="{ name: position.name, index: index, scope: `${label}` }"
+  <b-form-group>
+    <b-form-radio-group
+      v-for="(position, keyName) in positions"
+      :key="keyName"
+      stacked
     >
-      {{ position.name }}
-    </b-form-radio>
-  </div>
-  <!-- </b-form-radio-group> -->
-  <!-- </b-form-group> -->
+      <h4>{{keyName.toUpperCase()}}</h4>
+      <b-form-radio
+        v-model="internalSelectedPos"
+        v-for="(positionObject, index) in position"
+        :key="index"
+        :value="{ name: positionObject.name, index: index, scope: `${keyName}` }"
+      >
+        {{ positionObject.name }}
+      </b-form-radio>
+    </b-form-radio-group>
+  </b-form-group>
 </template>
 
 <script>
 export default {
   name: 'CampaignFormGroup',
   props: {
-    label: {
-      type: String,
-    },
-    selectedPos: {
-      type: Object,
-    },
-    positions: {
-      type: Array,
-    },
+    scope: String,
+    positions: Object
   },
   data() {
     return {
-      internalSelectedPos: this.selectedPos, // creating copy of props.selectedPos to prevent "mutation errors"
+      internalSelectedPos: '',
     };
   },
-  methods: {
-    selectPos() {
+  watch: {
+    internalSelectedPos: function() {
       this.$emit('update-selected-pos', this.internalSelectedPos);
-    },
+    }
   },
 };
 </script>

@@ -9,7 +9,7 @@
   >
     <b-card-text>
       <BIconBuilding class="politician-card__icon" :scale="1.5" />
-      {{ politician.address.city }}
+      {{ politician.first }} {{ politician.last }}
     </b-card-text>
 
     <BButton href="#" variant="Link">

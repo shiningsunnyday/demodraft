@@ -9,12 +9,12 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   plugins: [
     createPersistedState({
-      storage: window.localStorage, // temporary
+      storage: window.sessionStorage, // temporary
     }),
   ],
   state: {
     status: "",
-    token: localStorage.getItem("token") || "",
+    token: sessionStorage.getItem("token") || "",
     user: {}, // holds username, email, campaignLaunchStatus
   },
   mutations: {
@@ -64,17 +64,18 @@ export const store = new Vuex.Store({
           // remove campaignLaunchStatus after backend established
           const authUser = {
             username: username,
+            password: password, // security risk, will need to use session cookies/JWT
             email: email,
             campaignLaunchStatus: user.campaignLaunchStatus,
           };
           const stateData = { token: token, user: authUser };
-          localStorage.setItem("token", token);
+          sessionStorage.setItem("token", token);
           // axios.defaults.headers.common["Authorization"] = token;
           commit("auth_success", stateData);
         }
       } catch(error) {
         commit("auth_error");
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         alert(`Incorrect credentials. Try again?`);
         console.error(error.message);
       }
@@ -107,16 +108,17 @@ export const store = new Vuex.Store({
           const newUser = {
             username: username,
             email: email,
+            password: password, // security risk, will need to use session cookies/JWT
             campaignLaunchStatus: user.campaignLaunchStatus,
           };
           const stateData = { token: token, user: newUser };
-          localStorage.setItem("token", token);
+          sessionStorage.setItem("token", token);
           // axios.defaults.headers.common["Authorization"] = token;
           commit("auth_success", stateData);
         }
       } catch(error) {
         commit("auth_error");
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         alert(`Incorrect credentials. Try again?`);
         console.error(error.message);
       }
@@ -124,7 +126,7 @@ export const store = new Vuex.Store({
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         commit("logout");
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         // delete axios.defaults.headers.common["Authorization"];
         resolve();
       });
@@ -137,6 +139,7 @@ export const store = new Vuex.Store({
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
     username: (state) => state.user.username,
+    password: (state) => state.user.password, // security risk, will need to use session cookies/JWT
     userCampaignStatus: (state) => state.user.campaignLaunchStatus,
   },
 });
