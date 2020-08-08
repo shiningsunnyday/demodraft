@@ -52,18 +52,6 @@ class Address(APIView, Meta):
 
 
 class PoliticianV(APIView, Meta):
-    # def sendEmail(username, email){
-    #     # template = render_to_string('forward_app/utils/email/template.html',{'username': username, 'email':email, 'position':position})
-    #         email = EmailMessage(
-    #         'New Politician: ' + username + ' registered!',
-    #         'template'+email,
-    #         settings.EMAIL_HOST_USER,
-    #         ['bl195@duke.edu']
-    #         )
-    #         email.fail_silently=False
-    #         email.send()
-    # }
-
     def post(self, request):
         if set(request.data.keys()) != {"username", "scope", "index"}:
             return Response("Please provide username, one of local/state/country and index.",
@@ -83,7 +71,6 @@ class PoliticianV(APIView, Meta):
                 pol = Politician(persona=persona, office_id=pos['id'], name=pos['name'])
             pol.save()
             data = merge(UserSerializer(user).data, PoliticianSerializer(pol).data)
-            # template = render_to_string('forward_api/forward_app/utils/email/template.html',{'username': user.username, 'email':user.email, 'position':pos['name']})
             email = EmailMessage(
             'New Politician: ' + user.username + ' registered!', 'Email: '+user.email+ '\nPosition: '+pos['name'], settings.EMAIL_HOST_USER, ['demodraftapp@gmail.com']
             )
