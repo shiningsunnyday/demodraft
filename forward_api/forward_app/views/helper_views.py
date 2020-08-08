@@ -60,7 +60,12 @@ class PoliticianV(APIView, Meta):
             address = toAddress(persona)
             positions = fetchPositions(address, indices=True)
             pos = positions[request.data['scope']][request.data['index']]
-            pol = Politician(persona=persona, office_id=pos['id'], name=pos['name'])
+            if Politician.objects.filter(persona=persona).exists():
+                pol = Politician.objects.get(persona=persona)
+                pol.office_id = pos['id']
+                pol.name = pos['name']
+            else:
+                pol = Politician(persona=persona, office_id=pos['id'], name=pos['name'])
             pol.save()
             data = merge(UserSerializer(user).data, PoliticianSerializer(pol).data)
             return Response(data, status=status.HTTP_200_OK)
