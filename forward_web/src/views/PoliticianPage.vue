@@ -38,14 +38,14 @@ export default {
     };
   },
   async created() {
-    this.politicians = await ApiUtil.getPoliticians();
+    this.politicians = await ApiUtil.getAllPoliticians();
     this.filteredPoliticians = await this.politicians;
 
     // Populates a components filter list with filtering options that are linked to the incoming data
     let tempPoliticiansArr = [];
     this.politicians.forEach((politician) => {
-      const location = politician.address.city;
-      tempPoliticiansArr.push(location);
+      const position = politician.name;
+      tempPoliticiansArr.push(position);
     });
     // remove duplicate filtering options that populate the filtering lists
     this.options = [...new Set(tempPoliticiansArr)];
@@ -58,9 +58,9 @@ export default {
         this.filteredPoliticians = this.politicians;
       } else {
         let filteredResults = this.politicians.filter(function(politician) {
-          const location = politician.address.city;
+          const position = politician.name;
 
-          return this.indexOf(location) > -1;
+          return this.indexOf(position) > -1;
         }, this.selectedValues);
 
         this.filteredPoliticians = filteredResults;

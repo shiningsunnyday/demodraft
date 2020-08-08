@@ -85,11 +85,11 @@ export class ApiUtil {
     }
   }
 
-  static async getPoliticians() {
+  static async getAllPoliticians() {
     let response;
 
     try {
-      response = await axios.get(`https://jsonplaceholder.typicode.com/users`);
+      response = await axios.get(`${Config.API_URL}/politician/`);
     } catch (error) {
       console.error(error.message);
     }
@@ -101,9 +101,7 @@ export class ApiUtil {
     let response;
 
     try {
-      response = await axios.get(
-        `https://jsonplaceholder.typicode.com/users/${id}`
-      );
+      response = await axios.get(`${Config.API_URL}/politician/?politician_id=${id}`);
     } catch (error) {
       console.error(error.message);
     }
@@ -115,7 +113,6 @@ export class ApiUtil {
     try {
       return await axios.post(`${Config.API_URL}/address/`, data);
     } catch (error) {
-      console.error(error.message);
       alert(error.message);
     }
   }

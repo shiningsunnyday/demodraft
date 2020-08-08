@@ -40,17 +40,21 @@ export default {
     async handleSubmit(event) {
       // POST /address/
       // example request: {"address":"1263 Pacific Ave. Kansas City, KS"}
-      const response = await ApiUtil.postAddress({ 
-        username: this.$store.getters.username,
-        password: this.$store.getters.password, // security risk, will need to use session cookies/JWT
-        address: event 
-      });
-      this.civicData = response.data;
-      this.positions = {
-        local: this.civicData.local,
-        state: this.civicData.state,
-        country: this.civicData.country,
-      };
+      try {
+        const response = await ApiUtil.postAddress({ 
+          username: this.$store.getters.username,
+          password: this.$store.getters.password, // security risk, will need to use session cookies/JWT
+          address: event 
+        });
+        this.civicData = response.data;
+        this.positions = {
+          local: this.civicData.local,
+          state: this.civicData.state,
+          country: this.civicData.country,
+        }; 
+      } catch (error) {
+        console.log(error.message);
+      }
     },
     // *** May have to refactor or remove this method later ***
     // The API call will sometimes return duplicates of the same position titles, but with unique division ids.
