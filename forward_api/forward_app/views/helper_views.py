@@ -71,7 +71,6 @@ class PoliticianV(APIView, Meta):
             return Response(data, status=status.HTTP_200_OK)
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
-
     def put(self, request):
         if set(request.data.keys()) != {"username", "password", "first", "last"}:
             return Response("Please provide username, password, first name and last name.",
@@ -93,12 +92,11 @@ class PoliticianV(APIView, Meta):
         sz = PoliticianSerializer(pol)
         return Response(sz.data, status=status.HTTP_202_ACCEPTED)
 
-
     def get(self, request):
-        if set(request.data.keys()) == {"id"}:
-            pol = Politician.objects.get(id=int(request.data['id']))
+        if set(request.GET.keys()) == {"politician_id"}:
+            pol = Politician.objects.get(id=int(request.GET['politician_id']))
             sz = CampaignSerializer(pol.campaign)
-        elif set(request.data.keys()) == set():
+        elif set(request.GET.keys()) == set():
             sz = PoliticianSerializer(Politician.objects.filter(approved=True), many=True)
         else:
             sz = PoliticianSerializer(Politician.objects.all(), many=True)
@@ -107,9 +105,9 @@ class PoliticianV(APIView, Meta):
 
 class CampaignV(APIView, Meta):
     def get(self, request):
-        if set(request.data.keys()) != {"politician_id"}:
+        if set(request.GET.keys()) != {"politician_id"}:
             return Response("Please provide politician id.", status=status.HTTP_400_BAD_REQUEST)
-        pol = Politician.objects.get(id=int(request.data['politician_id']))
+        pol = Politician.objects.get(id=int(request.GET['politician_id']))
         if not pol.approved:
             return Response("Politician not yet approved", status=status.HTTP_204_NO_CONTENT)
         camp = pol.campaign
