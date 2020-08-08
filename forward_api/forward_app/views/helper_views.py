@@ -4,6 +4,9 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .meta import Meta
 from forward_app.serializers import *
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.template.loader import render_to_string
 
 
 class Address(APIView, Meta):
@@ -68,6 +71,11 @@ class PoliticianV(APIView, Meta):
                 pol = Politician(persona=persona, office_id=pos['id'], name=pos['name'])
             pol.save()
             data = merge(UserSerializer(user).data, PoliticianSerializer(pol).data)
+            email = EmailMessage(
+            'New Politician: ' + user.username + ' registered!', 'Email: '+user.email+ '\nPosition: '+pos['name'], settings.EMAIL_HOST_USER, ['demodraftapp@gmail.com']
+            )
+            email.fail_silently=False
+            email.send()
             return Response(data, status=status.HTTP_200_OK)
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
