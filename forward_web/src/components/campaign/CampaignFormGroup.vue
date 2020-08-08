@@ -2,6 +2,7 @@
   <b-form-group>
     <b-form-radio-group
       v-for="(position, keyName) in positions"
+      :key="keyName"
       stacked
     >
       <h4>{{keyName.toUpperCase()}}</h4>

@@ -40,12 +40,16 @@ export default {
     async handleSubmit(event) {
       // POST /address/
       // example request: {"address":"1263 Pacific Ave. Kansas City, KS"}
-      const response = await ApiUtil.postAddress({ address: event });
+      const response = await ApiUtil.postAddress({ 
+        username: this.$store.getters.username,
+        password: this.$store.getters.password, // security risk, will need to use session cookies/JWT
+        address: event 
+      });
       this.civicData = response.data;
       this.positions = {
-        local: this.getUniquePositions(this.civicData.administrativeArea2),
-        state: this.getUniquePositions(this.civicData.administrativeArea1),
-        federal: this.getUniquePositions(this.civicData.country),
+        local: this.civicData.local,
+        state: this.civicData.state,
+        country: this.civicData.country,
       };
     },
     // *** May have to refactor or remove this method later ***
@@ -70,8 +74,13 @@ export default {
         index: this.selectedPos.index,  
       };
 
-      //let response = await ApiUtil.submitCampaign(data);
-      console.log(data);
+      if (data.scope) {
+        const response = await ApiUtil.submitCampaign(data);
+        console.log(response);
+      } else {
+        alert('Choose a position for your campaign!');
+      }
+      
     },
     updateSelectedPos(event) {
       this.selectedPos = event;

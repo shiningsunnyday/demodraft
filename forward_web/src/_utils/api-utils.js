@@ -122,7 +122,7 @@ export class ApiUtil {
 
   static async submitCampaign(data) {
     try {
-      return await axios.put(`${Config.API_URL}/address/`, data);
+      return await axios.post(`${Config.API_URL}/politician/`, data);
     } catch (error) {
       console.error(error.message);
       alert(error.message);
