@@ -29,14 +29,21 @@ class Login(APIView, Meta):
         if exists:
             user = User.objects.get(username=username, password=password)
             sz = UserSerializer(user)
-            return Response(sz.data, status=status.HTTP_202_ACCEPTED)
+            try:
+                persona = user.persona
+                approved = persona.politician.approved
+                data = sz.data
+                data['approved'] = approved
+                return Response(data, status=status.HTTP_202_ACCEPTED)
+            except AttributeError:
+                return Response(sz.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class Users(APIView, Meta):
     def get(self, request):
         users = User.objects.all()
-        sz = UserSerializer(users, many=True)
+        sz = UsernameSerializer(users, many=True)
         return Response(sz.data, status=status.HTTP_200_OK)
 
 

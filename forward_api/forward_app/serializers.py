@@ -10,11 +10,15 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Email already exists.")
         return email
 
-
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
 
+
+class UsernameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username']
 
 # class GroupSerializer(serializers.HyperlinkedModelSerializer):
 #     class Meta:
