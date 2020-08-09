@@ -42,9 +42,9 @@
 </template>
 
 <script>
-import PolicyList from '@/components/PolicyList';
-import Multiselect from 'vue-multiselect';
-import { ApiUtil } from '@/_utils/api-utils';
+import PolicyList from "@/components/PolicyList";
+import Multiselect from "vue-multiselect";
+import { ApiUtil } from "@/_utils/api-utils";
 
 export default {
   name: 'home-page',
