@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div>{{ selectedPos }}</div>
     <CampaignAddressSearch @handle-submit="handleSubmit" />
     <hr>
     <b-form @submit.prevent="handleSubmitCampaign">
@@ -80,6 +79,8 @@ export default {
 
       if (data.scope) {
         const response = await ApiUtil.submitCampaign(data);
+
+        this.$store.dispatch('changeCampaignStatus');
         console.log(response);
       } else {
         alert('Choose a position for your campaign!');
@@ -90,6 +91,9 @@ export default {
       this.selectedPos = event;
     },
   },
+  created() {
+    console.log(this.$store.getters.getUserInfo);
+  }
 };
 </script>
 

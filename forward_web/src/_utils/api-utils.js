@@ -1,5 +1,5 @@
-import axios from "axios";
-import * as Config from "../config.json";
+import axios from 'axios';
+import * as Config from '../config.json';
 export class ApiUtil {
   static async getPolicies() {
     let response;
@@ -101,7 +101,9 @@ export class ApiUtil {
     let response;
 
     try {
-      response = await axios.get(`${Config.API_URL}/politician/?politician_id=${id}`);
+      response = await axios.get(
+        `${Config.API_URL}/politician/?politician_id=${id}`
+      );
     } catch (error) {
       console.error(error.message);
     }
@@ -120,6 +122,15 @@ export class ApiUtil {
   static async submitCampaign(data) {
     try {
       return await axios.post(`${Config.API_URL}/politician/`, data);
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
+  }
+
+  static async getCampaign(politician_id) {
+    try {
+      return await axios.get(`${Config.API_URL}/campaign/?politician_id=${politician_id}`);
     } catch (error) {
       console.error(error.message);
       alert(error.message);

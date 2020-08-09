@@ -15,7 +15,7 @@ export const store = new Vuex.Store({
   state: {
     status: "",
     token: sessionStorage.getItem("token") || "",
-    user: {}, // holds username, email, campaignLaunchStatus
+    user: {}, // holds username, email, password, approved, politician_id
   },
   mutations: {
     auth_request(state) {
@@ -58,7 +58,7 @@ export const store = new Vuex.Store({
         });
 
         if (response) {
-          const { username, email, password } = response.data;
+          const { username, email, password, approved, politician_id } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
           // remove campaignLaunchStatus after backend established
@@ -66,6 +66,8 @@ export const store = new Vuex.Store({
             username: username,
             password: password, // security risk, will need to use session cookies/JWT
             email: email,
+            approved: approved,
+            politician_id: politician_id,
             campaignLaunchStatus: user.campaignLaunchStatus,
           };
           const stateData = { token: token, user: authUser };
@@ -141,5 +143,6 @@ export const store = new Vuex.Store({
     username: (state) => state.user.username,
     password: (state) => state.user.password, // security risk, will need to use session cookies/JWT
     userCampaignStatus: (state) => state.user.campaignLaunchStatus,
+    getUserInfo: (state) => state.user,
   },
 });
