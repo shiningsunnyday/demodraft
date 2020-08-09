@@ -58,7 +58,6 @@ export default {
         username: '',
         email: '',
         password: '',
-        campaignLaunchStatus: false // remove after backend established
       },
       submitted: false,
     };
@@ -66,13 +65,12 @@ export default {
   methods: {
     async handleSubmit() {
       this.submitted = true;
-      const { username, email, password, campaignLaunchStatus } = this.user;
+      const { username, email, password } = this.user;
 
       let data = {
         username: username,
         email: email,
         password: password,
-        campaignLaunchStatus: campaignLaunchStatus,
       };
 
       this.$store
