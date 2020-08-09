@@ -58,6 +58,7 @@ export const store = new Vuex.Store({
         });
 
         if (response) {
+          console.log(response.data);
           const { username, email, password } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');

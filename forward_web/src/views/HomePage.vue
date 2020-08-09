@@ -18,18 +18,36 @@
     </div>
 
     <div class="home__policies-container">
-      <PolicyList v-bind:filteredPolicies="filteredPolicies" />
+      <!-- add isfiltered boolean -->
+      <!-- <PolicyList v-bind:filteredPolicies="filteredPolicies" /> -->
+      <DynamicScroller
+        :items="filteredPolicies"
+        :min-item-size="54"
+        class="scroller"
+      >
+        <template v-slot="{ policy, index, active }">
+          <DynamicScrollerItem
+            v-if="policy"
+            :item="policy"
+            :active="active"
+            :size-dependencies="[policy.name]"
+            :data-index="index"
+          >
+            <div class="name">{{ policy.name }}</div>
+          </DynamicScrollerItem>
+        </template>
+      </DynamicScroller>
     </div>
   </div>
 </template>
 
 <script>
-import PolicyList from "@/components/PolicyList";
-import Multiselect from "vue-multiselect";
-import { ApiUtil } from "@/_utils/api-utils";
+import PolicyList from '@/components/PolicyList';
+import Multiselect from 'vue-multiselect';
+import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
-  name: "home-page",
+  name: 'home-page',
   components: {
     PolicyList,
     Multiselect,
@@ -48,7 +66,7 @@ export default {
 
     // Populates a components filter list with filtering options that are linked to the incoming data
     let tempPoliciesArr = [];
-    this.policies.forEach(policy => tempPoliciesArr.push(policy.category));
+    this.policies.forEach((policy) => tempPoliciesArr.push(policy.category));
     // remove duplicate filtering options that populate the filtering lists
     this.options = [...new Set(tempPoliciesArr)];
   },
@@ -57,7 +75,7 @@ export default {
       // If no filter options are selected, render all the policies
       // otherwise, only render policies whose 'userId' property match the currently selected filter option
       if (this.selectedValues.length === 0) {
-        this.filteredPolicies = this.policies;
+        this.filteredPolicies = Object.freeze(this.policies);
       } else {
         // *** I think the best way to go about filtering out the policies based on what's selected is to use "URL querying", but this will have to be built into the backend API ***
         let filteredResults = this.policies.filter(function(policy) {
@@ -75,6 +93,16 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="scss" scoped>
+.scroller {
+  height: 100%;
+}
+
+.name {
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+}
+
 .home {
   text-align: center;
 

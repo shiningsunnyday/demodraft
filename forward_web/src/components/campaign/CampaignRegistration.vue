@@ -52,6 +52,7 @@ export default {
           state: this.civicData.state,
           country: this.civicData.country,
         }; 
+        console.log(this.civicData);
       } catch (error) {
         console.log(error.message);
       }
