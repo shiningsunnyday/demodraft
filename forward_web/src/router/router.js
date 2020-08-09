@@ -9,6 +9,7 @@ import PolicyPage from "../views/PolicyPage";
 import AboutPage from "../views/AboutPage";
 import PoliticianPage from "../views/PoliticianPage";
 import SelectedPolitician from "../components/politicians/SelectedPolitician";
+import CampaignPage from "@/views/CampaignPage";
 
 Vue.use(VueRouter);
 
@@ -55,6 +56,11 @@ const routes = [
     name: "selected-politician",
     component: SelectedPolitician,
     props: true,
+  },
+  {
+    path: "/campaign",
+    name: "campaign-page",
+    component: CampaignPage,
   },
 ];
 

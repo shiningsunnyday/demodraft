@@ -1,14 +1,11 @@
 import axios from "axios";
-
+import * as Config from "../config.json";
 export class ApiUtil {
-
-  static api_url = "http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com";
-
   static async getPolicies() {
     let response;
 
     try {
-      response = await axios.get(`${ApiUtil.api_url}/policies/`);
+      response = await axios.get(`${Config.API_URL}/policies/`);
     } catch (error) {
       console.error(error.message);
     }
@@ -19,7 +16,7 @@ export class ApiUtil {
   static async getPolicy(id) {
     let response;
     try {
-      response = await axios.get(`${ApiUtil.api_url}/policy/?id=${id}`);
+      response = await axios.get(`${Config.API_URL}/policy/?id=${id}`);
     } catch (error) {
       console.error(error.message);
     }
@@ -30,7 +27,7 @@ export class ApiUtil {
   static async getPolicyComments(id) {
     let response;
     try {
-      response = await axios.get(`${ApiUtil.api_url}/thread/?policy_id=${id}`);
+      response = await axios.get(`${Config.API_URL}/thread/?policy_id=${id}`);
     } catch (error) {
       console.error(error.message);
     }
@@ -41,7 +38,7 @@ export class ApiUtil {
   static async getThreadFromComment(id) {
     let response;
     try {
-      response = await axios.get(`${ApiUtil.api_url}/thread/?thread_id=${id}`);
+      response = await axios.get(`${Config.API_URL}/thread/?thread_id=${id}`);
     } catch (error) {
       console.error(error.message);
     }
@@ -52,7 +49,7 @@ export class ApiUtil {
   static async policyLike(id) {
     let response;
     try {
-      response = await axios.put(`${ApiUtil.api_url}/policy/`, {id: id});
+      response = await axios.put(`${Config.API_URL}/policy/`, { id: id });
     } catch (error) {
       console.error(error.message);
     }
@@ -62,17 +59,19 @@ export class ApiUtil {
   static async commentLike(id) {
     let response;
     try {
-      response = await axios.patch(`${ApiUtil.api_url}/comment/`, {comment_id: id});
+      response = await axios.patch(`${Config.API_URL}/comment/`, {
+        comment_id: id,
+      });
     } catch (error) {
       console.error(error.message);
     }
-    
+
     return response.data.likes;
   }
 
   static async addNewThread(data) {
     try {
-      await axios.post(`${ApiUtil.api_url}/thread/`, data);
+      await axios.post(`${Config.API_URL}/thread/`, data);
     } catch (error) {
       console.error(error.message);
     }
@@ -80,17 +79,17 @@ export class ApiUtil {
 
   static async addNewReply(data) {
     try {
-      await axios.post(`${ApiUtil.api_url}/comment/`, data);
+      await axios.post(`${Config.API_URL}/comment/`, data);
     } catch (error) {
       console.error(error.message);
     }
   }
-  
-  static async getPoliticians() {
+
+  static async getAllPoliticians() {
     let response;
 
     try {
-      response = await axios.get(`https://jsonplaceholder.typicode.com/users`);
+      response = await axios.get(`${Config.API_URL}/politician/`);
     } catch (error) {
       console.error(error.message);
     }
@@ -102,12 +101,28 @@ export class ApiUtil {
     let response;
 
     try {
-      response = await axios.get(`https://jsonplaceholder.typicode.com/users/${id}`);
+      response = await axios.get(`${Config.API_URL}/politician/?politician_id=${id}`);
     } catch (error) {
       console.error(error.message);
     }
 
     return response.data;
   }
-}
 
+  static async postAddress(data) {
+    try {
+      return await axios.post(`${Config.API_URL}/address/`, data);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  static async submitCampaign(data) {
+    try {
+      return await axios.post(`${Config.API_URL}/politician/`, data);
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
+  }
+}
