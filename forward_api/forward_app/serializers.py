@@ -53,7 +53,13 @@ class CampaignSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Campaign
-        fields = ['id', 'first', 'last', 'name', 'fundraised', 'fundraise_goal']
+        fields = ['id', 'name', 'first', 'last', 'actblue', 'fundraised']
+
+
+class MyCampaignSerializer(CampaignSerializer):
+    class Meta:
+        model = Campaign
+        fields = ['id', 'name', 'first', 'last', 'actblue', 'fundraised', 'fundraise_goal']
 
 
 class PolicySerializer(serializers.ModelSerializer):

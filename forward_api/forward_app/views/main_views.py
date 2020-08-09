@@ -31,9 +31,11 @@ class Login(APIView, Meta):
             sz = UserSerializer(user)
             try:
                 persona = user.persona
-                approved = persona.politician.approved
+                pol = persona.politician
+                approved = pol.approved
                 data = sz.data
                 data['approved'] = approved
+                data['politician_id'] = pol.id
                 return Response(data, status=status.HTTP_202_ACCEPTED)
             except AttributeError:
                 return Response(sz.data, status=status.HTTP_200_OK)

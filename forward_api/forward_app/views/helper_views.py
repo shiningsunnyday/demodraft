@@ -62,7 +62,7 @@ class PoliticianV(APIView, Meta):
             persona = user.persona
             address = toAddress(persona)
             positions = fetchPositions(address, indices=True)
-            pos = positions[request.data['scope']][request.data['index']]
+            pos = positions[request.data['scope']][int(request.data['index'])]
             if Politician.objects.filter(persona=persona).exists():
                 pol = Politician.objects.get(persona=persona)
                 pol.office_id = pos['id']
@@ -112,6 +112,8 @@ class PoliticianV(APIView, Meta):
 
 
 class CampaignV(APIView, Meta):
+    camp_attrs = {'actblue', 'fundraise_goal'}
+
     def get(self, request):
         if set(request.GET.keys()) != {"politician_id"}:
             return Response("Please provide politician id.", status=status.HTTP_400_BAD_REQUEST)
@@ -119,5 +121,17 @@ class CampaignV(APIView, Meta):
         if not pol.approved:
             return Response("Politician not yet approved", status=status.HTTP_204_NO_CONTENT)
         camp = pol.campaign
-        sz = CampaignSerializer(camp)
+        sz = MyCampaignSerializer(camp)
+        return Response(sz.data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        if "politician_id" not in set(request.data):
+            return Response("Please provide politician id.", status=status.HTTP_400_BAD_REQUEST)
+        pol = Politician.objects.get(id=int(request.data['politician_id']))
+        camp = pol.campaign
+        for attr in CampaignV.camp_attrs:
+            if attr in request.data:
+                setattr(camp, attr, request.data[attr])
+        camp.save()
+        sz = MyCampaignSerializer(camp)
         return Response(sz.data, status=status.HTTP_200_OK)
