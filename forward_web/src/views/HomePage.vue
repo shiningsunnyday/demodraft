@@ -18,6 +18,7 @@
     </div>
 
     <div class="home__policies-container">
+      <!-- add isfiltered boolean -->
       <PolicyList v-bind:filteredPolicies="filteredPolicies" />
     </div>
   </div>
@@ -29,7 +30,7 @@ import Multiselect from "vue-multiselect";
 import { ApiUtil } from "@/_utils/api-utils";
 
 export default {
-  name: "home-page",
+  name: 'home-page',
   components: {
     PolicyList,
     Multiselect,
@@ -48,7 +49,7 @@ export default {
 
     // Populates a components filter list with filtering options that are linked to the incoming data
     let tempPoliciesArr = [];
-    this.policies.forEach(policy => tempPoliciesArr.push(policy.category));
+    this.policies.forEach((policy) => tempPoliciesArr.push(policy.category));
     // remove duplicate filtering options that populate the filtering lists
     this.options = [...new Set(tempPoliciesArr)];
   },
@@ -75,6 +76,16 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="scss" scoped>
+.scroller {
+  height: 100%;
+}
+
+.name {
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+}
+
 .home {
   text-align: center;
 

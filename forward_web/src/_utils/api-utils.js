@@ -113,7 +113,14 @@ export class ApiUtil {
 
   static async postAddress(data) {
     try {
-      return await axios.post(`${Config.API_URL}/address/`, data);
+      // return await axios.post(`${Config.API_URL}/address/`, data);
+      return await axios({
+        method: 'post',
+        url: `${Config.API_URL}/address/`,
+        data: data,
+        headers: { "content-type": "application/json" },
+        auth: Config.API_AUTH
+      });
     } catch (error) {
       alert(error.message);
     }
@@ -121,7 +128,14 @@ export class ApiUtil {
 
   static async submitCampaign(data) {
     try {
-      return await axios.post(`${Config.API_URL}/politician/`, data);
+      // return await axios.post(`${Config.API_URL}/politician/`, data);
+      return await axios({
+        method: 'post',
+        url: `${Config.API_URL}/politician/`,
+        data: data,
+        headers: { "content-type": "application/json" },
+        auth: Config.API_AUTH
+      });
     } catch (error) {
       console.error(error.message);
       alert(error.message);

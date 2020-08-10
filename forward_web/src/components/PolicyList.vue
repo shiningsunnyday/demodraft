@@ -5,10 +5,10 @@
       v-for="policy in filteredPolicies"
       :key="policy.id"
     >
-      <!-- Move this into own component later -->
       <BCard class="mb-2 policy__card">
         <b-card-title>
           <b-button
+            variant="link"
             v-b-toggle
             :href="`#collapse-${policy.id}`"
             @click.prevent
@@ -34,8 +34,8 @@
             </BButton>
           </BCard>
         </b-collapse>
-        <b-card-text class="policy__category"> 
-          Category: {{ policy.category }} 
+        <b-card-text class="policy__category">
+          Category: {{ policy.category }}
         </b-card-text>
       </BCard>
     </div>
@@ -72,6 +72,9 @@ export default {
 
   &__card {
     width: 300px;
+    @media screen and (min-width: 768px) {
+      width: 455px;
+    }
     //cursor: pointer;
   }
 
