@@ -62,6 +62,9 @@ class PoliticianV(APIView, Meta):
             persona = user.persona
             address = toAddress(persona)
             positions = fetchPositions(address, indices=True)
+            if request.data['scope'] not in {"state", "local", "country"}:
+                return Response("Scope must be one of \"local\", \"state\", or \"country\".",
+                                status=status.HTTP_400_BAD_REQUEST)
             pos = positions[request.data['scope']][int(request.data['index'])]
             if Politician.objects.filter(persona=persona).exists():
                 pol = Politician.objects.get(persona=persona)
@@ -74,7 +77,7 @@ class PoliticianV(APIView, Meta):
             email = EmailMessage(
             'New Politician: ' + user.username + ' registered!', 'Email: '+user.email+ '\nPosition: '+pos['name'], settings.EMAIL_HOST_USER, ['demodraftapp@gmail.com']
             )
-            email.fail_silently=False
+            email.fail_silently = False
             email.send()
             return Response(data, status=status.HTTP_200_OK)
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
@@ -118,8 +121,6 @@ class CampaignV(APIView, Meta):
         if set(request.GET.keys()) != {"politician_id"}:
             return Response("Please provide politician id.", status=status.HTTP_400_BAD_REQUEST)
         pol = Politician.objects.get(id=int(request.GET['politician_id']))
-        if not pol.approved:
-            return Response("Politician not yet approved", status=status.HTTP_204_NO_CONTENT)
         camp = pol.campaign
         sz = MyCampaignSerializer(camp)
         return Response(sz.data, status=status.HTTP_200_OK)

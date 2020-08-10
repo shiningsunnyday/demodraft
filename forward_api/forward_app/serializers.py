@@ -57,9 +57,15 @@ class CampaignSerializer(serializers.ModelSerializer):
 
 
 class MyCampaignSerializer(CampaignSerializer):
+    approved = serializers.SerializerMethodField("is_approved")
+
+    def is_approved(self, camp):
+        pol = camp.politician
+        return pol.approved
+
     class Meta:
         model = Campaign
-        fields = ['id', 'name', 'first', 'last', 'actblue', 'fundraised', 'fundraise_goal']
+        fields = ['id', 'approved', 'name', 'first', 'last', 'actblue', 'fundraised', 'fundraise_goal']
 
 
 class PolicySerializer(serializers.ModelSerializer):
