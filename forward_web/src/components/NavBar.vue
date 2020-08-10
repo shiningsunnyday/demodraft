@@ -49,19 +49,27 @@
 
 <script>
 export default {
-  name: "nav-bar",
+  name: 'nav-bar',
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
     },
     userCampaignStatus() {
-      return this.$store.getters.userCampaignStatus;
+      const currentUser = this.$store.getters.getUserInfo;
+
+      // campaign never launched
+      if (typeof currentUser.approved === 'undefined') {
+        return false;
+      }
+
+      // campaign launched
+      return !currentUser.approved || currentUser.approved;
     },
   },
   methods: {
     logout() {
-      this.$store.dispatch("logout").then(() => {
-        this.$router.push("/login");
+      this.$store.dispatch('logout').then(() => {
+        this.$router.push('/login');
       });
     },
   },

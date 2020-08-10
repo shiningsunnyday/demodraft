@@ -35,6 +35,9 @@ export default {
       selectedPos: {},
     };
   },
+  created() {
+    console.log(this.$store.getters.getUserInfo);
+  },
   methods: {
     async handleSubmit(event) {
       // POST /address/
@@ -78,10 +81,10 @@ export default {
       };
 
       if (data.scope) {
-        const response = await ApiUtil.submitCampaign(data);
+        //const response = await ApiUtil.submitCampaign(data);
 
-        this.$store.dispatch('changeCampaignStatus');
-        console.log(response);
+        //this.$store.dispatch('changeCampaignStatus');
+        //console.log(response);
       } else {
         alert('Choose a position for your campaign!');
       }
