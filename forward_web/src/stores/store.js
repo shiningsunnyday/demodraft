@@ -15,7 +15,7 @@ export const store = new Vuex.Store({
   state: {
     status: "",
     token: sessionStorage.getItem("token") || "",
-    user: {}, // holds username, email, password, approved, politician_id
+    user: {}, // holds username, email, password, approved, politician_id, launchStatusTest, submissionStatusTest
   },
   mutations: {
     auth_request(state) {
@@ -34,12 +34,15 @@ export const store = new Vuex.Store({
       state.token = "";
     },
     campaignStatusMutation(state) {
-      state.user.campaignLaunchStatus = !state.user.campaignLaunchStatus;
+      state.user.launchStatusTest = !state.user.launchStatusTest;
+    },
+    submissionStatusMutation(state) {
+      state.user.submissionStatusTest = !state.user.submissionStatusTest;
     },
   },
   actions: {
     /**
-     * @param {Object} user - Holds username, password, campaignLaunchStatus
+     * @param {Object} user - Holds username, password, launchStatusTest
      */
     async login({ commit }, user) {
       const userData = {
@@ -68,7 +71,8 @@ export const store = new Vuex.Store({
             email: email,
             approved: approved,
             politician_id: politician_id,
-            campaignLaunchStatus: user.campaignLaunchStatus,
+            launchStatusTest: user.launchStatusTest,
+            submissionStatusTest: user.submissionStatusTest,
           };
           const stateData = { token: token, user: authUser };
           sessionStorage.setItem("token", token);
@@ -111,7 +115,8 @@ export const store = new Vuex.Store({
             username: username,
             email: email,
             password: password, // security risk, will need to use session cookies/JWT
-            campaignLaunchStatus: user.campaignLaunchStatus,
+            launchStatusTest: user.launchStatusTest,
+            submissionStatusTest: user.submissionStatusTest,
           };
           const stateData = { token: token, user: newUser };
           sessionStorage.setItem("token", token);
@@ -133,8 +138,11 @@ export const store = new Vuex.Store({
         resolve();
       });
     },
-    changeCampaignStatus({ commit }) {
+    changeLaunchStatusTest({ commit }) {
       commit("campaignStatusMutation");
+    },
+    changeSubmissionStatusTest({ commit }) {
+      commit("submissionStatusMutation");
     },
   },
   getters: {
@@ -142,7 +150,8 @@ export const store = new Vuex.Store({
     authStatus: (state) => state.status,
     username: (state) => state.user.username,
     password: (state) => state.user.password, // security risk, will need to use session cookies/JWT
-    userCampaignStatus: (state) => state.user.campaignLaunchStatus,
     getUserInfo: (state) => state.user,
+    userLaunchStatusTest: (state) => state.user.launchStatusTest,
+    userSubmissionStatusTest: (state) => state.user.submissionStatusTest,
   },
 });

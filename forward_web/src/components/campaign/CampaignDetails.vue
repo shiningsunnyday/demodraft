@@ -1,17 +1,15 @@
 <template>
   <div>
     <h1>CampaignDetails</h1>
-    <b-button @click="toggleSubmissionStatus">Toggle Submission Status</b-button>
-
-    <b-container v-if="!fakeApproved">
+    <div v-if="!isApproved">
       <h1>Thank you for submitting your campaign! 😄</h1>
       <h3>
         Your current submission is: Pending
       </h3>
       <h4>We'll notify you when your submission status is updated</h4>
-    </b-container>
+    </div>
 
-    <b-container v-if="fakeApproved">
+    <div v-if="isApproved">
       <h1>Your Campaign Info</h1>
       <hr />
       <ul>
@@ -19,7 +17,7 @@
         <li>Fundraise Goal</li>
         <li>Funds Raised</li>
       </ul>
-    </b-container>
+    </div>
   </div>
 </template>
 
@@ -34,15 +32,20 @@ export default {
       fakeApproved: false,
     };
   },
-  methods: {
-    toggleSubmissionStatus() {
-      this.fakeApproved = !this.fakeApproved;
-    }
+  computed: {
+    isApproved() {
+      const currentUser = this.$store.getters.getUserInfo;
+
+      // campaign never launched
+      // redundant guard clause for now
+      if (typeof currentUser.approved === 'undefined') {
+        return false;
+      }
+
+      return currentUser.approved;
+    },
   },
-  // created() {
-  //   const { politician_id } = this.$store.getters.getUserInfo;
-  //   ApiUtil.getCampaign(politician_id);
-  // },
+  methods: {},
 };
 </script>
 

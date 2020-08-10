@@ -19,24 +19,7 @@
 
     <div class="home__policies-container">
       <!-- add isfiltered boolean -->
-      <!-- <PolicyList v-bind:filteredPolicies="filteredPolicies" /> -->
-      <DynamicScroller
-        :items="filteredPolicies"
-        :min-item-size="54"
-        class="scroller"
-      >
-        <template v-slot="{ policy, index, active }">
-          <DynamicScrollerItem
-            v-if="policy"
-            :item="policy"
-            :active="active"
-            :size-dependencies="[policy.name]"
-            :data-index="index"
-          >
-            <div class="name">{{ policy.name }}</div>
-          </DynamicScrollerItem>
-        </template>
-      </DynamicScroller>
+      <PolicyList v-bind:filteredPolicies="filteredPolicies" />
     </div>
   </div>
 </template>
@@ -75,7 +58,7 @@ export default {
       // If no filter options are selected, render all the policies
       // otherwise, only render policies whose 'userId' property match the currently selected filter option
       if (this.selectedValues.length === 0) {
-        this.filteredPolicies = Object.freeze(this.policies);
+        this.filteredPolicies = this.policies;
       } else {
         // *** I think the best way to go about filtering out the policies based on what's selected is to use "URL querying", but this will have to be built into the backend API ***
         let filteredResults = this.policies.filter(function(policy) {
