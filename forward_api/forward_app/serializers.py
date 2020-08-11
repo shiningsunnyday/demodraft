@@ -18,12 +18,12 @@ class UserSerializer(serializers.ModelSerializer):
 class UsernameSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['username', 'email']
 
-# class GroupSerializer(serializers.HyperlinkedModelSerializer):
-#     class Meta:
-#         model = Group
-#         fields = ['url', 'name']
+class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Group
+        fields = ['url', 'name']
 
 
 class PoliticianSerializer(serializers.ModelSerializer):
