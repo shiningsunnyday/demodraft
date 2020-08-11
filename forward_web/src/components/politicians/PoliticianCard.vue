@@ -1,6 +1,6 @@
 <template>
   <BCard
-    :title="politician.name"
+    :title="`${politician.first} ${politician.last}`"
     img-src="https://i.picsum.photos/id/1062/5092/3395.jpg?hmac=o9m7qeU51uOLfXvepXcTrk2ZPiSBJEkiiOp-Qvxja-k"
     img-alt="Image"
     style="max-width: 20rem;"
@@ -9,7 +9,7 @@
   >
     <b-card-text>
       <BIconBuilding class="politician-card__icon" :scale="1.5" />
-      {{ politician.first }} {{ politician.last }}
+      {{ politicianLocation }}
     </b-card-text>
 
     <BButton href="#" variant="Link">
@@ -29,11 +29,12 @@
 </template>
 
 <script>
-import { BIconBuilding } from "bootstrap-vue";
-import { BCard, BButton } from "bootstrap-vue";
+import { BIconBuilding } from 'bootstrap-vue';
+import { BCard, BButton } from 'bootstrap-vue';
+import { states } from '@/_utils/common-utils.js';
 
 export default {
-  name: "PoliticianCard",
+  name: 'PoliticianCard',
   components: {
     BIconBuilding,
   },
@@ -42,6 +43,22 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      states: [],
+      politicianLocation: '',
+    };
+  },
+  mounted() {
+    this.states = states;
+    const words = this.politician.name.split(/[ -]+/);
+    const set = new Set(words);
+    this.states.forEach((state) => {
+      if (set.has(state)) {
+        this.politicianLocation = state;
+      }
+    });
   },
 };
 </script>

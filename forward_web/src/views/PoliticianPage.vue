@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     filterPoliticians() {
-      // If no filter options are selected, render all the policies
+      // If no filter options are selected, render all the politicians
       // otherwise, only render politicians whose 'location' property match the currently selected filter option
       if (this.selectedValues.length === 0) {
         this.filteredPoliticians = this.politicians;
