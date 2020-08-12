@@ -163,6 +163,21 @@ class NextCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'thread_id', 'username', 'content']
 
 
+class StanceSerializer(serializers.ModelSerializer):
+    policy_id = serializers.SerializerMethodField("get_policy_id")
+    policy_name = serializers.SerializerMethodField("get_policy_name")
+
+    def get_policy_id(self, stance):
+        return stance.policy.id
+
+    def get_policy_name(self, stance):
+        return stance.policy.name
+
+    class Meta:
+        model = Stance
+        fields = ['id', 'policy_id', 'policy_name', 'message', 'date']
+
+
 # class AllThreads(serializers.ModelSerializer):
 #     def to_representation(self, popularity):
 #         threads = popularity.thread_set

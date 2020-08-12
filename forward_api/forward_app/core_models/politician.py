@@ -1,4 +1,5 @@
 from django.db import models
+from .policy import Policy
 
 
 class Politician(models.Model):
@@ -9,9 +10,20 @@ class Politician(models.Model):
     last = models.CharField(max_length=200, default="")
     name = models.CharField(max_length=200)  # name of office
     approved = models.BooleanField(default=False)  # whether we approved or not, will be returned at login
+    policies = models.ManyToManyField(Policy, through='Stance')
 
     class Meta:
         ordering = ['created']
+
+
+class Stance(models.Model):
+    politician = models.ForeignKey(Politician, on_delete=models.CASCADE)
+    policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
+    message = models.CharField(max_length=500, default="")
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['date']
 
 
 class Campaign(models.Model):
