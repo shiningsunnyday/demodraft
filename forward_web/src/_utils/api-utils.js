@@ -142,12 +142,30 @@ export class ApiUtil {
     }
   }
 
-  static async getCampaign(politician_id) {
+  static async putCampaign(data) {
     try {
-      return await axios.get(`${Config.API_URL}/campaign/?politician_id=${politician_id}`);
+      return await axios({
+        method: 'put',
+        url: `${Config.API_URL}/campaign/`,
+        data: data,
+        headers: { "content-type": "application/json" },
+        auth: Config.API_AUTH
+      });
     } catch (error) {
       console.error(error.message);
       alert(error.message);
     }
+  }
+
+  static async getCampaign(politician_id) {
+    let response;
+
+    try {
+      response = await axios.get(`${Config.API_URL}/campaign/?politician_id=${politician_id}`);
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
+    return response.data;
   }
 }
