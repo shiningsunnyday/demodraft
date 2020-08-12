@@ -143,11 +143,14 @@ export class ApiUtil {
   }
 
   static async getCampaign(politician_id) {
+    let response;
+    
     try {
-      return await axios.get(`${Config.API_URL}/campaign/?politician_id=${politician_id}`);
+      response = await axios.get(`${Config.API_URL}/campaign/?politician_id=${politician_id}`);
     } catch (error) {
       console.error(error.message);
       alert(error.message);
     }
+    return response.data;
   }
 }

@@ -11,11 +11,12 @@
 
     <div v-if="isApproved">
       <h1>Your Campaign Info</h1>
+      <h2>Running for: {{ campaign.name }}</h2>
       <hr />
       <ul>
-        <li>Position Applied For</li>
-        <li>Fundraise Goal</li>
-        <li>Funds Raised</li>
+        <li>ActBlue: {{ campaign.actblue }}</li>
+        <li>Fundraise Goal: {{ campaign.fundraise_goal }}</li>
+        <li>Funds Raised: {{ campaign.fundraised }}</li>
       </ul>
     </div>
   </div>
@@ -29,8 +30,16 @@ export default {
   data() {
     return {
       user: {},
+      campaign: {},
       fakeApproved: false,
     };
+  },
+  async created() {
+    const currentUser = this.$store.getters.getUserInfo;
+    if (currentUser.approved) {
+      this.campaign = await ApiUtil.getCampaign(currentUser.politician_id);
+    }
+
   },
   computed: {
     isApproved() {
