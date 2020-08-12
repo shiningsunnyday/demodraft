@@ -15,7 +15,7 @@
       <hr />
 
       <ul>
-        <li>ActBlue: {{ campaign.actblue }}</li>
+        <li>ActBlue: <a :href="campaign.actblue" target="_blank" rel="noopener noreferrer">{{ campaign.actblue }}</a></li>
         <li>Fundraise Goal: {{ campaign.fundraise_goal }}</li>
         <li>Funds Raised: {{ campaign.fundraised }}</li>
       </ul>
@@ -60,21 +60,6 @@ export default {
       fakeApproved: false,
     };
   },
-  methods: {
-    async handleSubmit(event) {
-      const currentUser = this.$store.getters.getUserInfo;
-      try {
-        const response = await ApiUtil.putCampaign({
-          politician_id: currentUser.politician_id,
-          actblue: this.actblue,
-          fundraise_goal: this.fundraiseGoal
-        });
-        this.campaign = await ApiUtil.getCampaign(currentUser.politician_id);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-  },
   async created() {
     const currentUser = this.$store.getters.getUserInfo;
     if (currentUser.approved) {
@@ -96,6 +81,22 @@ export default {
 
       return currentUser.approved;
     },
+    
+  },
+  methods: {
+    async handleSubmit(event) {
+      const currentUser = this.$store.getters.getUserInfo;
+      try {
+        const response = await ApiUtil.putCampaign({
+          politician_id: currentUser.politician_id,
+          actblue: this.actblue,
+          fundraise_goal: this.fundraiseGoal
+        });
+        this.campaign = await ApiUtil.getCampaign(currentUser.politician_id);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
   }
 };
 </script>
