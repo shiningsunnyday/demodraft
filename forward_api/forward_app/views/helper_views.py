@@ -8,10 +8,17 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 
-# from forward_app.utils.Google import Create_Service
+# from forward_api.Google import Create_Service
 # import base64
 # from email.mime.multipart import MIMEMultipart
 # from email.mime.text import MIMEText
+
+# CLIENT_SECRET_FILE = 'client_secret.json'
+# API_NAME = 'gmail'
+# API_VERSION = 'v1'
+# SCOPES = ['https://mail.google.com']
+
+# service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES) 
 
 
 class Address(APIView, Meta):
@@ -80,11 +87,11 @@ class PoliticianV(APIView, Meta):
             pol.save()
             data = merge(UserSerializer(user).data, PoliticianSerializer(pol).data)
 
-            # email = EmailMessage(
-            # 'New Politician: ' + user.username + ' registered!', 'Email: '+user.email+ '\nPosition: '+pos['name'], settings.EMAIL_HOST_USER, ['demodraftapp@gmail.com']
-            # )
-            # email.fail_silently = False
-            # email.send()
+            email = EmailMessage(
+            'New Politician: ' + user.username + ' registered!', 'Email: '+user.email+ '\nPosition: '+pos['name'], settings.EMAIL_HOST_USER, ['demodraftapp@gmail.com']
+            )
+            email.fail_silently = False
+            email.send()
 
             # service = Create_Service(settings.CLIENT_SECRET_FILE, settings.API_NAME, settings.API_VERSION, settings.SCOPES) 
             # emailMsg = 'New Politician: ' + user.username + ' registered!', 'Email: '+user.email+ '\nPosition: '+pos['name']
