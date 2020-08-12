@@ -12,6 +12,7 @@
 import CampaignRegistration from '@/components/campaign/CampaignRegistration';
 import CampaignDetails from '@/components/campaign/CampaignDetails';
 import * as Config from '@/config.json';
+import { ApiUtil } from "../_utils/api-utils";
 
 export default {
   name: 'CampaignPage',

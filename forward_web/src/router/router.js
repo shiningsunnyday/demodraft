@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { store } from "../stores/store";
+import { store } from "../_stores/store";
 
 import LoginPage from "../views/LoginPage";
 import HomePage from "../views/HomePage";

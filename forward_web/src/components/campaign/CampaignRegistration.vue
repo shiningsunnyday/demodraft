@@ -40,8 +40,6 @@ export default {
   },
   methods: {
     async handleSubmit(event) {
-      // POST /address/
-      // example request: {"address":"1263 Pacific Ave. Kansas City, KS"}
       try {
         const response = await ApiUtil.postAddress({
           username: this.$store.getters.username,
@@ -58,9 +56,6 @@ export default {
         console.log(error.message);
       }
     },
-    // *** May have to refactor or remove this method later ***
-    // The API call will sometimes return duplicates of the same position titles, but with unique division ids.
-    // This method prevents duplicate positions names from being rendered in the selectable list
     getUniquePositions(position) {
       const set = new Set();
       const result = [];
@@ -81,9 +76,22 @@ export default {
       };
 
       if (data.scope) {
-        //const response = await ApiUtil.submitCampaign(data);
+        /** This works now **/ 
+        // const response = await ApiUtil.submitCampaign(data);
+        // console.log(response);
+        /** This works now **/ 
 
-        //this.$store.dispatch('changeCampaignStatus');
+        // TODO
+        // loading spinner on Launch button (before calling await ApiUtil.submitCampaign(data))
+        // success modal
+
+        /**
+         * Vuex
+         * 1. grab the politician id from response.data.id and axios call GET campaign/?politician_id=response.data.id
+         * OR
+         * 2. set/create approved = false in user store
+         * finally, change current view to pending Campaign Details & navbar from Launch Campaign >> My Campaign
+         */
         alert(
           `${data.username} applied for ${this.selectedPos.name}\nusername: ${data.username}\nscope: ${data.scope}\nindex: ${data.index}`
         );
@@ -95,9 +103,6 @@ export default {
     updateSelectedPos(event) {
       this.selectedPos = event;
     },
-  },
-  created() {
-    console.log(this.$store.getters.getUserInfo);
   },
 };
 </script>

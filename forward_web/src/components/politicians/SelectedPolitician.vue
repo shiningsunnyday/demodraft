@@ -9,6 +9,9 @@
 
     <div class="selected-politician__description">
       <p>Running for {{ politician.name }}</p>
+      <p v-if="politician.actblue">
+        Actblue: <a :href="politician.actblue" target="_blank" rel="noopener noreferrer">{{ politician.actblue }}</a>
+      </p>
     </div>
 
     <div class="selected-politician__policies">
@@ -45,6 +48,8 @@ export default {
     this.politician = await ApiUtil.getSelectedPolitician(
       this.$route.params.id
     );
+
+    console.log(this.politician);
   },
 };
 </script>

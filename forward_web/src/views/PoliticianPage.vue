@@ -19,12 +19,12 @@
 </template>
 
 <script>
-import Multiselect from "vue-multiselect";
-import PoliticianList from "../components/politicians/PoliticianList";
-import { ApiUtil } from "../_utils/api-utils";
+import Multiselect from 'vue-multiselect';
+import PoliticianList from '@/components/politicians/PoliticianList';
+import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
-  name: "PoliticianPage",
+  name: 'PoliticianPage',
   components: {
     Multiselect,
     PoliticianList,
