@@ -140,7 +140,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'librian2000@gmail.com'
-EMAIL_HOST_PASSWORD = 'librian1969'
+EMAIL_HOST_PASSWORD = '321Chicken!'
 
 #GMAIL API Configuration
 CLIENT_SECRET_FILE = 'client_secret.json'
