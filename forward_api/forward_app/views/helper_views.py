@@ -92,16 +92,6 @@ class PoliticianV(APIView, Meta):
             )
             email.fail_silently = False
             email.send()
-
-            # service = Create_Service(settings.CLIENT_SECRET_FILE, settings.API_NAME, settings.API_VERSION, settings.SCOPES) 
-            # emailMsg = 'New Politician: ' + user.username + ' registered!', 'Email: '+user.email+ '\nPosition: '+pos['name']
-            # mimeMessage = MIMEMultipart()
-            # mimeMessage['to'] = 'demodraftapp@gmail.com'
-            # mimeMessage['subject'] = 'New Politician ' + user.username + " Registered!"
-            # mimeMessagge.attach(MIMEText(emailMsg,"plain"))
-            # raw_string = base64.urlsafe_b64encode(mimeMessage.as_bytes()).decode()
-            # message = service.users().messages().send(userID='me', body={'raw': raw_string}).execute()
-
             return Response(data, status=status.HTTP_200_OK)
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
