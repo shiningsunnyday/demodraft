@@ -23,3 +23,15 @@ class StanceV(APIView, Meta):
             sz = StanceSerializer(stances, many=True)
             return Response(sz.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request):
+        if set(request.data.keys()) != {"stance_id", "content"}:
+            return Response("Please provide stance_id and content.", status=status.HTTP_400_BAD_REQUEST)
+        sz = StanceSerializer(data = request.data)
+        if sz.is_valid(raise_exception=True):
+            stance = Stance.objects.get(id = request.data['stance_id'])
+            stance.message = request.data['content']
+            stance.save()
+            sz = StanceSerializer(stance)
+            return Response(sz.data, status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

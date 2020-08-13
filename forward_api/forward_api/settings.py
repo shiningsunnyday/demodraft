@@ -142,8 +142,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'librian2000@gmail.com'
 EMAIL_HOST_PASSWORD = '321Chicken!'
 
-#GMAIL API Configuration
-CLIENT_SECRET_FILE = 'client_secret.json'
-API_NAME = 'gmail'
-API_VERSION = 'v1'
-SCOPES = ['https://mail.google.com']
