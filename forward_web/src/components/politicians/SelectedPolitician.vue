@@ -29,7 +29,9 @@
               }"
             >
               {{ policy.name }}
+              
             </router-link>
+            <p>{{ policy.message }}</p>
           </ul>
         </div>
       </div>
@@ -61,7 +63,7 @@ export default {
     this.stances.forEach(stance => {
       if (!policySet.has(stance.policy_id)) {
         policySet.add(stance.policy_id);
-        this.endorsed.push({'name': stance.policy_name, 'id': stance.policy_id});
+        this.endorsed.push({'name': stance.policy_name, 'message': stance.message, 'id': stance.policy_id});
       }
     });
     // todo
