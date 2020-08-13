@@ -1,18 +1,26 @@
 <template>
   <div>
     <CampaignAddressSearch @handle-submit="handleSubmit" />
+    <<<<<<< HEAD
     <hr />
+    =======
+    <hr>
+    >>>>>>> web_dev
     <b-form @submit.prevent="handleSubmitCampaign">
       <b-container>
         <CampaignFormGroup
           :positions="positions"
           @update-selected-pos="updateSelectedPos"
         />
+        <<<<<<< HEAD
         <b-button v-if="isLoading" disabled>
           <b-spinner small></b-spinner>
           <span class="sr-only">Loading...</span>
         </b-button>
         <b-button v-else class="launch-button" type="submit">Launch</b-button>
+        =======
+        <b-button type="submit">Launch</b-button>
+        >>>>>>> web_dev
       </b-container>
     </b-form>
   </div>

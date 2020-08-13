@@ -127,7 +127,6 @@ export class ApiUtil {
 
   static async submitCampaign(data) {
     try {
-      // return await axios.post(`${Config.API_URL}/politician/`, data);
       return await axios({
         method: 'post',
         url: `${Config.API_URL}/politician/`,
