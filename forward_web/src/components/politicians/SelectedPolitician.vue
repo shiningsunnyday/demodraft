@@ -18,7 +18,19 @@
       <div class="selected-politician__wrapper">
         <div class="selected-politician__policy-list">
           <h3>Endorsed:</h3>
-          <p v-for="policy in endorsed">{{ policy }}</p>
+          <ul v-for="policy in endorsed" v-bind:key="policy.id">
+            <router-link
+              class="selected-politician__route"
+              v-bind:to="{
+                name: 'policy-page',
+                params: {
+                  id: policy.id,
+                },
+              }"
+            >
+              {{ policy.name }}
+            </router-link>
+          </ul>
         </div>
       </div>
     </div>
@@ -49,7 +61,7 @@ export default {
     this.stances.forEach(stance => {
       if (!policySet.has(stance.policy_id)) {
         policySet.add(stance.policy_id);
-        this.endorsed.push(stance.policy_name);
+        this.endorsed.push({'name': stance.policy_name, 'id': stance.policy_id});
       }
     });
     // todo
