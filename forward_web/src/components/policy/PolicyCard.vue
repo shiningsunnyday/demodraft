@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import { ApiUtil } from "@/_utils/api-utils";
+
 export default {
   name: 'PolicyCard',
   props: {
@@ -55,8 +57,14 @@ export default {
     }
   },
   methods: {
-    handleEndorse() {
-      this.$emit('handle-policy-name', this.policy.name);
+    async handleEndorse() {
+      // maybe get previous stance and populate stance text
+      const policyData = {
+        name: this.policy.name,
+        id: this.policy.id,
+      };
+
+      this.$emit('handle-policy-stance', policyData);
     },
   },
 };

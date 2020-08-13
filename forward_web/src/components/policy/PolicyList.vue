@@ -7,13 +7,13 @@
     >
       <PolicyCard
         :policy="policy"
-        @handle-policy-name="handlePolicyName"
+        @handle-policy-stance="handlePolicyStance"
       ></PolicyCard>
     </div>
     <b-modal 
       ref="modal-endorse" 
       id="modal-endorse" 
-      :title="modalTitle"
+      :title="policyStance.modalTitle"
       @shown="focusTextarea"
       centered
       no-close-on-backdrop
@@ -48,6 +48,7 @@
 <script>
 import { BCard, BButton } from 'bootstrap-vue';
 import PolicyCard from './PolicyCard';
+import { ApiUtil } from "@/_utils/api-utils";
 
 export default {
   name: 'PolicyList',
@@ -64,16 +65,29 @@ export default {
   },
   data() {
     return {
-      modalTitle: '',
+      policyStance: {
+        modalTitle: '',
+        id: 0,
+      },
       stanceText: '',
     };
   },
   methods: {
-    handlePolicyName(event) {
-      this.modalTitle = event;
+    handlePolicyStance(policy) {
+      this.policyStance.modalTitle = policy.name;
+      this.policyStance.id = policy.id;
+      // maybe get previous stance and populate stance text
     },
-    handleSubmit() {
-      console.log(this.stanceText);
+    async handleSubmit() {
+      const politician_id = this.$store.getters.getUserInfo.politician_id;
+      const stanceData = {
+        policy_id: this.policyStance.id,
+        politician_id: politician_id,
+        content: this.stanceText
+      };
+      await ApiUtil.postStance(stanceData);
+      // todo
+      // confirmation message
       this.stanceText = '';
     },
     handleCloseModal() {

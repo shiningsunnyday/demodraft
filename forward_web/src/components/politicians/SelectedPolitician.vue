@@ -17,17 +17,8 @@
     <div class="selected-politician__policies">
       <div class="selected-politician__wrapper">
         <div class="selected-politician__policy-list">
-          <h3>Supports:</h3>
-          <p>Policy A</p>
-          <p>Policy B</p>
-          <p>Policy C</p>
-        </div>
-
-        <div class="selected-politician__policy-list">
-          <h3>Rejects:</h3>
-          <p>Policy 1</p>
-          <p>Policy 2</p>
-          <p>Policy 3</p>
+          <h3>Endorsed:</h3>
+          <p v-for="policy in endorsed">{{ policy }}</p>
         </div>
       </div>
     </div>
@@ -35,13 +26,15 @@
 </template>
 
 <script>
-import { ApiUtil } from "../../_utils/api-utils";
+import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
   name: "SelectedPolitician",
   data() {
     return {
       politician: {},
+      endorsed: [],
+      stances: [],
     };
   },
   async created() {
@@ -49,7 +42,20 @@ export default {
       this.$route.params.id
     );
 
-    console.log(this.politician);
+    const stanceResponse = await ApiUtil.getStance(this.politician.id);
+    this.stances = stanceResponse.data;
+    
+    const policySet = new Set();
+    this.stances.forEach(stance => {
+      if (!policySet.has(stance.policy_id)) {
+        policySet.add(stance.policy_id);
+        this.endorsed.push(stance.policy_name);
+      }
+    });
+    // todo
+    // show most recent stance when user clicks an endorsed policy
+    console.log('endorsed: ', this.endorsed);
+    console.log('politician: ', this.politician);
   },
 };
 </script>
@@ -84,7 +90,7 @@ export default {
   &__wrapper {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
     width: 500px;
     padding: 0 20px;
