@@ -15,7 +15,7 @@ export const store = new Vuex.Store({
   state: {
     status: "",
     token: sessionStorage.getItem("token") || "",
-    user: {}, // holds username, email, password, approved, politician_id, launchStatusTest, submissionStatusTest
+    user: {}, // holds username, email, password, approved, politician_id, campaignPending
   },
   mutations: {
     auth_request(state) {
@@ -33,11 +33,8 @@ export const store = new Vuex.Store({
       state.status = "";
       state.token = "";
     },
-    campaignStatusMutation(state) {
-      state.user.launchStatusTest = !state.user.launchStatusTest;
-    },
-    submissionStatusMutation(state) {
-      state.user.submissionStatusTest = !state.user.submissionStatusTest;
+    campaignPendingMutation(state) {
+      state.user.campaignPending = !state.user.campaignPending;
     },
   },
   actions: {
@@ -64,15 +61,13 @@ export const store = new Vuex.Store({
           const { username, email, password, approved, politician_id } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
-          // remove campaignLaunchStatus after backend established
           const authUser = {
             username: username,
             password: password, // security risk, will need to use session cookies/JWT
             email: email,
             approved: approved,
             politician_id: politician_id,
-            launchStatusTest: user.launchStatusTest,
-            submissionStatusTest: user.submissionStatusTest,
+            campaignPending: user.campaignPending,
           };
           const stateData = { token: token, user: authUser };
           sessionStorage.setItem("token", token);
@@ -110,13 +105,11 @@ export const store = new Vuex.Store({
           const { username, email, password } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64'); 
-          // remove campaignLaunchStatus after backend established
           const newUser = {
             username: username,
             email: email,
             password: password, // security risk, will need to use session cookies/JWT
-            launchStatusTest: user.launchStatusTest,
-            submissionStatusTest: user.submissionStatusTest,
+            campaignPending: user.campaignPending,
           };
           const stateData = { token: token, user: newUser };
           sessionStorage.setItem("token", token);
@@ -133,16 +126,13 @@ export const store = new Vuex.Store({
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         commit("logout");
-        sessionStorage.removeItem("token");
+        sessionStorage.clear();
         // delete axios.defaults.headers.common["Authorization"];
         resolve();
       });
     },
-    changeLaunchStatusTest({ commit }) {
-      commit("campaignStatusMutation");
-    },
-    changeSubmissionStatusTest({ commit }) {
-      commit("submissionStatusMutation");
+    changeCampaignPending({ commit }) {
+      commit("campaignPendingMutation");
     },
   },
   getters: {
@@ -151,7 +141,5 @@ export const store = new Vuex.Store({
     username: (state) => state.user.username,
     password: (state) => state.user.password, // security risk, will need to use session cookies/JWT
     getUserInfo: (state) => state.user,
-    userLaunchStatusTest: (state) => state.user.launchStatusTest,
-    userSubmissionStatusTest: (state) => state.user.submissionStatusTest,
   },
 });

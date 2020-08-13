@@ -50,6 +50,7 @@ const routes = [
     path: "/politicians",
     name: "politician-page",
     component: PoliticianPage,
+
   },
   {
     path: "/politicians/:id",
@@ -61,6 +62,9 @@ const routes = [
     path: "/campaign",
     name: "campaign-page",
     component: CampaignPage,
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 

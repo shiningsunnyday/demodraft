@@ -56,14 +56,12 @@ export default {
     },
     userCampaignStatus() {
       const currentUser = this.$store.getters.getUserInfo;
-
-      // campaign never launched
-      if (typeof currentUser.approved === 'undefined') {
+      // redundant guard clauses for now
+      if (typeof currentUser.approved === 'undefined' || currentUser.campaignPending || !currentUser.approved) {
         return false;
       }
 
-      // campaign launched
-      return !currentUser.approved || currentUser.approved;
+      return true;
     },
   },
   methods: {

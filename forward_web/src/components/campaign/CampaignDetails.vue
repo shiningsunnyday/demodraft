@@ -72,19 +72,17 @@ export default {
   computed: {
     isApproved() {
       const currentUser = this.$store.getters.getUserInfo;
-
-      // campaign never launched
-      // redundant guard clause for now
-      if (typeof currentUser.approved === 'undefined') {
+      // redundant guard clauses for now
+      if (typeof currentUser.approved === 'undefined' || currentUser.campaignPending || !currentUser.approved) {
         return false;
       }
 
-      return currentUser.approved;
+      return true;
     },
     
   },
   methods: {
-    async handleSubmit(event) {
+    async handleSubmit() {
       const currentUser = this.$store.getters.getUserInfo;
       try {
         const response = await ApiUtil.putCampaign({

@@ -2,7 +2,7 @@
   <b-container>
     <h1>Campaign Page</h1>
     <div class="center">
-      <CampaignRegistration v-if="!isCampaignLaunched" />
+      <CampaignRegistration v-if="!isCampaignLaunched" @handle-campaign-launch="handleCampaignLaunch"/>
       <CampaignDetails v-if="isCampaignLaunched" />
     </div>
   </b-container>
@@ -20,22 +20,22 @@ export default {
     CampaignRegistration,
     CampaignDetails,
   },
-  computed: {
-    isCampaignLaunched() {
-      const currentUser = this.$store.getters.getUserInfo;
-
-      // campaign never launched
-      if (typeof currentUser.approved === 'undefined') {
-        return false;
-      }
-
-      // campaign launched
-      if (!currentUser.approved || currentUser.approved) {
-        return true;
-      }
-    },
+  data() {
+    return {
+      isCampaignLaunched: false,
+    };
   },
-  methods: {},
+  created() {
+    const currentUser = this.$store.getters.getUserInfo;
+    if (typeof currentUser.approved !== 'undefined' || currentUser.campaignPending) {
+      this.isCampaignLaunched = true;
+    }
+  },
+  methods: {
+    handleCampaignLaunch(event) {
+      this.isCampaignLaunched = event;
+    }
+  },
 };
 </script>
 

@@ -8,7 +8,11 @@
           :positions="positions"
           @update-selected-pos="updateSelectedPos"
         />
-        <b-button class="launch-button" type="submit">Launch</b-button>
+        <b-button v-if="isLoading" disabled>
+          <b-spinner small></b-spinner>
+          <span class="sr-only">Loading...</span>
+        </b-button>
+        <b-button v-else class="launch-button" type="submit">Launch</b-button>
       </b-container>
     </b-form>
   </div>
@@ -33,10 +37,9 @@ export default {
       status: null,
       positions: {},
       selectedPos: {},
+      successModal: '',
+      isLoading: false,
     };
-  },
-  created() {
-    console.log(this.$store.getters.getUserInfo);
   },
   methods: {
     async handleSubmit(event) {
@@ -56,46 +59,32 @@ export default {
         console.log(error.message);
       }
     },
-    getUniquePositions(position) {
-      const set = new Set();
-      const result = [];
-      position.forEach((positionObject) => {
-        if (!set.has(positionObject.name)) {
-          set.add(positionObject.name);
-          result.push(positionObject);
-        }
-      });
-
-      return result;
-    },
     async handleSubmitCampaign() {
+      const { username, campaignPending } = this.$store.getters.getUserInfo;
       const data = {
-        username: this.$store.getters.username,
+        username: username,
         scope: this.selectedPos.scope,
         index: this.selectedPos.index,
       };
 
       if (data.scope) {
-        /** This works now **/ 
-        // const response = await ApiUtil.submitCampaign(data);
+        this.isLoading = true;
+        const response = await ApiUtil.submitCampaign(data);
         // console.log(response);
-        /** This works now **/ 
-
-        // TODO
-        // loading spinner on Launch button (before calling await ApiUtil.submitCampaign(data))
-        // success modal
-
-        /**
-         * Vuex
-         * 1. grab the politician id from response.data.id and axios call GET campaign/?politician_id=response.data.id
-         * OR
-         * 2. set/create approved = false in user store
-         * finally, change current view to pending Campaign Details & navbar from Launch Campaign >> My Campaign
-         */
-        alert(
-          `${data.username} applied for ${this.selectedPos.name}\nusername: ${data.username}\nscope: ${data.scope}\nindex: ${data.index}`
-        );
-        console.log(data);
+        this.successModal = '';
+        const modalMessage = `Campaign successfully submited!`;
+        await this.$bvModal.msgBoxOk(modalMessage, {
+          title: 'Confirmation',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'success',
+          headerClass: 'p-2 border-bottom-0',
+          footerClass: 'p-2 border-top-0',
+          centered: true,
+        });
+        this.$store.dispatch('changeCampaignPending');
+        this.isLoading = false;
+        this.$emit('handle-campaign-launch', true);
       } else {
         alert('Choose a position for your campaign!');
       }
