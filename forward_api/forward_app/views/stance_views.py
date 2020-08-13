@@ -10,8 +10,11 @@ class StanceV(APIView, Meta):
     def post(self, request):
         if set(request.data.keys()) != {"policy_id", "politician_id", "content"}:
             return Response("Please provide policy_id, politician_id, and content.", status=status.HTTP_400_BAD_REQUEST)
-        policy = Policy.objects.get(id=int(request.data['policy_id']))
-        pol = Politician.objects.get(id=int(request.data['politician_id']))
+        policy_id, politician_id = int(request.data['policy_id']), int(request.data['politician_id'])
+        if Stance.objects.filter(policy_id=policy_id, politician_id=politician_id).exists():
+            return Response("Stance already exists for politician and policy.", status=status.HTTP_400_BAD_REQUEST)
+        policy = Policy.objects.get(id=policy_id)
+        pol = Politician.objects.get(id=politician_id)
         stance = Stance.objects.create(politician=pol, policy=policy, message=request.data['content'])
         sz = StanceSerializer(stance)
         return Response(sz.data, status=status.HTTP_202_ACCEPTED)
@@ -29,7 +32,7 @@ class StanceV(APIView, Meta):
             return Response("Please provide stance_id and content.", status=status.HTTP_400_BAD_REQUEST)
         sz = StanceSerializer(data = request.data)
         if sz.is_valid(raise_exception=True):
-            stance = Stance.objects.get(id = request.data['stance_id'])
+            stance = Stance.objects.get(id=request.data['stance_id'])
             stance.message = request.data['content']
             stance.save()
             sz = StanceSerializer(stance)
