@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from forward_app.serializers import *
 from rest_framework import status
 from .meta import Meta
+from django.conf import settings
 
 
 class Signup(APIView, Meta):
@@ -13,6 +14,7 @@ class Signup(APIView, Meta):
         return Response(status=status.HTTP_200_OK)
 
     def post(self, request):
+        return Response("Sorry. We are not accepting new user signups right now.", status=status.HTTP_204_NO_CONTENT)
         sz = UserSerializer(data=request.data)
         if sz.is_valid(raise_exception=True):
             sz.save()
@@ -25,6 +27,9 @@ class Signup(APIView, Meta):
 class Login(APIView, Meta):
     def post(self, request):
         username, password = request.data["username"], request.data["password"]
+        if username not in settings.INTERNAL_USERNAMES or password not in settings.INTERNAL_PASSWORDS:
+            return Response("Please login with internal username and password.",
+                            status=status.HTTP_401_UNAUTHORIZED)
         exists = User.objects.filter(username=username, password=password).exists()
         if exists:
             user = User.objects.get(username=username, password=password)
