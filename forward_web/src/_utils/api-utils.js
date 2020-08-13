@@ -113,7 +113,13 @@ export class ApiUtil {
 
   static async postAddress(data) {
     try {
-      return await axios.post(`${Config.API_URL}/address/`, data);
+      return await axios({
+        method: 'post',
+        url: `${Config.API_URL}/address/`,
+        data: data,
+        headers: { "content-type": "application/json" },
+        auth: Config.API_AUTH
+      });
     } catch (error) {
       alert(error.message);
     }
@@ -121,7 +127,28 @@ export class ApiUtil {
 
   static async submitCampaign(data) {
     try {
-      return await axios.post(`${Config.API_URL}/politician/`, data);
+      return await axios({
+        method: 'post',
+        url: `${Config.API_URL}/politician/`,
+        data: data,
+        headers: { "content-type": "application/json" },
+        auth: Config.API_AUTH
+      });
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
+  }
+
+  static async putCampaign(data) {
+    try {
+      return await axios({
+        method: 'put',
+        url: `${Config.API_URL}/campaign/`,
+        data: data,
+        headers: { "content-type": "application/json" },
+        auth: Config.API_AUTH
+      });
     } catch (error) {
       console.error(error.message);
       alert(error.message);
@@ -129,8 +156,41 @@ export class ApiUtil {
   }
 
   static async getCampaign(politician_id) {
+    let response;
+
     try {
-      return await axios.get(`${Config.API_URL}/campaign/?politician_id=${politician_id}`);
+      response = await axios.get(`${Config.API_URL}/campaign/?politician_id=${politician_id}`);
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
+    return response.data;
+  }
+
+  static async postStance(data) {
+    try {
+      return await axios({
+        method: 'post',
+        url: `${Config.API_URL}/stance/`,
+        data: data,
+        headers: { "content-type": "application/json" },
+        auth: Config.API_AUTH
+      });
+    } catch (error) {
+      console.error(error.message);
+      alert(error.message);
+    }
+  }
+
+  static async getStance(data) {
+    try {
+      return await axios({
+        method: 'get',
+        url: `${Config.API_URL}/stance/`,
+        params: { politician_id: data },
+        headers: { "content-type": "application/json" },
+        auth: Config.API_AUTH
+      });
     } catch (error) {
       console.error(error.message);
       alert(error.message);

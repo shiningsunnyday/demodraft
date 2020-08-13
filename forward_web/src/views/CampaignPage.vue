@@ -1,38 +1,52 @@
 <template>
-  <div>
-    <h1>CampaignPage</h1>
-    <b-button @click="toggleLaunchCampaign">Toggle Launch Campaign</b-button>
-    <CampaignRegistration v-if="!isCampaignLaunched" />
-    <!-- ?? <SelectPositionComponent /> ?? 
-    After clicking the Launch button in the <CampaignRegistration /> component, send the data returned from the Google API call into this component where the user will be able to select the position(s?) they're interested in?
-    -->
-    <CampaignDetails v-if="isCampaignLaunched" />
-  </div>
+  <b-container>
+    <h1>Campaign Page</h1>
+    <div class="center">
+      <CampaignRegistration v-if="!isCampaignLaunched" @handle-campaign-launch="handleCampaignLaunch"/>
+      <CampaignDetails v-if="isCampaignLaunched" />
+    </div>
+  </b-container>
 </template>
 
 <script>
-import CampaignRegistration from "@/components/campaign/CampaignRegistration";
-import CampaignDetails from "@/components/campaign/CampaignDetails";
-import * as Config from "@/config.json";
+import CampaignRegistration from '@/components/campaign/CampaignRegistration';
+import CampaignDetails from '@/components/campaign/CampaignDetails';
+import * as Config from '@/config.json';
+import { ApiUtil } from "../_utils/api-utils";
 
 export default {
-  name: "CampaignPage",
+  name: 'CampaignPage',
   components: {
     CampaignRegistration,
     CampaignDetails,
   },
-  computed: {
-    isCampaignLaunched() {
-      return this.$store.getters.userCampaignStatus;
+  data() {
+    return {
+      isCampaignLaunched: false,
+    };
+  },
+  created() {
+    const currentUser = this.$store.getters.getUserInfo;
+    if (typeof currentUser.approved !== 'undefined' || currentUser.campaignPending) {
+      this.isCampaignLaunched = true;
     }
   },
   methods: {
-    // for testing purposes
-    toggleLaunchCampaign() {
-      this.$store.dispatch('changeCampaignStatus');
-    },
-  }
+    handleCampaignLaunch(event) {
+      this.isCampaignLaunched = event;
+    }
+  },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+h1 {
+  color: red;
+  text-align: center;
+  margin-bottom: 5rem;
+}
+.center {
+  display: flex;
+  justify-content: center;
+}
+</style>

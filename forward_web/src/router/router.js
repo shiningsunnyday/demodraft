@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { store } from "../stores/store";
+import { store } from "../_stores/store";
 
 import LoginPage from "../views/LoginPage";
 import HomePage from "../views/HomePage";
@@ -50,6 +50,7 @@ const routes = [
     path: "/politicians",
     name: "politician-page",
     component: PoliticianPage,
+
   },
   {
     path: "/politicians/:id",
@@ -61,6 +62,9 @@ const routes = [
     path: "/campaign",
     name: "campaign-page",
     component: CampaignPage,
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 

@@ -1,24 +1,48 @@
 <template>
   <div>
-    <b-button @click="toggleSubmissionStatus">Toggle Submission Status</b-button>
-
-    <b-container v-if="!fakeApproved">
+    <h1>CampaignDetails</h1>
+    <div v-if="!isApproved">
       <h1>Thank you for submitting your campaign! 😄</h1>
       <h3>
         Your current submission is: Pending
       </h3>
       <h4>We'll notify you when your submission status is updated</h4>
-    </b-container>
+    </div>
 
-    <b-container v-if="fakeApproved">
+    <div v-if="isApproved">
       <h1>Your Campaign Info</h1>
+      <p>Running for: {{ campaign.name }}</p>
       <hr />
+
       <ul>
-        <li>Position Applied For</li>
-        <li>Fundraise Goal</li>
-        <li>Funds Raised</li>
+        <li>ActBlue: <a :href="campaign.actblue" target="_blank" rel="noopener noreferrer">{{ campaign.actblue }}</a></li>
+        <li>Fundraise Goal: {{ campaign.fundraise_goal }}</li>
+        <li>Funds Raised: {{ campaign.fundraised }}</li>
       </ul>
-    </b-container>
+      <b-form @submit.prevent="handleSubmit">
+
+        <b-form-group
+          id="mycampaign-group"
+          label="My Campaign"
+          label-for="mycampaign"
+          description="Update any info for your current campaign"
+        >
+          <b-form-input
+            id="mycampaign"
+            v-model="actblue"
+            type="text"
+            required
+          />
+          <b-form-input
+            id="mycampaign"
+            v-model="fundraiseGoal"
+            type="text"
+            required
+          />
+        </b-form-group>
+        <b-button type="submit">Update</b-button>
+      </b-form>
+    </div>
   </div>
 </template>
 
@@ -30,18 +54,48 @@ export default {
   data() {
     return {
       user: {},
+      campaign: {},
+      actblue: "",
+      fundraiseGoal: 0,
       fakeApproved: false,
     };
   },
-  methods: {
-    toggleSubmissionStatus() {
-      this.fakeApproved = !this.fakeApproved;
+  async created() {
+    const currentUser = this.$store.getters.getUserInfo;
+    if (currentUser.approved) {
+      this.campaign = await ApiUtil.getCampaign(currentUser.politician_id);
+      this.fundraiseGoal = this.campaign.fundraise_goal;
+      this.actblue = this.campaign.actblue;
     }
+
   },
-  // created() {
-  //   const { politician_id } = this.$store.getters.getUserInfo;
-  //   ApiUtil.getCampaign(politician_id);
-  // },
+  computed: {
+    isApproved() {
+      const currentUser = this.$store.getters.getUserInfo;
+      // redundant guard clauses for now
+      if (typeof currentUser.approved === 'undefined' || currentUser.campaignPending || !currentUser.approved) {
+        return false;
+      }
+
+      return true;
+    },
+    
+  },
+  methods: {
+    async handleSubmit() {
+      const currentUser = this.$store.getters.getUserInfo;
+      try {
+        const response = await ApiUtil.putCampaign({
+          politician_id: currentUser.politician_id,
+          actblue: this.actblue,
+          fundraise_goal: this.fundraiseGoal
+        });
+        this.campaign = await ApiUtil.getCampaign(currentUser.politician_id);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+  }
 };
 </script>
 

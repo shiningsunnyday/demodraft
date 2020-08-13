@@ -19,12 +19,12 @@
 </template>
 
 <script>
-import Multiselect from "vue-multiselect";
-import PoliticianList from "../components/politicians/PoliticianList";
-import { ApiUtil } from "../_utils/api-utils";
+import Multiselect from 'vue-multiselect';
+import PoliticianList from '@/components/politicians/PoliticianList';
+import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
-  name: "PoliticianPage",
+  name: 'PoliticianPage',
   components: {
     Multiselect,
     PoliticianList,
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     filterPoliticians() {
-      // If no filter options are selected, render all the policies
+      // If no filter options are selected, render all the politicians
       // otherwise, only render politicians whose 'location' property match the currently selected filter option
       if (this.selectedValues.length === 0) {
         this.filteredPoliticians = this.politicians;
