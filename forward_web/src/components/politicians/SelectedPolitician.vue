@@ -1,54 +1,50 @@
 <template>
-  <div class="selected-politician">
-    <h1>{{ politician.first }} {{ politician.last }}</h1>
-    <div class="selected-politician__img-wrapper">
-      <img
-        src="https://i.picsum.photos/id/1025/4951/3301.jpg?hmac=_aGh5AtoOChip_iaMo8ZvvytfEojcgqbCH7dzaz-H8Y"
-      />
-    </div>
-
-    <div class="selected-politician__description">
-      <p>Running for {{ politician.name }}</p>
-      <p v-if="politician.actblue">
-        Actblue: <a :href="politician.actblue" target="_blank" rel="noopener noreferrer">{{ politician.actblue }}</a>
-      </p>
-    </div>
-
-    <div class="selected-politician__policies">
-      <div class="selected-politician__wrapper">
-        <div class="selected-politician__policy-list">
-          <h3>Endorsed:</h3>
-          <ul v-for="policy in endorsed" v-bind:key="policy.id">
-            <router-link
-              class="selected-politician__route"
-              v-bind:to="{
-                name: 'policy-page',
-                params: {
-                  id: policy.id,
-                },
-              }"
-            >
-              {{ policy.name }}
-              
-            </router-link>
-            <p>{{ policy.message }}</p>
-          </ul>
-        </div>
+  <b-container class="selected-politician">
+    <div class="selected-politician__left">
+      <h1>{{ politician.first }} {{ politician.last }}</h1>
+      <div class="selected-politician__img-wrapper">
+        <img
+          src="https://i.picsum.photos/id/1025/4951/3301.jpg?hmac=_aGh5AtoOChip_iaMo8ZvvytfEojcgqbCH7dzaz-H8Y"
+        />
+      </div>
+      <div class="selected-politician__description">
+        <p>Running for {{ politician.name }}</p>
+        <p v-if="politician.actblue">Actblue:
+          <a :href="politician.actblue" target="_blank" rel="noopener noreferrer">{{ politician.actblue }}</a>
+        </p>
       </div>
     </div>
-  </div>
+    
+    <div class="selected-politician__right">
+      <h3>Endorsed</h3>
+      <div class="loading-spinner" v-if="isLoading">
+        <b-spinner label="Loading..."></b-spinner>
+      </div>
+      <div v-else class="selected-politician__list" v-for="policy in endorsed" v-bind:key="policy.id">
+        <router-link
+          class="selected-politician__route"
+          v-bind:to="{ name: 'policy-page', params: { id: policy.id } }"
+          target="_blank"
+        >
+          {{ policy.name }}
+        </router-link>
+        <p class="selected-politician__message">{{ policy.message }}</p>
+      </div>
+    </div>
+  </b-container>
 </template>
 
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
-  name: "SelectedPolitician",
+  name: 'SelectedPolitician',
   data() {
     return {
       politician: {},
       endorsed: [],
       stances: [],
+      isLoading: true,
     };
   },
   async created() {
@@ -58,14 +54,19 @@ export default {
 
     const stanceResponse = await ApiUtil.getStance(this.politician.id);
     this.stances = stanceResponse.data;
-    
+
     const policySet = new Set();
-    this.stances.forEach(stance => {
+    this.stances.forEach((stance) => {
       if (!policySet.has(stance.policy_id)) {
         policySet.add(stance.policy_id);
-        this.endorsed.push({'name': stance.policy_name, 'message': stance.message, 'id': stance.policy_id});
+        this.endorsed.push({
+          name: stance.policy_name,
+          message: stance.message,
+          id: stance.policy_id,
+        });
       }
     });
+    this.isLoading = false;
     // todo
     // show most recent stance when user clicks an endorsed policy
     console.log('endorsed: ', this.endorsed);
@@ -75,43 +76,52 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.selected-politician {
+@mixin flex-column-center {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
 
-  &__img-wrapper {
-    max-width: 700px;
-    max-height: 700px;
+.selected-politician {
+  font-size: 14px;
 
-    img {
-      width: 100%;
+  @media screen and (min-width: 1280px) {
+    display: flex;
+    font-size: 1rem;
+    > * {
+      padding: 1rem;
     }
   }
 
-  &__description {
-    margin-top: 20px;
+  &__left{
+    @include flex-column-center;
+    @media screen and (min-width: 1280px) {
+      width: 500px;
+    }
   }
 
-  &__policies {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 20px;
+  &__right {
+    @include flex-column-center;
+    @media screen and (min-width: 1280px) {
+      width: 500px;
+    }
+  }
+
+  &__img-wrapper {
+    max-width: 500px;
+    max-height: 700px;
+  }
+
+  img {
     width: 100%;
   }
 
-  &__wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-    width: 500px;
-    padding: 0 20px;
+  &__description {
+    margin: 1rem;
   }
 
-  &__policy-list {
-    // max-width: 300px;
+  &__list {
+    @include flex-column-center;
     text-align: center;
   }
 }

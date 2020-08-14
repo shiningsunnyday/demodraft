@@ -121,7 +121,7 @@ export class ApiUtil {
         auth: Config.API_AUTH
       });
     } catch (error) {
-      alert(error.message);
+      console.error(error.message);
     }
   }
 
@@ -136,7 +136,6 @@ export class ApiUtil {
       });
     } catch (error) {
       console.error(error.message);
-      alert(error.message);
     }
   }
 
@@ -151,7 +150,6 @@ export class ApiUtil {
       });
     } catch (error) {
       console.error(error.message);
-      alert(error.message);
     }
   }
 
@@ -178,7 +176,6 @@ export class ApiUtil {
       });
     } catch (error) {
       console.error(error.message);
-      alert(error.message);
     }
   }
 
@@ -193,7 +190,6 @@ export class ApiUtil {
       });
     } catch (error) {
       console.error(error.message);
-      alert(error.message);
     }
   }
 }

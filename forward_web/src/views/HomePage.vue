@@ -16,8 +16,8 @@
         placeholder="Filter by Category"
       />
     </div>
-
-    <div class="home__policies-container">
+    <div v-if="isLoadingPolicies">Loading...</div>
+    <div v-else class="home__policies-container">
       <!-- add isfiltered boolean -->
       <PolicyList v-bind:filteredPolicies="filteredPolicies" />
     </div>
@@ -41,6 +41,7 @@ export default {
       filteredPolicies: [], // holds the policies currently rendered to browser
       options: [], // holds all the values that populate the filter list
       selectedValues: null, // holds the selected filtering options the user selects
+      isLoadingPolicies: true,
     };
   },
   async created() {
@@ -52,6 +53,7 @@ export default {
     this.policies.forEach((policy) => tempPoliciesArr.push(policy.category));
     // remove duplicate filtering options that populate the filtering lists
     this.options = [...new Set(tempPoliciesArr)];
+    this.isLoadingPolicies = false;
   },
   methods: {
     filterPolicies() {
