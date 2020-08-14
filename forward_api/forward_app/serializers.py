@@ -28,13 +28,17 @@ class UsernameSerializer(serializers.ModelSerializer):
 
 class PoliticianSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField("get_username")
+    state = serializers.SerializerMethodField("get_loc")
 
     def get_username(self, pol):
         return pol.persona.user.username
+
+    def get_loc(self, pol):
+        return pol.persona.state
     
     class Meta:
         model = Politician
-        fields = ['id', 'name', 'username', 'first', 'last', 'approved']
+        fields = ['id', 'name', 'state', 'username', 'first', 'last', 'approved']
 
 
 class CampaignSerializer(serializers.ModelSerializer):
