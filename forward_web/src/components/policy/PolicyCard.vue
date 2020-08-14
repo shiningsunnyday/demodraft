@@ -22,9 +22,6 @@
             Learn more
           </router-link>
         </BButton>
-        <BButton v-if="isPolitician" v-b-modal.modal-endorse @click="handleEndorse">
-          Endorse
-        </BButton>
       </BCard>
     </b-collapse>
     <b-card-text class="policy__category">
@@ -34,34 +31,12 @@
 </template>
 
 <script>
-import { ApiUtil } from "@/_utils/api-utils";
+import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
   name: 'PolicyCard',
   props: {
     policy: Object,
-  },
-  data() {
-    return {
-      isPolitician: false,
-    };
-  },
-  created() {
-    const currentUser = this.$store.getters.getUserInfo;
-    if (currentUser.approved) {
-      this.isPolitician = true;
-    }
-  },
-  methods: {
-    async handleEndorse() {
-      // maybe get previous stance and populate stance text
-      const policyData = {
-        name: this.policy.name,
-        id: this.policy.id,
-      };
-
-      this.$emit('handle-policy-stance', policyData);
-    },
   },
 };
 </script>

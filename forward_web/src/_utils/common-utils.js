@@ -49,3 +49,8 @@ export const states = [
   'Wisconsin',
   'Wyoming',
 ];
+
+export const simulateApiCall = async () => {
+  const delay = ms => new Promise(res => setTimeout(res, ms));
+  return await delay(1000);
+};
