@@ -52,5 +52,5 @@ def toAddress(p):
 
 
 if __name__ == '__main__':
-    x = fetchPositions("2263 Santa Clara Ave, Alameda, CA 94501")
+    x = normalizeAddress("804 36th St SE Cedar Rapids, Iowa")
     print(x)

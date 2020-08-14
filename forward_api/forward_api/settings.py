@@ -142,5 +142,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'librian2000@gmail.com'
 EMAIL_HOST_PASSWORD = '321Chicken!'
 
-INTERNAL_USERNAMES = ["asianmanwholikesmath", "donaldtrump"] + ['aspiringpolitician%d' % i for i in range(50)]
-INTERNAL_PASSWORDS = ["theoppositeofdonaldtrumpisanasianmanwholikesmath", "iamfakenews", "iwanttolaunchacampaign"]
+INTERNAL_USERNAMES = ["normalperson", "averagejoe"] + ['aspiringpolitician%d' % i for i in range(1, 21)]
+INTERNAL_PASSWORDS = ["freehealthcare", "universalbasicincome", "iwanttolaunchacampaign"]
