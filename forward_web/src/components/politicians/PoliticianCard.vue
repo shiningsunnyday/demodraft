@@ -50,15 +50,8 @@ export default {
       politicianLocation: '',
     };
   },
-  mounted() {
-    this.states = states;
-    const words = this.politician.name.split(/[ -]+/);
-    const set = new Set(words);
-    this.states.forEach((state) => {
-      if (set.has(state)) {
-        this.politicianLocation = state;
-      }
-    });
+  created() {
+    this.politicianLocation = this.politician.state;
   },
 };
 </script>

@@ -44,8 +44,8 @@ export default {
     // Populates a components filter list with filtering options that are linked to the incoming data
     let tempPoliticiansArr = [];
     this.politicians.forEach((politician) => {
-      const position = politician.name;
-      tempPoliticiansArr.push(position);
+      const loc = politician.state;
+      tempPoliticiansArr.push(loc);
     });
     // remove duplicate filtering options that populate the filtering lists
     this.options = [...new Set(tempPoliticiansArr)];
@@ -58,9 +58,9 @@ export default {
         this.filteredPoliticians = this.politicians;
       } else {
         let filteredResults = this.politicians.filter(function(politician) {
-          const position = politician.name;
+          const loc = politician.state;
 
-          return this.indexOf(position) > -1;
+          return this.indexOf(loc) > -1;
         }, this.selectedValues);
 
         this.filteredPoliticians = filteredResults;
