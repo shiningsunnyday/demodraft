@@ -57,8 +57,8 @@ class Address(APIView, Meta):
             persona.city = norm_address['city']
             persona.state = norm_address['state']
             persona.zipcode = norm_address['zip']
-            persona.save()
             positions = fetchPositions(request.data["address"])
+            persona.save()
             return Response(positions, status=status.HTTP_200_OK)
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 

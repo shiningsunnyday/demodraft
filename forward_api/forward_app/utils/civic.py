@@ -46,9 +46,11 @@ def normalizeAddress(address):
     normalizedInput = r.json()['normalizedInput']
     return normalizedInput
 
+
 def toAddress(p):
     return p.line1 + ' ' + p.city + ', ' + p.state + ' ' + str(p.zipcode)
 
+
 if __name__ == '__main__':
-    x = fetchPositions("1263 Pacific Ave. Kansas City, KS")
+    x = fetchPositions("2263 Santa Clara Ave, Alameda, CA 94501")
     print(x)
