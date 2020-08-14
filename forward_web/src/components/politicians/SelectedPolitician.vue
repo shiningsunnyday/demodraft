@@ -67,10 +67,8 @@ export default {
       }
     });
     this.isLoading = false;
-    // todo
-    // show most recent stance when user clicks an endorsed policy
-    console.log('endorsed: ', this.endorsed);
-    console.log('politician: ', this.politician);
+    // console.log('endorsed: ', this.endorsed);
+    // console.log('politician: ', this.politician);
   },
 };
 </script>
