@@ -1,6 +1,7 @@
 <template>
   <div>
-    <CampaignAddressSearch @handle-submit="handleSubmit" />
+    <p>Description</p>
+    <CampaignAddressSearch @handle-submit="handleSubmit" :isSearching="isSearching"/>
     <hr />
     <b-form @submit.prevent="handleSubmitCampaign">
       <b-container>
@@ -8,11 +9,11 @@
           :positions="positions"
           @update-selected-pos="updateSelectedPos"
         />
-        <b-button v-if="isLoading" disabled>
-          <b-spinner small></b-spinner>
-          <span class="sr-only">Loading...</span>
+        <b-button class="launch-button" v-if="isLaunching" disabled>
+          <b-spinner small type="grow"></b-spinner>
+          Launching...
         </b-button>
-        <b-button v-else class="launch-button" type="submit">Launch</b-button>
+        <b-button v-else-if="civicData.local" class="launch-button" type="submit">Launch</b-button>
       </b-container>
     </b-form>
   </div>
@@ -33,17 +34,16 @@ export default {
   data() {
     return {
       civicData: {},
-      address: '',
-      status: null,
       positions: {},
       selectedPos: {},
-      successModal: '',
-      isLoading: false,
+      isLaunching: false,
+      isSearching: false,
     };
   },
   methods: {
     async handleSubmit(event) {
       try {
+        this.isSearching = true;
         const response = await ApiUtil.postAddress({
           username: this.$store.getters.username,
           password: this.$store.getters.password, // security risk, will need to use session cookies/JWT
@@ -56,8 +56,9 @@ export default {
           country: this.civicData.country,
         };
       } catch (error) {
-        console.log(error.message);
+        alert(`Oops, that's not a valid address!`);
       }
+      this.isSearching = false;
     },
     async handleSubmitCampaign() {
       const { username, campaignPending } = this.$store.getters.getUserInfo;
@@ -68,26 +69,30 @@ export default {
       };
 
       if (data.scope) {
-        this.isLoading = true;
-        const response = await ApiUtil.submitCampaign(data);
-        // console.log(response);
-        this.successModal = '';
-        const modalMessage = `Campaign successfully submited!`;
-        await this.$bvModal.msgBoxOk(modalMessage, {
-          title: 'Confirmation',
-          size: 'sm',
-          buttonSize: 'sm',
-          okVariant: 'success',
-          headerClass: 'p-2 border-bottom-0',
-          footerClass: 'p-2 border-top-0',
-          centered: true,
-        });
-        this.$store.dispatch('changeCampaignPending');
-        this.isLoading = false;
+        try {
+          this.isLaunching = true;
+          const response = await ApiUtil.submitCampaign(data);
+          //console.log(response);
+          const modalMessage = `Campaign successfully submited!`;
+          await this.$bvModal.msgBoxOk(modalMessage, {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'success',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true,
+          });
+          this.$store.dispatch('changeCampaignPending');
+        } catch (error) {
+          alert(`Oops, something went wrong.`);
+        }
+        this.isLaunching = false;
         this.$emit('handle-campaign-launch', true);
-      } else {
-        alert('Choose a position for your campaign!');
+        return;
       }
+
+      return alert('Choose a position for your campaign!');
     },
     updateSelectedPos(event) {
       this.selectedPos = event;

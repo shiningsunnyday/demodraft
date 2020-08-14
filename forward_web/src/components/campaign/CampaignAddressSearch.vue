@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-container>
-      <b-form @submit.prevent="handleSubmit">
+      <b-form class="campaign__address-form" @submit.prevent="handleSubmit">
         <b-form-group
           id="address-group"
           label="Address"
@@ -15,7 +15,11 @@
             required
           />
         </b-form-group>
-        <b-button type="submit">Search</b-button>
+        <b-button v-if="isSearching" dsiabled>
+          <b-spinner small type="grow"></b-spinner>
+          Searching...
+        </b-button>
+        <b-button v-else type="submit">Search</b-button>
       </b-form>
     </b-container>
   </div>
@@ -24,6 +28,11 @@
 <script>
 export default {
   name: 'CampaignAddressSearch',
+  props: {
+    isSearching: {
+      type: Boolean
+    }
+  },
   data() {
     return {
       internalAddress: '',
@@ -32,10 +41,17 @@ export default {
   methods: {
     async handleSubmit() {
       this.$emit('handle-submit', this.internalAddress);
-      this.internalAddress = '';
     },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.campaign {
+  &__address-form {
+    @media screen and (min-width: 768px) {
+      width: 500px;
+    }
+  }
+}
+</style>

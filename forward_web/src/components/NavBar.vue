@@ -14,11 +14,11 @@
 
     <b-collapse id="nav-collapse" is-nav="">
       <b-navbar-nav>
-        <b-nav-item v-if="isLoggedIn">
+        <!-- <b-nav-item v-if="isLoggedIn">
           <router-link to="/about" class="navbar__link">
             About
           </router-link>
-        </b-nav-item>
+        </b-nav-item> -->
 
         <b-nav-item v-if="isLoggedIn">
           <router-link to="/politicians" class="navbar__link">
