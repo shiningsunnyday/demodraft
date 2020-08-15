@@ -49,7 +49,7 @@ export default {
         username: '',
         email: '',
         password: '',
-        campaignPending: false // remove after backend established
+        campaignPending: false
       },
     };
   },

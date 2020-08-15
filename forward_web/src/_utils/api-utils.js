@@ -160,7 +160,6 @@ export class ApiUtil {
       response = await axios.get(`${Config.API_URL}/campaign/?politician_id=${politician_id}`);
     } catch (error) {
       console.error(error.message);
-      alert(error.message);
     }
     return response.data;
   }

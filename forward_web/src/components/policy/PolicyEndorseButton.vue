@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div v-if="isPolitician && isLoading">Loading...</div>
+    <div v-if="isPolitician && isLoading">
+      <b-spinner type="grow" label="Loading..."></b-spinner>
+    </div>
     <div v-else>
       <b-button v-if="isPolitician && !hasEndorsed" variant="primary" v-b-modal.modal-endorse>Endorse</b-button>
       <b-button v-else-if="isPolitician && hasEndorsed" variant="success" disabled>You've endorsed this policy!</b-button>
@@ -59,7 +61,6 @@ export default {
     };
   },
   async created() {
-    this.isLoading = true;
     const currentUser = this.$store.getters.getUserInfo;
     if (currentUser.approved) {
       this.isPolitician = true;
@@ -98,7 +99,6 @@ export default {
       }
       this.isSubmitting = false;
       this.stanceText = '';
-      this.isSuccess = true;
       this.$refs['modal-endorse'].hide();
     },
     handleCancel() {

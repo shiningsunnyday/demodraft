@@ -28,8 +28,7 @@
 
         <b-nav-item v-if="isLoggedIn">
           <router-link to="/campaign" class="navbar__link">
-            <span v-if="!userCampaignStatus">Launch Campaign</span>
-            <span v-else>My Campaign</span>
+            <span>Campaign</span>
           </router-link>
         </b-nav-item>
 
@@ -53,15 +52,6 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
-    },
-    userCampaignStatus() {
-      const currentUser = this.$store.getters.getUserInfo;
-      // redundant guard clauses for now
-      if (typeof currentUser.approved === 'undefined' || currentUser.campaignPending || !currentUser.approved) {
-        return false;
-      }
-
-      return true;
     },
   },
   methods: {

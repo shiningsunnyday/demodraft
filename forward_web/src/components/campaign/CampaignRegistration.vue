@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Description</p>
+    <b-container class="campaign-reg__description">Search for representative positions at every level of government that represents your address. Then select a position you would like to launch your campaign for.</b-container>
     <CampaignAddressSearch @handle-submit="handleSubmit" :isSearching="isSearching"/>
     <hr />
     <b-form @submit.prevent="handleSubmitCampaign">
@@ -24,6 +24,7 @@ import CampaignAddressSearch from './CampaignAddressSearch';
 import CampaignFormGroup from './CampaignFormGroup';
 import * as Config from '@/config.json';
 import { ApiUtil } from '@/_utils/api-utils';
+import { simulateApiCall } from '@/_utils/common-utils.js';
 
 export default {
   name: 'CampaignRegistration',
@@ -71,8 +72,8 @@ export default {
       if (data.scope) {
         try {
           this.isLaunching = true;
+          //await simulateApiCall();
           const response = await ApiUtil.submitCampaign(data);
-          //console.log(response);
           const modalMessage = `Campaign successfully submited!`;
           await this.$bvModal.msgBoxOk(modalMessage, {
             title: 'Confirmation',
@@ -88,6 +89,7 @@ export default {
           alert(`Oops, something went wrong.`);
         }
         this.isLaunching = false;
+        // change to campaign details view
         this.$emit('handle-campaign-launch', true);
         return;
       }
@@ -102,6 +104,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.campaign-reg {
+  &__description {
+    max-width: 550px;
+    margin-bottom: 3rem;
+  }
+}
 .launch-button {
   margin-bottom: 5rem;
 }

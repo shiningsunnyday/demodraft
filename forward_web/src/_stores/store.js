@@ -5,7 +5,8 @@ import createPersistedState from "vuex-persistedstate";
 import * as Config from '../config.json';
 
 Vue.use(Vuex);
-
+// separate into files and modules in the future
+// utilize mapstate in components in the future
 export const store = new Vuex.Store({
   plugins: [
     createPersistedState({
@@ -36,6 +37,11 @@ export const store = new Vuex.Store({
     campaignPendingMutation(state) {
       state.user.campaignPending = !state.user.campaignPending;
     },
+    simulateLoginAuth(state, data) {
+      state.status = "success";
+      state.token = data.token;
+      state.user = data.user;
+    }
   },
   actions: {
     /**
@@ -56,7 +62,7 @@ export const store = new Vuex.Store({
           headers: { "content-type": "application/json" },
           auth: Config.API_AUTH
         });
-
+        
         if (response) {
           const { username, email, password, approved, politician_id } = response.data;
           // temp token
@@ -77,6 +83,7 @@ export const store = new Vuex.Store({
       } catch(error) {
         commit("auth_error");
         sessionStorage.removeItem("token");
+        // sessionStorage.clear();
         alert(`Incorrect credentials. Try again?`);
         console.error(error.message);
       }
@@ -134,6 +141,18 @@ export const store = new Vuex.Store({
     changeCampaignPending({ commit }) {
       commit("campaignPendingMutation");
     },
+    simulateLogin({ commit }, user) {
+      const token = 'token';
+      const authUser = {
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        campaignPending: user.campaignPending,
+        approved: user.approved,
+      };
+      const stateData = { token: token, user: authUser };
+      commit("simulateLoginAuth", stateData);
+    }
   },
   getters: {
     isLoggedIn: (state) => !!state.token,

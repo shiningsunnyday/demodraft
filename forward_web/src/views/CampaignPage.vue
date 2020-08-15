@@ -43,7 +43,7 @@ export default {
 h1 {
   color: red;
   text-align: center;
-  margin-bottom: 5rem;
+  margin-bottom: 3rem;
 }
 .center {
   display: flex;
