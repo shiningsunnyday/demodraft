@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="isLoading"><b-spinner type="grow" label="Loading..."></b-spinner></div>
+    <div v-if="isLoading"><b-spinner label="Loading..."></b-spinner></div>
     <div v-else>
       <div v-if="!isApproved">
         <h1>Thank you for submitting your campaign! 😄</h1>
@@ -66,7 +66,7 @@ export default {
   },
   async created() {
     const { username, email, password, campaignPending } = this.$store.getters.getUserInfo;
-    this.$store.dispatch('login', { username, password, campaignPending });
+    await this.$store.dispatch('login', { username, password, campaignPending });
     try {
       const user = this.$store.getters.getUserInfo;
       if (user.approved) {
