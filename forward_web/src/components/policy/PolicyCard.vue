@@ -16,7 +16,7 @@
         <BButton variant="link">
           <router-link
             class="policy__route"
-            v-bind:to="{ name: 'policy-page', params: { id: policy.id } }"
+            :to="{ name: 'policy-page', params: { id: policy.id } }"
           >
             Learn more
           </router-link>

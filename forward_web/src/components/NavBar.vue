@@ -1,11 +1,11 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand>
-      <router-link to="/about" class="navbar__link" v-if="!isLoggedIn">
+      <router-link :to="{ name: 'about-page' }" class="navbar__link" v-if="!isLoggedIn">
         About
       </router-link>
 
-      <router-link to="/" class="navbar__link" v-else>
+      <router-link :to="{ name: 'home-page' }" class="navbar__link" v-else>
         Home
       </router-link>
     </b-navbar-brand>
@@ -15,19 +15,19 @@
     <b-collapse id="nav-collapse" is-nav="">
       <b-navbar-nav>
         <!-- <b-nav-item v-if="isLoggedIn">
-          <router-link to="/about" class="navbar__link">
+          <router-link :to="{ name: 'about-page' }" class="navbar__link">
             About
           </router-link>
         </b-nav-item> -->
 
         <b-nav-item v-if="isLoggedIn">
-          <router-link to="/politicians" class="navbar__link">
+          <router-link :to="{ name: 'politician-page' }" class="navbar__link">
             Politicians
           </router-link>
         </b-nav-item>
 
         <b-nav-item v-if="isLoggedIn">
-          <router-link to="/campaign" class="navbar__link">
+          <router-link :to="{ name: 'campaign-page' }" class="navbar__link">
             <span>Campaign</span>
           </router-link>
         </b-nav-item>
@@ -37,7 +37,7 @@
         </b-nav-item>
 
         <b-nav-item v-if="!isLoggedIn">
-          <router-link to="/login" class="navbar__link">
+          <router-link :to="{ name: 'login-page' }" class="navbar__link">
             <span>Login</span>
           </router-link>
         </b-nav-item>

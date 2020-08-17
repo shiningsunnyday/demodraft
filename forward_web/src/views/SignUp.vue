@@ -33,7 +33,7 @@
         <BButton type="submit" variant="primary">
           Submit
         </BButton>
-        <router-link to="/login" class="signup__link">
+        <router-link :to="{ name: 'login-page' }" class="signup__link">
           Already have an account? Login!
         </router-link>
       </div>

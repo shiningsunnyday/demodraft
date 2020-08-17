@@ -22,9 +22,8 @@
       </div>
       <div v-else class="selected-politician__list" v-for="policy in endorsed" v-bind:key="policy.id">
         <router-link
+          :to="{ name: 'policy-page', params: { id: policy.id } }"
           class="selected-politician__route"
-          v-bind:to="{ name: 'policy-page', params: { id: policy.id } }"
-          target="_blank"
         >
           {{ policy.name }}
         </router-link>
