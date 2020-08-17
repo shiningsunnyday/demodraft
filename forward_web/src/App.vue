@@ -9,7 +9,7 @@
 import LoginPage from './views/LoginPage';
 import HomePage from './views/HomePage';
 import SignUp from './views/SignUp';
-import PolicyPage from './views/PolicyPage';
+import SelectedPolicy from './components/policy/SelectedPolicy';
 import AboutPage from './views/AboutPage';
 import NavBar from './components/NavBar';
 import PoliticianList from './components/politicians/PoliticianList';
@@ -29,7 +29,7 @@ export default {
     HomePage,
     SignUp,
     NavBar,
-    PolicyPage,
+    SelectedPolicy,
     PoliticianList,
     PoliticianCard,
     PoliticianPage,

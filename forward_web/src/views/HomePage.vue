@@ -45,14 +45,21 @@ export default {
     };
   },
   async created() {
-    this.policies = await ApiUtil.getPolicies();
-    this.filteredPolicies = this.policies;
-
-    // Populates a components filter list with filtering options that are linked to the incoming data
-    let tempPoliciesArr = [];
-    this.policies.forEach((policy) => tempPoliciesArr.push(policy.category));
-    // remove duplicate filtering options that populate the filtering lists
-    this.options = [...new Set(tempPoliciesArr)];
+    // move this to navbar.vue method
+    try {
+      this.policies = await ApiUtil.getPolicies();
+      this.filteredPolicies = this.policies;
+      // Populates a components filter list with filtering options that are linked to the incoming data
+      const policyCategories = [];
+      this.policies.forEach((policy) => {
+        policyCategories.push(policy.category);
+      });
+      // remove duplicate filtering options that populate the filtering lists
+      this.options = [...new Set(policyCategories)];
+    } catch (error) {
+      alert(`Error ${error.response.status}: Something went wrong fetching policies`);
+      console.error(error);
+    }
     this.isLoadingPolicies = false;
   },
   methods: {

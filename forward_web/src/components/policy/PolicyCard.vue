@@ -13,13 +13,8 @@
     <b-collapse :id="`collapse-${policy.id}`" class="mt-2">
       <BCard>
         <p class="card-text">{{ policy.statement }}</p>
-        <BButton variant="link">
-          <router-link
-            class="policy__route"
-            :to="{ name: 'policy-page', params: { id: policy.id } }"
-          >
-            Learn more
-          </router-link>
+        <BButton variant="link" @click="handleLearnMore">
+          Learn more
         </BButton>
       </BCard>
     </b-collapse>
@@ -37,6 +32,23 @@ export default {
   props: {
     policy: Object,
   },
+  methods: {
+    async handleLearnMore() {
+      try {
+        const selectedPolicy = await ApiUtil.getPolicy(this.policy.id);
+        this.$router.push({ 
+          name: 'selected-policy', 
+          params: { 
+            id: this.policy.id, 
+            policy: selectedPolicy 
+          }
+        });
+      } catch (error) {
+        alert(`Error ${error.response.status}: Something when wrong fetching this policy`);
+        console.log(error);
+      }
+    }
+  }
 };
 </script>
 

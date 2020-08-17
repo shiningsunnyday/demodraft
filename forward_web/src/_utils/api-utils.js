@@ -1,27 +1,25 @@
 import axios from 'axios';
 import * as Config from '../config.json';
+
+const apiClient = axios.create({
+  baseURL: Config.API_URL,
+  auth: Config.API_AUTH,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  }
+});
+
 export class ApiUtil {
+  
   static async getPolicies() {
-    let response;
-
-    try {
-      response = await axios.get(`${Config.API_URL}/policies/`);
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data;
+    const policiesPromise = await apiClient.get('/policies/');
+    return policiesPromise.data;
   }
 
   static async getPolicy(id) {
-    let response;
-    try {
-      response = await axios.get(`${Config.API_URL}/policy/?id=${id}`);
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data;
+    const policyPromise = await apiClient.get(`/policy/?id=${id}`);
+    return policyPromise.data;
   }
 
   static async getPolicyComments(id) {
