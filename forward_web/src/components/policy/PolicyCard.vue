@@ -11,12 +11,12 @@
       </b-button>
     </b-card-title>
     <b-collapse :id="`collapse-${policy.id}`" class="mt-2">
-      <BCard>
+      <b-card>
         <p class="card-text">{{ policy.statement }}</p>
-        <BButton variant="link" @click="handleLearnMore">
+        <b-button variant="link" @click="handleLearnMore">
           Learn more
-        </BButton>
-      </BCard>
+        </b-button>
+      </b-card>
     </b-collapse>
     <b-card-text class="policy__category">
       Category: {{ policy.category }}
@@ -33,20 +33,11 @@ export default {
     policy: Object,
   },
   methods: {
-    async handleLearnMore() {
-      try {
-        const selectedPolicy = await ApiUtil.getPolicy(this.policy.id);
-        this.$router.push({ 
-          name: 'selected-policy', 
-          params: { 
-            id: this.policy.id, 
-            policy: selectedPolicy 
-          }
-        });
-      } catch (error) {
-        alert(`Error ${error.response.status}: Something when wrong fetching this policy`);
-        console.log(error);
-      }
+    handleLearnMore() {
+      this.$router.push({ 
+        name: 'selected-policy', 
+        params: { id: this.policy.id }
+      });
     }
   }
 };

@@ -12,16 +12,13 @@
       v-for="(comment, index) in comments" 
       :key="`comment-${index}`"
     >
-      <CommentThread 
-        :comment="comment" 
-      ></CommentThread>
+      <CommentThread :comment="comment"></CommentThread>
     </div>
   </div>
   </div>
 </template>
 
 <script>
-import { BButton, BIcon, BIconHandThumbsUp } from "bootstrap-vue";
 import { ApiUtil } from "@/_utils/api-utils.js";
 import CommentThread from './CommentThread';
 import CommentForm from "@/components/comments/CommentForm";
@@ -29,9 +26,6 @@ import CommentForm from "@/components/comments/CommentForm";
 export default {
   name: "CommentList",
   components: {
-    "b-button": BButton,
-    BIcon,
-    BIconHandThumbsUp,
     CommentThread,
     CommentForm,
   },
@@ -45,9 +39,12 @@ export default {
     };
   },
   async created() {
-    this.comments = await ApiUtil.getPolicyComments(
-      this.$route.params.id
-    );
+    try {
+      this.comments = await ApiUtil.getPolicyComments(this.policyId);
+    } catch (error) {
+      alert(`Error ${error.response.status}: Something when wrong fetching this policy's comments`);
+      console.log(error);
+    }
   },
   methods: {
     async updateComments() {
