@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <NavBar />
-    <router-view :key="$route.fullPath" />
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive" :key="$route.fullPath" />
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive" :key="$route.fullPath" />
   </div>
 </template>
 

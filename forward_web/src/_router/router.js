@@ -21,6 +21,7 @@ const routes = [
     component: PoliciesPage,
     meta: {
       requiresAuth: true,
+      keepAlive: true,
     },
   },
   {
@@ -51,12 +52,20 @@ const routes = [
     path: '/politicians',
     name: 'politician-page',
     component: PoliticianPage,
+    meta: {
+      requiresAuth: true,
+      keepAlive: true,
+    },
   },
   {
     path: '/politicians/:id',
     name: 'selected-politician',
     component: SelectedPolitician,
     props: true,
+    meta: {
+      requiresAuth: true,
+      keepAlive: true,
+    },
   },
   {
     path: '/campaign',
