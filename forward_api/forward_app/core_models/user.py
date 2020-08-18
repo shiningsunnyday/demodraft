@@ -3,15 +3,20 @@ from django.contrib.auth.models import User
 
 
 """
-score function that decides moderator status
-    - needs calculating every time any of a Persona's data changes
-    - periodically, a sweeping operation happens through db that:
+score function that decides moderator status off Persona data
+"""
+def score(pers):
+    raise NotImplementedError
+
+
+"""
+- periodically, a sweeping operation happens through db that:
         - updates score of every persona
         - calculates top 10 percentile cutoff
         - writes it to /utils/cutoff_history.txt
         - promotes and degrades personas as needed
 """
-def score(pers):
+def sweep():
     raise NotImplementedError
 
 
