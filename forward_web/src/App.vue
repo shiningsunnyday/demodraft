@@ -9,16 +9,9 @@
 import LoginPage from './views/LoginPage';
 import HomePage from './views/HomePage';
 import SignUp from './views/SignUp';
-import SelectedPolicy from './components/policy/SelectedPolicy';
 import AboutPage from './views/AboutPage';
 import NavBar from './components/NavBar';
-import PoliticianList from './components/politicians/PoliticianList';
-import PoliticianCard from './components/politicians/PoliticianCard';
 import PoliticianPage from './views/PoliticianPage';
-import CampaignDetails from './components/campaign/CampaignDetails';
-import CampaignRegistration from './components/campaign/CampaignRegistration';
-import CampaignAddressSearch from './components/campaign/CampaignAddressSearch';
-import CampaignFormGroup from './components/campaign/CampaignFormGroup';
 import CampaignPage from './views/CampaignPage';
 
 export default {
@@ -29,14 +22,7 @@ export default {
     HomePage,
     SignUp,
     NavBar,
-    SelectedPolicy,
-    PoliticianList,
-    PoliticianCard,
     PoliticianPage,
-    CampaignDetails,
-    CampaignRegistration,
-    CampaignAddressSearch,
-    CampaignFormGroup,
     CampaignPage,
   },
   created() {
