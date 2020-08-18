@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import { store } from '@/_stores/store';
 
 import LoginPage from '@/views/LoginPage';
-import HomePage from '@/views/HomePage';
+import PoliciesPage from '@/views/PoliciesPage';
 import SignUp from '@/views/SignUp';
 import SelectedPolicy from '@/components/policy/SelectedPolicy';
 import AboutPage from '@/views/AboutPage';
@@ -17,8 +17,8 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'home-page',
-    component: HomePage,
+    name: 'policies-page',
+    component: PoliciesPage,
     meta: {
       requiresAuth: true,
     },

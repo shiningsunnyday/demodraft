@@ -5,8 +5,8 @@
         About
       </router-link>
 
-      <router-link :to="{ name: 'home-page' }" class="navbar__link" v-else>
-        Home
+      <router-link :to="{ name: 'policies-page' }" class="navbar__link" v-else>
+        Policies
       </router-link>
     </b-navbar-brand>
 

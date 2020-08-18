@@ -7,7 +7,7 @@
 
 <script>
 import LoginPage from './views/LoginPage';
-import HomePage from './views/HomePage';
+import PoliciesPage from './views/PoliciesPage';
 import SignUp from './views/SignUp';
 import AboutPage from './views/AboutPage';
 import NavBar from './components/NavBar';
@@ -19,7 +19,7 @@ export default {
   components: {
     AboutPage,
     LoginPage,
-    HomePage,
+    PoliciesPage,
     SignUp,
     NavBar,
     PoliticianPage,
