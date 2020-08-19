@@ -1,5 +1,8 @@
 <template>
-  <b-container v-if="!isLoading" class="policy">
+  <div v-if="isLoading" class="policy-loading">
+    <b-spinner label="Loading" :variant="'secondary'">Loading...</b-spinner>
+  </div>
+  <b-container v-else class="policy">
     <h1 class="policy__title">{{ policy.name }}</h1>
     <b-button @click="likePolicy" class="policy__like">
       {{ `${policy.likes} like(s)` }}
@@ -47,16 +50,16 @@ export default {
       alert(`Error ${error.response.status}: Something when wrong fetching this policy`);
       console.log(error);
     }
-
-    this.politician = await ApiUtil.getModifiedPolitician({
-      user: this.$store.getters.getUserInfo,
-    });
-
-    const endorsedPolicies = this.politician.endorsed;
-    for (const endorsement of endorsedPolicies) {
-      if (endorsement.policy_id === this.policy.id) {
-        this.politician.hasEndorsed = true;
-        break;
+    
+    const user = this.$store.getters.getUserInfo;
+    if (user.approved) {
+      this.politician = await ApiUtil.getModifiedPolitician({ user});
+      const endorsedPolicies = this.politician.endorsed;
+      for (const endorsement of endorsedPolicies) {
+        if (endorsement.policy_id === this.policy.id) {
+          this.politician.hasEndorsed = true;
+          break;
+        }
       }
     }
     this.isLoading = false;
@@ -64,7 +67,7 @@ export default {
   methods: {
     async likePolicy() {
       if (!this.hasLiked) {
-        this.likes = await ApiUtil.policyLike(this.$route.params.id);
+        this.policy.likes = await ApiUtil.putPolicyLike(this.policy.id);
         this.hasLiked = true;
       }
     },
@@ -73,6 +76,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.policy-loading {
+  text-align: center;
+}
+
 .policy {
   text-align: center;
 
