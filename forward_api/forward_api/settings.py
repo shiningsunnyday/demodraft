@@ -132,6 +132,7 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
     'PATCH'
+
 ]
 
 #SMTP Configuration
@@ -144,3 +145,4 @@ EMAIL_HOST_PASSWORD = '321Chicken!'
 
 INTERNAL_USERNAMES = ["normalperson", "averagejoe"] + ['aspiringpolitician%d' % i for i in range(1, 21)]
 INTERNAL_PASSWORDS = ["freehealthcare", "universalbasicincome", "iwanttolaunchacampaign"]
+
