@@ -1,26 +1,25 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from forward_app.serializers import *
-from django.contrib.auth import authenticate
-from rest_framework.parsers import JSONParser
-
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import AllowAny
 from rest_framework import status
-
-
-class Meta(object):
-    permission_classes = [AllowAny]
-    authentication_classes = [BasicAuthentication]
-    parser_classes = [JSONParser]
+from .meta import Meta
+from django.conf import settings
 
 
 class Signup(APIView, Meta):
+    def delete(self, request):
+        username, password = request.data["username"], request.data["password"]
+        user = User.objects.get(username=username, password=password)
+        user.delete()
+        return Response(status=status.HTTP_200_OK)
+
     def post(self, request):
-        username, email, password = request.data["username"], request.data["email"], request.data["password"]
+        # return Response("Sorry. We are not accepting new user signups right now.", status=status.HTTP_204_NO_CONTENT)
         sz = UserSerializer(data=request.data)
         if sz.is_valid(raise_exception=True):
             sz.save()
+            user = User.objects.get(**sz.data)
+            persona = Persona.objects.create(user=user)
             return Response(sz.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -28,18 +27,30 @@ class Signup(APIView, Meta):
 class Login(APIView, Meta):
     def post(self, request):
         username, password = request.data["username"], request.data["password"]
+        if username not in settings.INTERNAL_USERNAMES or password not in settings.INTERNAL_PASSWORDS:
+            return Response("Please login with internal username and password.",
+                            status=status.HTTP_401_UNAUTHORIZED)
         exists = User.objects.filter(username=username, password=password).exists()
         if exists:
             user = User.objects.get(username=username, password=password)
             sz = UserSerializer(user)
-            return Response(sz.data, status=status.HTTP_202_ACCEPTED)
+            try:
+                persona = user.persona
+                pol = persona.politician
+                approved = pol.approved
+                data = sz.data
+                data['approved'] = approved
+                data['politician_id'] = pol.id
+                return Response(data, status=status.HTTP_202_ACCEPTED)
+            except AttributeError:
+                return Response(sz.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class Users(APIView, Meta):
     def get(self, request):
         users = User.objects.all()
-        sz = UserSerializer(users, many=True)
+        sz = UsernameSerializer(users, many=True)
         return Response(sz.data, status=status.HTTP_200_OK)
 
 
@@ -184,7 +195,6 @@ class CommentV(APIView, Meta):
         if sz.is_valid(raise_exception=True):
             thread = Thread.objects.get(id=request.data["thread_id"])
             user = User.objects.get(username=request.data["username"])
-
             comment = Comment.objects.get(id=thread.lead_comment_id)
             next_comment_id = comment.next_comment_id
             comments = []
