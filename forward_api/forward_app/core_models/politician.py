@@ -32,6 +32,6 @@ class Campaign(models.Model):
     fundraised = models.IntegerField(default=0)
     fundraise_goal = models.IntegerField(default=0)
     actblue = models.URLField(max_length=200, default="")
-
+    
     class Meta:
         ordering = ['created']

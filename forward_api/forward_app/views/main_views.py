@@ -186,6 +186,14 @@ class ThreadV(APIView, Meta):
             return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request):
+        user = User.objects.get(username=request.data["username"])
+        stage = user.persona.stage
+        if stage == 2:
+            thread = Thread.objects.get(id = request.data["thread_id"])
+            thread.delete()
+        return Response("You are not authorized to delete threads", status=status.HTTP_400_BAD_REQUEST)
+
 
 class CommentV(APIView, Meta):
     def post(self, request):
@@ -226,6 +234,7 @@ class CommentV(APIView, Meta):
         if set(request.data.keys()) != {"comment_id", "content"}:
             return Response("Please provide comment_id, and updated content.", status=status.HTTP_400_BAD_REQUEST)
         sz = UpdatedCommentSerializer(data=request.data)
+
         if sz.is_valid(raise_exception=True):
             comment = Comment.objects.get(id=request.data["comment_id"])
             comment.content = request.data["content"]
@@ -233,4 +242,14 @@ class CommentV(APIView, Meta):
             sz = CommentSerializer(comment)
             return Response(sz.data, status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        user = User.objects.get(username=request.data["username"])
+        stage = user.persona.stage
+        if stage == 2:
+            comment = Comments.objects.get(id = request.data["comment_id"])
+            comment.delete()
+        return Response("You are not authorized to delete comments", status=status.HTTP_400_BAD_REQUEST)
+
+
 

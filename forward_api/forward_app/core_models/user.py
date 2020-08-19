@@ -41,7 +41,6 @@ class Persona(models.Model):
 class Moderator(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     persona = models.OneToOneField(Persona, on_delete=models.CASCADE)
-
     class Meta:
         ordering = ['created']
 
