@@ -14,13 +14,13 @@
 
     <BButton href="#" variant="Link">
       <router-link
-        class="politician-card__route"
-        v-bind:to="{
+        :to="{
           name: 'selected-politician',
           params: {
             id: politician.id,
           },
         }"
+        class="politician-card__route"
       >
         Learn More
       </router-link>

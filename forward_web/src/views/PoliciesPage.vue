@@ -1,8 +1,8 @@
 <template>
-  <div class="home">
-    <h1 class="home__title">Home</h1>
+  <div class="policies">
+    <h1 class="policies__title">Policies</h1>
 
-    <div class="home__filter-container">
+    <div class="policies__filter-container">
       <p id="filter">Filter:</p>
       <Multiselect
         v-model="selectedValues"
@@ -17,7 +17,7 @@
       />
     </div>
     <div v-if="isLoadingPolicies">Loading...</div>
-    <div v-else class="home__policies-container">
+    <div v-else class="policies__policies-container">
       <!-- add isfiltered boolean -->
       <PolicyList v-bind:filteredPolicies="filteredPolicies" />
     </div>
@@ -30,7 +30,7 @@ import Multiselect from 'vue-multiselect';
 import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
-  name: 'home-page',
+  name: 'policies-page',
   components: {
     PolicyList,
     Multiselect,
@@ -45,14 +45,21 @@ export default {
     };
   },
   async created() {
-    this.policies = await ApiUtil.getPolicies();
-    this.filteredPolicies = this.policies;
-
-    // Populates a components filter list with filtering options that are linked to the incoming data
-    let tempPoliciesArr = [];
-    this.policies.forEach((policy) => tempPoliciesArr.push(policy.category));
-    // remove duplicate filtering options that populate the filtering lists
-    this.options = [...new Set(tempPoliciesArr)];
+    // move this to navbar.vue method
+    try {
+      this.policies = await ApiUtil.getPolicies();
+      this.filteredPolicies = this.policies;
+      // Populates a components filter list with filtering options that are linked to the incoming data
+      const policyCategories = [];
+      this.policies.forEach((policy) => {
+        policyCategories.push(policy.category);
+      });
+      // remove duplicate filtering options that populate the filtering lists
+      this.options = [...new Set(policyCategories)];
+    } catch (error) {
+      alert(`Error ${error.response.status}: Something went wrong fetching policies`);
+      console.error(error);
+    }
     this.isLoadingPolicies = false;
   },
   methods: {
@@ -88,7 +95,7 @@ export default {
   align-items: center;
 }
 
-.home {
+.policies {
   text-align: center;
 
   &__filter-container {

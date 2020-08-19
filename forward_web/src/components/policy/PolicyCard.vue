@@ -11,17 +11,12 @@
       </b-button>
     </b-card-title>
     <b-collapse :id="`collapse-${policy.id}`" class="mt-2">
-      <BCard>
+      <b-card>
         <p class="card-text">{{ policy.statement }}</p>
-        <BButton variant="link">
-          <router-link
-            class="policy__route"
-            v-bind:to="{ name: 'policy-page', params: { id: policy.id } }"
-          >
-            Learn more
-          </router-link>
-        </BButton>
-      </BCard>
+        <b-button variant="link" @click="handleLearnMore">
+          Learn more
+        </b-button>
+      </b-card>
     </b-collapse>
     <b-card-text class="policy__category">
       Category: {{ policy.category }}
@@ -37,6 +32,14 @@ export default {
   props: {
     policy: Object,
   },
+  methods: {
+    handleLearnMore() {
+      this.$router.push({ 
+        name: 'selected-policy', 
+        params: { id: this.policy.id }
+      });
+    }
+  }
 };
 </script>
 

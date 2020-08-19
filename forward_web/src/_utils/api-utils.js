@@ -1,38 +1,30 @@
 import axios from 'axios';
 import * as Config from '../config.json';
+
+const apiClient = axios.create({
+  baseURL: Config.API_URL,
+  auth: Config.API_AUTH,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  }
+});
+
 export class ApiUtil {
+  
   static async getPolicies() {
-    let response;
-
-    try {
-      response = await axios.get(`${Config.API_URL}/policies/`);
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data;
+    const policiesPromise = await apiClient.get('/policies/');
+    return policiesPromise.data;
   }
 
   static async getPolicy(id) {
-    let response;
-    try {
-      response = await axios.get(`${Config.API_URL}/policy/?id=${id}`);
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data;
+    const policyPromise = await apiClient.get(`/policy/?id=${id}`);
+    return policyPromise.data;
   }
 
   static async getPolicyComments(id) {
-    let response;
-    try {
-      response = await axios.get(`${Config.API_URL}/thread/?policy_id=${id}`);
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data;
+    const policyCommentsPromise = await apiClient.get(`/thread/?policy_id=${id}`);
+    return policyCommentsPromise.data;
   }
 
   static async getThreadFromComment(id) {
@@ -179,16 +171,44 @@ export class ApiUtil {
   }
 
   static async getStance(data) {
-    try {
-      return await axios({
-        method: 'get',
-        url: `${Config.API_URL}/stance/`,
-        params: { politician_id: data },
-        headers: { "content-type": "application/json" },
-        auth: Config.API_AUTH
-      });
-    } catch (error) {
-      console.error(error.message);
+    return await axios({
+      method: 'get',
+      url: `${Config.API_URL}/stance/`,
+      params: { politician_id: data },
+      headers: { "content-type": "application/json" },
+      auth: Config.API_AUTH
+    });
+  }
+
+  static async getModifiedPolitician(req) {
+    const { user } = req;
+
+    if (!user) {
+      alert('Missing req for getModifiedPolitician');
+      return;
     }
+
+    if (user.approved) {
+      try {
+        const politician = await ApiUtil.getSelectedPolitician(user.politician_id);
+        const stancePromise = await ApiUtil.getStance(user.politician_id);
+        const allPoliticianStances = stancePromise.data;
+        return {
+          id: politician.id,
+          firstName: politician.first,
+          lastName: politician.last,
+          actblue: politician.actblue,
+          fundraised: politician.fundraised,
+          approved: user.approved,
+          position: politician.name,
+          endorsed: allPoliticianStances,
+        };
+      } catch (error) {
+        alert('Oops, something went wrong modifying a politician!');
+        console.error(error);
+      }
+    }
+    
+    return alert('This user is not an approved politician');
   }
 }
