@@ -132,4 +132,17 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
     'PATCH'
+
 ]
+
+#SMTP Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'librian2000@gmail.com'
+EMAIL_HOST_PASSWORD = '321Chicken!'
+
+INTERNAL_USERNAMES = ["normalperson", "averagejoe"] + ['aspiringpolitician%d' % i for i in range(1, 21)]
+INTERNAL_PASSWORDS = ["freehealthcare", "universalbasicincome", "iwanttolaunchacampaign"]
+

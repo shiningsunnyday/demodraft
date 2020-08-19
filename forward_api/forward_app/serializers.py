@@ -10,11 +10,15 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Email already exists.")
         return email
 
-
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
 
+
+class UsernameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
 
 # class GroupSerializer(serializers.HyperlinkedModelSerializer):
 #     class Meta:
@@ -22,10 +26,50 @@ class UserSerializer(serializers.ModelSerializer):
 #         fields = ['url', 'name']
 
 
-class PoliticianSerializer(serializers.HyperlinkedModelSerializer):
+class PoliticianSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField("get_username")
+    state = serializers.SerializerMethodField("get_loc")
+
+    def get_username(self, pol):
+        return pol.persona.user.username
+
+    def get_loc(self, pol):
+        return pol.persona.state
+    
     class Meta:
         model = Politician
-        fields = ['name']
+        fields = ['id', 'name', 'state', 'username', 'first', 'last', 'approved']
+
+
+class CampaignSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField("office_name")
+    first = serializers.SerializerMethodField("get_first")
+    last = serializers.SerializerMethodField("get_last")
+
+    def office_name(self, camp):
+        return camp.politician.name
+
+    def get_first(self, camp):
+        return camp.politician.first
+
+    def get_last(self, camp):
+        return camp.politician.last
+
+    class Meta:
+        model = Campaign
+        fields = ['id', 'name', 'first', 'last', 'actblue', 'fundraised']
+
+
+class MyCampaignSerializer(CampaignSerializer):
+    approved = serializers.SerializerMethodField("is_approved")
+
+    def is_approved(self, camp):
+        pol = camp.politician
+        return pol.approved
+
+    class Meta:
+        model = Campaign
+        fields = ['id', 'approved', 'name', 'first', 'last', 'actblue', 'fundraised', 'fundraise_goal']
 
 
 class PolicySerializer(serializers.ModelSerializer):
@@ -121,6 +165,21 @@ class NextCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'thread_id', 'username', 'content']
+
+
+class StanceSerializer(serializers.ModelSerializer):
+    policy_id = serializers.SerializerMethodField("get_policy_id")
+    policy_name = serializers.SerializerMethodField("get_policy_name")
+
+    def get_policy_id(self, stance):
+        return stance.policy.id
+
+    def get_policy_name(self, stance):
+        return stance.policy.name
+
+    class Meta:
+        model = Stance
+        fields = ['id', 'policy_id', 'policy_name', 'message', 'date']
 
 
 # class AllThreads(serializers.ModelSerializer):
