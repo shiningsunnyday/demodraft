@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <div v-if="isLoading"><b-spinner label="Loading..."></b-spinner></div>
-    <div v-else>
+  <div class="campaign-details">
+    <div v-if="isLoading"><b-spinner :variant="'secondary'" label="Loading..."></b-spinner></div>
+    <div v-else class="campaign-details__content">
       <div v-if="!isApproved">
         <h1>Thank you for submitting your campaign! 😄</h1>
         <h3>
@@ -10,18 +10,31 @@
         <h4>We'll notify you when your submission status is updated</h4>
       </div>
 
-      <div v-else>
-        <h1>Your Campaign Info</h1>
-        <p>Running for: {{ campaign.name }}</p>
+      <b-container v-else class="campaign-details__approved-block">
+        <div>
+          <h1 class="campaign-details__title">My Campaign</h1>
+          <p class="campaign-details__politician-name">{{ politician.firstName }} {{ politician.lastName }}</p>
+          <p class="campaign-details__position">Running for: {{ politician.position }}</p>
+        </div>
         <hr />
 
-        <ul>
-          <li>ActBlue: <a :href="campaign.actblue" target="_blank" rel="noopener noreferrer">{{ campaign.actblue }}</a></li>
-          <li>Fundraise Goal: {{ campaign.fundraise_goal }}</li>
-          <li>Funds Raised: {{ campaign.fundraised }}</li>
-        </ul>
-        <b-form @submit.prevent="handleSubmit">
-
+        <div class="campaign-details__fundraise-block">
+          <p class="campaign-details__actblue-block">
+            <span>ActBlue: </span>
+            <a 
+              class="campaign-details__actblue" 
+              :href="politician.actblue" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              {{ politician.actblue }}
+            </a>
+          </p>
+          <p><span>Goal: </span>{{ politician.fundraiseGoal }}</p>
+          <p><span>Fund Raised: </span>{{ politician.fundraised }}</p>
+        </div>
+        
+        <b-form @submit.prevent="handleSubmit" class="campaign-details__form">
           <b-form-group
             id="mycampaign-group"
             label="My Campaign"
@@ -30,20 +43,27 @@
           >
             <b-form-input
               id="mycampaign"
-              v-model="actblue"
+              v-model="politician.actblue"
               type="text"
               required
             />
             <b-form-input
               id="mycampaign"
-              v-model="fundraiseGoal"
+              v-model="politician.fundraiseGoal"
               type="text"
               required
             />
           </b-form-group>
-          <b-button type="submit">Update</b-button>
+          <div v-if="!isSuccess">
+            <b-button v-if="isUpdated" type="submit">Update</b-button>
+            <b-button v-else disabled>
+              <b-spinner small label="Spinning"></b-spinner>
+              Updating...
+            </b-button>
+          </div>
+          <b-button v-else variant="success" disabled>Updated!</b-button>
         </b-form>
-      </div>
+      </b-container>
     </div>
   </div>
 </template>
@@ -56,50 +76,105 @@ export default {
   name: 'CampaignDetails',
   data() {
     return {
-      user: {},
-      campaign: {},
-      actblue: "",
-      fundraiseGoal: 0,
+      politician: {},
       isApproved: false,
       isLoading: true,
+      isUpdated: true,
+      isSuccess: false,
     };
   },
   async created() {
-    const { username, email, password, campaignPending } = this.$store.getters.getUserInfo;
+    const { username, password, campaignPending } = this.$store.getters.getUserInfo;
     await this.$store.dispatch('login', { username, password, campaignPending });
-    try {
-      const user = this.$store.getters.getUserInfo;
-      if (user.approved) {
-        this.campaign = await ApiUtil.getCampaign(user.politician_id);
-        this.fundraiseGoal = this.campaign.fundraise_goal;
-        this.actblue = this.campaign.actblue;
-        this.isApproved = true;
-        if (user.campaignPending) {
-          this.$store.dispatch('changeCampaignPending');
-        }
+    const user = this.$store.getters.getUserInfo;
+    if (user.approved) {
+      this.politician = await ApiUtil.getModifiedPolitician({user});
+      this.isApproved = this.politician.approved;
+      if (user.campaignPending) {
+        this.$store.dispatch('changeCampaignPending');
       }
-    } catch (error) {
-      alert('Oops, something went wrong checking your campaign status.');
     }
-    
     this.isLoading = false;
   },
   methods: {
     async handleSubmit() {
-      const currentUser = this.$store.getters.getUserInfo;
       try {
-        const response = await ApiUtil.putCampaign({
-          politician_id: currentUser.politician_id,
-          actblue: this.actblue,
-          fundraise_goal: this.fundraiseGoal
+        this.isUpdated = false;
+        const user = this.$store.getters.getUserInfo;
+        const updated = await ApiUtil.putCampaign({
+          politician_id: this.politician.id,
+          actblue: this.politician.actblue,
+          fundraise_goal: this.politician.fundraiseGoal
         });
-        this.campaign = await ApiUtil.getCampaign(currentUser.politician_id);
+        this.politician.actblue = updated.data.actblue;
+        this.politician.fundraiseGoal = updated.data.fundraise_goal;
+        this.isUpdated = true;
+        this.isSuccess = true;
+        setTimeout(() => {
+          this.isSuccess = false;
+        }, 1000);
       } catch (error) {
-        console.log(error.message);
+        alert('Oops, something went wrong updating your campaign!');
+        console.error(error);
       }
     }
   }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.campaign-details {
+  font-size: 14px;
+
+  @media screen and (min-width: 768px) {
+    font-size: 1rem;
+  }
+
+  &__title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  &__politician-name {
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  &__fundraise-block {
+    margin: 1rem 0;
+
+    span {
+      font-weight: bold;
+    }
+  }
+
+  &__actblue-block {
+    @media screen and (min-width: 768px) {
+      display: flex;
+      align-items: center;
+      span {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  &__actblue {
+    display: block;
+    max-width: 300px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    @media screen and (min-width: 768px) {
+      display: inline-block;
+      max-width: 500px;
+    }
+  }
+
+  p {
+    padding: 0;
+    margin: 0;
+  }
+}
+</style>

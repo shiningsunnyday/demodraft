@@ -38,14 +38,13 @@ export class ApiUtil {
     return response.data.splice(1);
   }
 
-  static async policyLike(id) {
-    let response;
+  static async putPolicyLike(id) {
     try {
-      response = await axios.put(`${Config.API_URL}/policy/`, { id: id });
+      const policyLikePromise = await apiClient.put(`/policy/`, { id: id });
+      return policyLikePromise.data.likes;
     } catch (error) {
       console.error(error.message);
     }
-    return response.data.likes;
   }
 
   static async commentLike(id) {
@@ -132,17 +131,8 @@ export class ApiUtil {
   }
 
   static async putCampaign(data) {
-    try {
-      return await axios({
-        method: 'put',
-        url: `${Config.API_URL}/campaign/`,
-        data: data,
-        headers: { "content-type": "application/json" },
-        auth: Config.API_AUTH
-      });
-    } catch (error) {
-      console.error(error.message);
-    }
+    const putCampaignPromise = await apiClient.put('/policies/', data);
+    return putCampaignPromise.data;
   }
 
   static async getCampaign(politician_id) {
@@ -188,27 +178,26 @@ export class ApiUtil {
       return;
     }
 
-    if (user.approved) {
-      try {
-        const politician = await ApiUtil.getSelectedPolitician(user.politician_id);
-        const stancePromise = await ApiUtil.getStance(user.politician_id);
-        const allPoliticianStances = stancePromise.data;
-        return {
-          id: politician.id,
-          firstName: politician.first,
-          lastName: politician.last,
-          actblue: politician.actblue,
-          fundraised: politician.fundraised,
-          approved: user.approved,
-          position: politician.name,
-          endorsed: allPoliticianStances,
-        };
-      } catch (error) {
-        alert('Oops, something went wrong modifying a politician!');
-        console.error(error);
-      }
+    try {
+      const politician = await ApiUtil.getSelectedPolitician(user.politician_id);
+      const stancePromise = await ApiUtil.getStance(user.politician_id);
+      const campaign = await ApiUtil.getCampaign(user.politician_id);
+      const allPoliticianStances = stancePromise.data;
+      return {
+        id: politician.id,
+        firstName: politician.first,
+        lastName: politician.last,
+        state: politician.state,
+        actblue: campaign.actblue,
+        fundraiseGoal: campaign.fundraise_goal,
+        fundraised: campaign.fundraised,
+        position: campaign.name,
+        approved: politician.approved,
+        endorsed: allPoliticianStances,
+      };
+    } catch (error) {
+      alert('Oops, something went wrong modifying a politician!');
+      console.error(error);
     }
-    
-    return alert('This user is not an approved politician');
   }
 }

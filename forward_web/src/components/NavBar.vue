@@ -5,7 +5,7 @@
     </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
+    
     <b-collapse id="nav-collapse" is-nav align="center">
       <b-navbar-nav>
         <div class="not-logout">
@@ -56,17 +56,18 @@ export default {
 .navbar {
   margin-bottom: 2rem;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  padding: 0 12px;
+  padding: 12px 12px;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 769px) {
     height: 75px;
+    padding: 0 12px;
   }
 
   .navbar-nav {
     margin: 0 auto;
     height: 100%;
 
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 769px) {
       .not-logout {
         display: flex;
         height: 100%;
@@ -86,7 +87,7 @@ export default {
       font-size: 1.2rem;
       letter-spacing: 0.05rem;
 
-      @media screen and (min-width: 768px) {
+      @media screen and (min-width: 769px) {
         height: 100%;
       }
 
@@ -111,7 +112,7 @@ export default {
   }
 
   #nav-collapse {
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 769px) {
       height: 100%;
     }
     .navbar-nav {

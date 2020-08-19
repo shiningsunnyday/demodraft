@@ -32,7 +32,7 @@
         >
           {{ policy.name }}
         </b-button>
-        <p class="selected-politician__message">{{ policy.message }}</p>
+        <p class="selected-politician__message">"{{ policy.message }}"</p>
       </div>
     </div>
   </b-container>

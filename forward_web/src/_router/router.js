@@ -64,7 +64,6 @@ const routes = [
     props: true,
     meta: {
       requiresAuth: true,
-      keepAlive: true,
     },
   },
   {
