@@ -1,38 +1,30 @@
 import axios from 'axios';
 import * as Config from '../config.json';
+
+const apiClient = axios.create({
+  baseURL: Config.API_URL,
+  auth: Config.API_AUTH,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  }
+});
+
 export class ApiUtil {
+  
   static async getPolicies() {
-    let response;
-
-    try {
-      response = await axios.get(`${Config.API_URL}/policies/`);
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data;
+    const policiesPromise = await apiClient.get('/policies/');
+    return policiesPromise.data;
   }
 
   static async getPolicy(id) {
-    let response;
-    try {
-      response = await axios.get(`${Config.API_URL}/policy/?id=${id}`);
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data;
+    const policyPromise = await apiClient.get(`/policy/?id=${id}`);
+    return policyPromise.data;
   }
 
   static async getPolicyComments(id) {
-    let response;
-    try {
-      response = await axios.get(`${Config.API_URL}/thread/?policy_id=${id}`);
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data;
+    const policyCommentsPromise = await apiClient.get(`/thread/?policy_id=${id}`);
+    return policyCommentsPromise.data;
   }
 
   static async getThreadFromComment(id) {
@@ -46,14 +38,13 @@ export class ApiUtil {
     return response.data.splice(1);
   }
 
-  static async policyLike(id) {
-    let response;
+  static async putPolicyLike(id) {
     try {
-      response = await axios.put(`${Config.API_URL}/policy/`, { id: id });
+      const policyLikePromise = await apiClient.put(`/policy/`, { id: id });
+      return policyLikePromise.data.likes;
     } catch (error) {
       console.error(error.message);
     }
-    return response.data.likes;
   }
 
   static async commentLike(id) {
@@ -140,17 +131,8 @@ export class ApiUtil {
   }
 
   static async putCampaign(data) {
-    try {
-      return await axios({
-        method: 'put',
-        url: `${Config.API_URL}/campaign/`,
-        data: data,
-        headers: { "content-type": "application/json" },
-        auth: Config.API_AUTH
-      });
-    } catch (error) {
-      console.error(error.message);
-    }
+    const putCampaignPromise = await apiClient.put('/policies/', data);
+    return putCampaignPromise.data;
   }
 
   static async getCampaign(politician_id) {
@@ -179,16 +161,43 @@ export class ApiUtil {
   }
 
   static async getStance(data) {
+    return await axios({
+      method: 'get',
+      url: `${Config.API_URL}/stance/`,
+      params: { politician_id: data },
+      headers: { "content-type": "application/json" },
+      auth: Config.API_AUTH
+    });
+  }
+
+  static async getModifiedPolitician(req) {
+    const { user } = req;
+
+    if (!user) {
+      alert('Missing req for getModifiedPolitician');
+      return;
+    }
+
     try {
-      return await axios({
-        method: 'get',
-        url: `${Config.API_URL}/stance/`,
-        params: { politician_id: data },
-        headers: { "content-type": "application/json" },
-        auth: Config.API_AUTH
-      });
+      const politician = await ApiUtil.getSelectedPolitician(user.politician_id);
+      const stancePromise = await ApiUtil.getStance(user.politician_id);
+      const campaign = await ApiUtil.getCampaign(user.politician_id);
+      const allPoliticianStances = stancePromise.data;
+      return {
+        id: politician.id,
+        firstName: politician.first,
+        lastName: politician.last,
+        state: politician.state,
+        actblue: campaign.actblue,
+        fundraiseGoal: campaign.fundraise_goal,
+        fundraised: campaign.fundraised,
+        position: campaign.name,
+        approved: politician.approved,
+        endorsed: allPoliticianStances,
+      };
     } catch (error) {
-      console.error(error.message);
+      alert('Oops, something went wrong modifying a politician!');
+      console.error(error);
     }
   }
 }

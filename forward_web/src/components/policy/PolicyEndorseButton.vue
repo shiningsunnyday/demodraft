@@ -1,11 +1,8 @@
 <template>
   <div>
-    <div v-if="isPolitician && isLoading">
-      <b-spinner type="grow" label="Loading..."></b-spinner>
-    </div>
-    <div v-else>
-      <b-button v-if="isPolitician && !hasEndorsed" variant="primary" v-b-modal.modal-endorse>Endorse</b-button>
-      <b-button v-else-if="isPolitician && hasEndorsed" variant="success" disabled>You've endorsed this policy!</b-button>
+    <div>
+      <b-button v-if="!politician.hasEndorsed" variant="primary" v-b-modal.modal-endorse>Endorse</b-button>
+      <b-button v-else variant="success" disabled>You've endorsed this policy!</b-button>
       <b-modal
         ref="modal-endorse"
         id="modal-endorse"
@@ -49,51 +46,29 @@ import { simulateApiCall } from '@/_utils/common-utils';
 export default {
   props: {
     policy: Object,
+    politician: Object
   },
   data() {
     return {
       stanceText: '',
-      isPolitician: false,
-      politicianId: 0,
-      isLoading: true,
       isSubmitting: false,
-      hasEndorsed: false,
     };
-  },
-  async created() {
-    const currentUser = this.$store.getters.getUserInfo;
-    if (currentUser.approved) {
-      this.isPolitician = true;
-      this.politicianId = currentUser.politician_id;
-      try {
-        const stanceResponse = await ApiUtil.getStance(this.politicianId);
-        const allPoliticianStances = stanceResponse.data;
-        allPoliticianStances.forEach(stanceObject => {
-          if (stanceObject.policy_id === this.policy.id) {
-            this.hasEndorsed = true;
-          }
-        });
-      } catch (error) {
-        alert('Opps, something went wrong in checking your endorsments!');
-      }
-    }
-    this.isLoading = false;
   },
   methods: {
     async handleSubmit() {
       const stanceData = {
         policy_id: this.policy.id,
-        politician_id: this.politicianId,
+        politician_id: this.politician.id,
         content: this.stanceText,
       };
 
       try {
         this.isSubmitting = true;
         await ApiUtil.postStance(stanceData);
-        const stanceResponse = await ApiUtil.getStance(this.politicianId);
+        const stanceResponse = await ApiUtil.getStance(this.politician.id);
         const allPoliticianStances = stanceResponse.data;
         const mostRecentStancePolicyId = allPoliticianStances[allPoliticianStances.length - 1].policy_id;
-        this.hasEndorsed = (mostRecentStancePolicyId === this.policy.id);
+        this.politician.hasEndorsed = (mostRecentStancePolicyId === this.policy.id);
       } catch (error) {
         alert('Oops, something went wrong.');
       }

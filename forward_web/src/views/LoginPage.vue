@@ -15,7 +15,7 @@
         />
       </BFormGroup>
 
-      <BFormGroup id="password-group" label="Password" label-for="password">
+      <BFormGroup id="password-group" label="Password:" label-for="password">
         <BFormInput
           id="password"
           v-model="user.password"
@@ -25,7 +25,7 @@
       </BFormGroup>
       <div class="login__footer">
         <BButton type="submit" variant="primary">Submit</BButton>
-        <router-link to="/signup" class="login__link">
+        <router-link :to="{ name: 'signup' }" class="login__link">
           Don't have an account? Sign up!
         </router-link>
       </div>

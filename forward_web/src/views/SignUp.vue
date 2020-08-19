@@ -2,7 +2,7 @@
   <div class="signup">
     <h1 class="signup__title">Sign Up</h1>
     <BForm class="signup__form" @submit.prevent="handleSubmit">
-      <BFormGroup id="username-group" label="Username" label-for="username">
+      <BFormGroup id="username-group" label="Username:" label-for="username">
         <BFormInput
           id="username"
           v-model="user.username"
@@ -20,7 +20,7 @@
         <BFormInput id="email" v-model="user.email" type="email" required />
       </BFormGroup>
 
-      <BFormGroup id="password-group" label="Password" label-for="password">
+      <BFormGroup id="password-group" label="Password:" label-for="password">
         <BFormInput
           id="password"
           v-model="user.password"
@@ -33,7 +33,7 @@
         <BButton type="submit" variant="primary">
           Submit
         </BButton>
-        <router-link to="/login" class="signup__link">
+        <router-link :to="{ name: 'login-page' }" class="signup__link">
           Already have an account? Login!
         </router-link>
       </div>

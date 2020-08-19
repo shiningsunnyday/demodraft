@@ -17,18 +17,22 @@
     
     <div class="selected-politician__right">
       <h3>Endorsed</h3>
-      <div class="loading-spinner" v-if="isLoading">
+      <div v-if="isLoading" class="loading-spinner">
         <b-spinner label="Loading..."></b-spinner>
       </div>
-      <div v-else class="selected-politician__list" v-for="policy in endorsed" v-bind:key="policy.id">
-        <router-link
+      <div 
+        v-else 
+        v-for="policy in endorsed" v-bind:key="policy.id"
+        class="selected-politician__list" 
+      >
+        <b-button 
+          @click="handleSelectedPolicy(policy.id)"
+          variant="link"
           class="selected-politician__route"
-          v-bind:to="{ name: 'policy-page', params: { id: policy.id } }"
-          target="_blank"
         >
           {{ policy.name }}
-        </router-link>
-        <p class="selected-politician__message">{{ policy.message }}</p>
+        </b-button>
+        <p class="selected-politician__message">"{{ policy.message }}"</p>
       </div>
     </div>
   </b-container>
@@ -67,9 +71,15 @@ export default {
       }
     });
     this.isLoading = false;
-    // console.log('endorsed: ', this.endorsed);
-    // console.log('politician: ', this.politician);
   },
+  methods: {
+    handleSelectedPolicy(policyId) {
+      this.$router.push({ 
+        name: 'selected-policy', 
+        params: { id: policyId }
+      });
+    }
+  }
 };
 </script>
 
