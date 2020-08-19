@@ -7,49 +7,27 @@
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav align="center">
-      <b-navbar-nav class="navbar__desktop-navbar">
-        <b-nav-item
-          :to="{ name: 'policies-page' }"
-          class="navbar__link"
-          v-if="isLoggedIn"
-        >
-          Policies
-        </b-nav-item>
+      <b-navbar-nav>
+        <div class="not-logout">
+          <b-nav-item :to="{ name: 'policies-page' }" v-if="isLoggedIn">
+            Policies
+          </b-nav-item>
 
-        <b-nav-item
-          :to="{ name: 'politician-page' }"
-          class="navbar__link"
-          v-if="isLoggedIn"
-        >
-          Politicians
-        </b-nav-item>
+          <b-nav-item :to="{ name: 'politician-page' }" v-if="isLoggedIn">
+            Politicians
+          </b-nav-item>
 
-        <b-nav-item
-          :to="{ name: 'about-page' }"
-          class="navbar__link"
-          v-if="isLoggedIn"
-        >
-          About
-        </b-nav-item>
+          <b-nav-item :to="{ name: 'about-page' }" v-if="isLoggedIn">
+            About
+          </b-nav-item>
 
-        <b-nav-item
-          :to="{ name: 'campaign-page' }"
-          class="navbar__link"
-          v-if="isLoggedIn"
-        >
-          <span>Campaign</span>
-        </b-nav-item>
+          <b-nav-item :to="{ name: 'campaign-page' }" v-if="isLoggedIn">
+            <span>Campaign</span>
+          </b-nav-item>
+        </div>
 
-        <b-nav-item class="navbar__link" v-if="isLoggedIn" @click="logout">
+        <b-nav-item class="logout" v-if="isLoggedIn" @click="logout">
           Logout
-        </b-nav-item>
-
-        <b-nav-item
-          :to="{ name: 'login-page' }"
-          class="navbar__link"
-          v-if="!isLoggedIn"
-        >
-          <span>Login</span>
         </b-nav-item>
       </b-navbar-nav>
     </b-collapse>
@@ -78,23 +56,67 @@ export default {
 .navbar {
   margin-bottom: 2rem;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  font-size: 1.2rem;
-  height: 100% !important;
+  padding: 0 12px;
 
-  &__link {
-    padding: 0.5rem 2rem;
+  @media screen and (min-width: 768px) {
+    height: 75px;
+  }
 
-    .nav-link {
-      color: white !important;
+  .navbar-nav {
+    margin: 0 auto;
+    height: 100%;
 
-      &:hover {
-        color: greenyellow !important;
+    @media screen and (min-width: 768px) {
+      .not-logout {
+        display: flex;
+        height: 100%;
+      }
+
+      .logout {
+        position: absolute;
+        right: 0;
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    .nav-item {
+      display: flex;
+      width: 125px;
+      font-size: 1.2rem;
+      letter-spacing: 0.05rem;
+
+      @media screen and (min-width: 768px) {
+        height: 100%;
+      }
+
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        color: white;
+      }
+
+      .router-link-exact-active {
+        border-bottom: 2px solid white;
       }
     }
   }
 
-  &__desktop-navbar {
-    margin: 0 auto;
+  .navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+
+  #nav-collapse {
+    @media screen and (min-width: 768px) {
+      height: 100%;
+    }
+    .navbar-nav {
+      align-items: center;
+    }
   }
 }
 </style>

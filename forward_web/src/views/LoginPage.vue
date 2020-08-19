@@ -15,7 +15,7 @@
         />
       </BFormGroup>
 
-      <BFormGroup id="password-group" label="Password" label-for="password">
+      <BFormGroup id="password-group" label="Password:" label-for="password">
         <BFormInput
           id="password"
           v-model="user.password"
