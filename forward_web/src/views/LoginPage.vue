@@ -49,14 +49,15 @@ export default {
         username: '',
         email: '',
         password: '',
+        campaignPending: false
       },
     };
   },
   methods: {
     handleSubmit() {
-      const { username, email, password } = this.user;
+      const { username, email, password, campaignPending } = this.user;
       this.$store
-        .dispatch('login', { username, password })
+        .dispatch('login', { username, password, campaignPending })
         .then(() => this.$router.push('/'))
         .catch((err) => console.log(err));
     },

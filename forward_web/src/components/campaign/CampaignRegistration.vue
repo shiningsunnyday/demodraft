@@ -1,0 +1,116 @@
+<template>
+  <div>
+    <b-container class="campaign-reg__description">Search for representative positions at every level of government that represents your address. Then select a position you would like to launch your campaign for.</b-container>
+    <CampaignAddressSearch @handle-submit="handleSubmit" :isSearching="isSearching"/>
+    <hr />
+    <b-form @submit.prevent="handleSubmitCampaign">
+      <b-container>
+        <CampaignFormGroup
+          :positions="positions"
+          @update-selected-pos="updateSelectedPos"
+        />
+        <b-button class="launch-button" v-if="isLaunching" disabled>
+          <b-spinner small type="grow"></b-spinner>
+          Launching...
+        </b-button>
+        <b-button v-else-if="civicData.local" class="launch-button" type="submit">Launch</b-button>
+      </b-container>
+    </b-form>
+  </div>
+</template>
+
+<script>
+import CampaignAddressSearch from './CampaignAddressSearch';
+import CampaignFormGroup from './CampaignFormGroup';
+import * as Config from '@/config.json';
+import { ApiUtil } from '@/_utils/api-utils';
+import { simulateApiCall } from '@/_utils/common-utils.js';
+
+export default {
+  name: 'CampaignRegistration',
+  components: {
+    CampaignAddressSearch,
+    CampaignFormGroup,
+  },
+  data() {
+    return {
+      civicData: {},
+      positions: {},
+      selectedPos: {},
+      isLaunching: false,
+      isSearching: false,
+    };
+  },
+  methods: {
+    async handleSubmit(event) {
+      try {
+        this.isSearching = true;
+        const response = await ApiUtil.postAddress({
+          username: this.$store.getters.username,
+          password: this.$store.getters.password, // security risk, will need to use session cookies/JWT
+          address: event,
+        });
+        this.civicData = response.data;
+        this.positions = {
+          local: this.civicData.local,
+          state: this.civicData.state,
+          country: this.civicData.country,
+        };
+      } catch (error) {
+        alert(`Oops, that's not a valid address!`);
+      }
+      this.isSearching = false;
+    },
+    async handleSubmitCampaign() {
+      const { username, campaignPending } = this.$store.getters.getUserInfo;
+      const data = {
+        username: username,
+        scope: this.selectedPos.scope,
+        index: this.selectedPos.index,
+      };
+
+      if (data.scope) {
+        try {
+          this.isLaunching = true;
+          //await simulateApiCall();
+          const response = await ApiUtil.submitCampaign(data);
+          const modalMessage = `Campaign successfully submited!`;
+          await this.$bvModal.msgBoxOk(modalMessage, {
+            title: 'Confirmation',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'success',
+            headerClass: 'p-2 border-bottom-0',
+            footerClass: 'p-2 border-top-0',
+            centered: true,
+          });
+          this.$store.dispatch('changeCampaignPending');
+        } catch (error) {
+          alert(`Oops, something went wrong.`);
+        }
+        this.isLaunching = false;
+        // change to campaign details view
+        this.$emit('handle-campaign-launch', true);
+        return;
+      }
+
+      return alert('Choose a position for your campaign!');
+    },
+    updateSelectedPos(event) {
+      this.selectedPos = event;
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.campaign-reg {
+  &__description {
+    max-width: 550px;
+    margin-bottom: 3rem;
+  }
+}
+.launch-button {
+  margin-bottom: 5rem;
+}
+</style>

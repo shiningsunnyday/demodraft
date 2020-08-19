@@ -5,7 +5,8 @@ import createPersistedState from "vuex-persistedstate";
 import * as Config from '../config.json';
 
 Vue.use(Vuex);
-
+// separate into files and modules in the future
+// utilize mapstate in components in the future
 export const store = new Vuex.Store({
   plugins: [
     createPersistedState({
@@ -15,7 +16,7 @@ export const store = new Vuex.Store({
   state: {
     status: "",
     token: sessionStorage.getItem("token") || "",
-    user: {}, // holds username, email, password, approved, politician_id
+    user: {}, // holds username, email, password, approved, politician_id, campaignPending
   },
   mutations: {
     auth_request(state) {
@@ -33,13 +34,18 @@ export const store = new Vuex.Store({
       state.status = "";
       state.token = "";
     },
-    campaignStatusMutation(state) {
-      state.user.campaignLaunchStatus = !state.user.campaignLaunchStatus;
+    campaignPendingMutation(state) {
+      state.user.campaignPending = !state.user.campaignPending;
     },
+    simulateLoginAuth(state, data) {
+      state.status = "success";
+      state.token = data.token;
+      state.user = data.user;
+    }
   },
   actions: {
     /**
-     * @param {Object} user - Holds username, password, campaignLaunchStatus
+     * @param {Object} user - Holds username, password, launchStatusTest
      */
     async login({ commit }, user) {
       const userData = {
@@ -56,19 +62,18 @@ export const store = new Vuex.Store({
           headers: { "content-type": "application/json" },
           auth: Config.API_AUTH
         });
-
+        
         if (response) {
           const { username, email, password, approved, politician_id } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
-          // remove campaignLaunchStatus after backend established
           const authUser = {
             username: username,
             password: password, // security risk, will need to use session cookies/JWT
             email: email,
             approved: approved,
             politician_id: politician_id,
-            campaignLaunchStatus: user.campaignLaunchStatus,
+            campaignPending: user.campaignPending,
           };
           const stateData = { token: token, user: authUser };
           sessionStorage.setItem("token", token);
@@ -78,6 +83,7 @@ export const store = new Vuex.Store({
       } catch(error) {
         commit("auth_error");
         sessionStorage.removeItem("token");
+        // sessionStorage.clear();
         alert(`Incorrect credentials. Try again?`);
         console.error(error.message);
       }
@@ -106,12 +112,11 @@ export const store = new Vuex.Store({
           const { username, email, password } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64'); 
-          // remove campaignLaunchStatus after backend established
           const newUser = {
             username: username,
             email: email,
             password: password, // security risk, will need to use session cookies/JWT
-            campaignLaunchStatus: user.campaignLaunchStatus,
+            campaignPending: user.campaignPending,
           };
           const stateData = { token: token, user: newUser };
           sessionStorage.setItem("token", token);
@@ -128,21 +133,32 @@ export const store = new Vuex.Store({
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         commit("logout");
-        sessionStorage.removeItem("token");
+        sessionStorage.clear();
         // delete axios.defaults.headers.common["Authorization"];
         resolve();
       });
     },
-    changeCampaignStatus({ commit }) {
-      commit("campaignStatusMutation");
+    changeCampaignPending({ commit }) {
+      commit("campaignPendingMutation");
     },
+    simulateLogin({ commit }, user) {
+      const token = 'token';
+      const authUser = {
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        campaignPending: user.campaignPending,
+        approved: user.approved,
+      };
+      const stateData = { token: token, user: authUser };
+      commit("simulateLoginAuth", stateData);
+    }
   },
   getters: {
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
     username: (state) => state.user.username,
     password: (state) => state.user.password, // security risk, will need to use session cookies/JWT
-    userCampaignStatus: (state) => state.user.campaignLaunchStatus,
     getUserInfo: (state) => state.user,
   },
 });

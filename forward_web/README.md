@@ -1,24 +1,30 @@
 # forward_web
 
 ## Project setup
+
+### Set up config private variables
+
 ```
-npm install
+cd forward_web
+cd src
+cp config.json.example config.json
+```
+
+Inside `config.json` replace with [**THIS**](https://gist.github.com/awexli/c9513713c924b8d45f5e5e4daca9fac5)
+
+
+```javascript
+yarn install
 ```
 
 ### Compiles and hot-reloads for development
-```
-npm run serve
+
+```javascript
+yarn serve
 ```
 
 ### Compiles and minifies for production
-```
-npm run build
-```
 
-### Lints and fixes files
+```javascript
+yarn build
 ```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

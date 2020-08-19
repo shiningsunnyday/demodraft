@@ -58,6 +58,7 @@ export default {
         username: '',
         email: '',
         password: '',
+        campaignPending: false
       },
       submitted: false,
     };
@@ -65,12 +66,13 @@ export default {
   methods: {
     async handleSubmit() {
       this.submitted = true;
-      const { username, email, password } = this.user;
+      const { username, email, password, campaignPending } = this.user;
 
       let data = {
         username: username,
         email: email,
         password: password,
+        campaignPending: campaignPending
       };
 
       this.$store
