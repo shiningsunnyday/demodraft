@@ -16,7 +16,9 @@
         placeholder="Filter by Category"
       />
     </div>
-    <div v-if="isLoadingPolicies">Loading...</div>
+    <div v-if="isLoadingPolicies">
+      <b-spinner label="Loading" :variant="'secondary'">Loading...</b-spinner>
+    </div>
     <div v-else class="policies__policies-container">
       <!-- add isfiltered boolean -->
       <PolicyList v-bind:filteredPolicies="filteredPolicies" />
