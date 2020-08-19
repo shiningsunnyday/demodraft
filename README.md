@@ -19,7 +19,7 @@ Keep master always functional and base work on dev branch off master. Make a pr 
 
 ## Frontend (Alex, Jaytee)
 
-- Make sure you have [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) or [yarn](https://classic.yarnpkg.com/en/docs/getting-started) installed
+- Make sure you have [yarn](https://classic.yarnpkg.com/en/docs/getting-started) installed
 - Go through the `README.md` of [this repo](https://github.com/multiplegeorges/vue-cli-plugin-s3-deploy) and follow the steps for their prerequisites, installation, and usage. This will be used in cases of deploying to s3 bucket manually (see below)
 - [Visual Studio Code](https://code.visualstudio.com/) is the recommended editor with the following plugins/extensions:
   - **Auto Import** - *Automatically finds, parses and provides code actions and code completion for all available imports. Works with Typescript and TSX.*
