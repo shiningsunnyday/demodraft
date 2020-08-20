@@ -129,7 +129,6 @@ export default {
         this.politician.fundraiseGoal = updated.fundraise_goal;
         this.isUpdated = true;
         this.isSuccess = true;
-        console.log(updated);
 
         setTimeout(() => {
           this.isSuccess = false;

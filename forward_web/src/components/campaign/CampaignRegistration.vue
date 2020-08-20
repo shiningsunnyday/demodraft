@@ -1,21 +1,39 @@
 <template>
   <div>
-    <b-container class="campaign-reg__description">Search for representative positions at every level of government that represents your address. Then select a position you would like to launch your campaign for.</b-container>
-    <CampaignAddressSearch @handle-submit="handleSubmit" :isSearching="isSearching"/>
+    <b-container class="campaign-reg__description">
+      Search for representative positions at every level of government that
+      represents your address. Then select a position you would like to launch
+      your campaign for.
+    </b-container>
+
+    <CampaignAddressSearch
+      @handle-submit="handleSubmit"
+      :isSearching="isSearching"
+    />
+
     <hr />
-    <b-form @submit.prevent="handleSubmitCampaign">
-      <b-container>
+
+    <b-container>
+      <b-form @submit.prevent="handleSubmitCampaign">
         <CampaignFormGroup
           :positions="positions"
           @update-selected-pos="updateSelectedPos"
         />
+
         <b-button class="launch-button" v-if="isLaunching" disabled>
           <b-spinner small type="grow"></b-spinner>
           Launching...
         </b-button>
-        <b-button v-else-if="civicData.local" class="launch-button" type="submit">Launch</b-button>
-      </b-container>
-    </b-form>
+
+        <b-button
+          v-else-if="civicData.local"
+          class="launch-button"
+          type="submit"
+        >
+          Launch
+        </b-button>
+      </b-form>
+    </b-container>
   </div>
 </template>
 
