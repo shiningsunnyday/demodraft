@@ -1,6 +1,8 @@
 <template>
   <div class="campaign-details">
-    <div v-if="isLoading"><b-spinner :variant="'secondary'" label="Loading..."></b-spinner></div>
+    <div v-if="isLoading">
+      <b-spinner :variant="'secondary'" label="Loading..."></b-spinner>
+    </div>
     <div v-else class="campaign-details__content">
       <div v-if="!isApproved">
         <h1>Thank you for submitting your campaign! 😄</h1>
@@ -13,18 +15,22 @@
       <b-container v-else class="campaign-details__approved-block">
         <div>
           <h1 class="campaign-details__title">My Campaign</h1>
-          <p class="campaign-details__politician-name">{{ politician.firstName }} {{ politician.lastName }}</p>
-          <p class="campaign-details__position">Running for: {{ politician.position }}</p>
+          <p class="campaign-details__politician-name">
+            {{ politician.firstName }} {{ politician.lastName }}
+          </p>
+          <p class="campaign-details__position">
+            Running for: {{ politician.position }}
+          </p>
         </div>
         <hr />
 
         <div class="campaign-details__fundraise-block">
           <p class="campaign-details__actblue-block">
             <span>ActBlue: </span>
-            <a 
-              class="campaign-details__actblue" 
-              :href="politician.actblue" 
-              target="_blank" 
+            <a
+              class="campaign-details__actblue"
+              :href="politician.actblue"
+              target="_blank"
               rel="noopener noreferrer"
             >
               {{ politician.actblue }}
@@ -33,7 +39,7 @@
           <p><span>Goal: </span>{{ politician.fundraiseGoal }}</p>
           <p><span>Fund Raised: </span>{{ politician.fundraised }}</p>
         </div>
-        
+
         <b-form @submit.prevent="handleSubmit" class="campaign-details__form">
           <b-form-group
             id="mycampaign-group"
@@ -84,16 +90,29 @@ export default {
     };
   },
   async created() {
-    const { username, password, campaignPending } = this.$store.getters.getUserInfo;
-    await this.$store.dispatch('login', { username, password, campaignPending });
+    const {
+      username,
+      password,
+      campaignPending,
+    } = this.$store.getters.getUserInfo;
+
+    await this.$store.dispatch('login', {
+      username,
+      password,
+      campaignPending,
+    });
+
     const user = this.$store.getters.getUserInfo;
+
     if (user.approved) {
-      this.politician = await ApiUtil.getModifiedPolitician({user});
+      this.politician = await ApiUtil.getModifiedPolitician({ user });
       this.isApproved = this.politician.approved;
+
       if (user.campaignPending) {
         this.$store.dispatch('changeCampaignPending');
       }
     }
+
     this.isLoading = false;
   },
   methods: {
@@ -104,12 +123,14 @@ export default {
         const updated = await ApiUtil.putCampaign({
           politician_id: this.politician.id,
           actblue: this.politician.actblue,
-          fundraise_goal: this.politician.fundraiseGoal
+          fundraise_goal: this.politician.fundraiseGoal,
         });
-        this.politician.actblue = updated.data.actblue;
-        this.politician.fundraiseGoal = updated.data.fundraise_goal;
+        this.politician.actblue = updated.actblue;
+        this.politician.fundraiseGoal = updated.fundraise_goal;
         this.isUpdated = true;
         this.isSuccess = true;
+        console.log(updated);
+
         setTimeout(() => {
           this.isSuccess = false;
         }, 1000);
@@ -117,8 +138,8 @@ export default {
         alert('Oops, something went wrong updating your campaign!');
         console.error(error);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

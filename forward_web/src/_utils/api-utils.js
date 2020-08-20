@@ -131,7 +131,7 @@ export class ApiUtil {
   }
 
   static async putCampaign(data) {
-    const putCampaignPromise = await apiClient.put('/policies/', data);
+    const putCampaignPromise = await apiClient.put('/campaign/', data);
     return putCampaignPromise.data;
   }
 

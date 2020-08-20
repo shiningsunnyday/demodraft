@@ -17,13 +17,27 @@
         label-for="email"
         description="We'll never share your email with anyone else."
       >
-        <BFormInput id="email" v-model="user.email" type="email" required />
+        <BFormInput
+          id="email"
+          v-model="user.email"
+          type="email"
+          required
+        />
       </BFormGroup>
 
       <BFormGroup id="password-group" label="Password:" label-for="password">
         <BFormInput
           id="password"
           v-model="user.password"
+          type="password"
+          required
+        />
+      </BFormGroup>
+
+      <BFormGroup id="confirm-password-group" label="Confirm Password:" label-for="confirm-password">
+        <BFormInput
+          id="confirm-password"
+          v-model="user.confirmPassword"
           type="password"
           required
         />
@@ -58,7 +72,8 @@ export default {
         username: '',
         email: '',
         password: '',
-        campaignPending: false
+        confirmPassword: '',
+        campaignPending: false,
       },
       submitted: false,
     };
@@ -72,7 +87,7 @@ export default {
         username: username,
         email: email,
         password: password,
-        campaignPending: campaignPending
+        campaignPending: campaignPending,
       };
 
       this.$store
