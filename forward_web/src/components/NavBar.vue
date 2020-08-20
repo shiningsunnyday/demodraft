@@ -58,7 +58,7 @@ export default {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   padding: 12px 12px;
 
-  @media screen and (min-width: 769px) {
+  @media screen and (min-width: 992px) {
     height: 75px;
     padding: 0 12px;
   }
@@ -67,7 +67,7 @@ export default {
     margin: 0 auto;
     height: 100%;
 
-    @media screen and (min-width: 769px) {
+    @media screen and (min-width: 992px) {
       .not-logout {
         display: flex;
         height: 100%;
@@ -87,7 +87,7 @@ export default {
       font-size: 1.2rem;
       letter-spacing: 0.05rem;
 
-      @media screen and (min-width: 769px) {
+      @media screen and (min-width: 992px) {
         height: 100%;
       }
 
@@ -112,7 +112,7 @@ export default {
   }
 
   #nav-collapse {
-    @media screen and (min-width: 769px) {
+    @media screen and (min-width: 992px) {
       height: 100%;
     }
     .navbar-nav {
