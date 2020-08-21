@@ -10,9 +10,11 @@ def line_prepender(filename, line):
 """
 Updates score of every Persona
 """
-def update_scores(pers):
+def update_scores(pers, comments):
     for p in pers:
-        p.score = p.num_followers / len(pers)
+        per_comments = comments.filter(user=p.user)
+        p.score = sum([comment.likes for comment in per_comments])
+        p.save()
 
 
 """
@@ -29,8 +31,12 @@ def sweep(pers):
     cut = cutoff(pers)
     line_prepender('forward_app/utils/cutoffs.txt', '%s,%f' % (str(datetime.date.today()), cut))
     for p in pers:
-        if p.score > cut and p.stage == 1:  # regular user that meets cutoff
+        if p.score >= cut and p.stage == 1:  # regular user that meets cutoff
             p.stage = 2
+            p.save()
+        elif p.score < cut and p.stage == 2:
+            p.stage = 1
+            p.save()
 
 
 
