@@ -131,8 +131,8 @@ CORS_ALLOW_METHODS = [
     'GET',
     'POST',
     'PUT',
-    'PATCH'
-
+    'PATCH',
+    'DELETE',
 ]
 
 #SMTP Configuration
