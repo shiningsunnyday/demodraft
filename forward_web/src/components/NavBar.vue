@@ -4,7 +4,7 @@
       Demodraft
     </b-navbar-brand>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-    
+
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-navbar-brand>
@@ -58,6 +58,7 @@ export default {
 <style lang="scss" scoped>
 $collapsed-breakpoint: 991px;
 $uncollapsed-breakpoint: 992px;
+
 @mixin navbar-no-burger {
   @media screen and (min-width: $uncollapsed-breakpoint) {
     @content;
@@ -74,11 +75,11 @@ $uncollapsed-breakpoint: 992px;
   margin-bottom: 2rem;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   padding: 12px 12px;
-  
+
   @include navbar-no-burger {
     height: 75px;
     padding: 0 12px;
-  } 
+  }
 
   .navbar-nav {
     display: flex;
@@ -101,7 +102,7 @@ $uncollapsed-breakpoint: 992px;
       width: 125px;
       font-size: 1.2rem;
       letter-spacing: 0.05rem;
-      
+
       a {
         display: flex;
         align-items: center;
