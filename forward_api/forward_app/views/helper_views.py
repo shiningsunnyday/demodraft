@@ -103,6 +103,7 @@ class PoliticianV(APIView, Meta):
             return Response("Either username or password is wrong.", status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.get(username=request.data['username'])
         persona = user.persona
+        persona.stage = 2
         pol = persona.politician
         if pol.approved:
             sz = PoliticianSerializer(pol)
@@ -111,6 +112,7 @@ class PoliticianV(APIView, Meta):
         pol.first = request.data["first"]
         pol.last = request.data["last"]
         camp = Campaign(politician=pol)
+        persona.save()
         pol.save()
         camp.save()
         sz = PoliticianSerializer(pol)
@@ -119,12 +121,16 @@ class PoliticianV(APIView, Meta):
     def get(self, request):
         if set(request.GET.keys()) == {"politician_id"}:
             pol = Politician.objects.get(id=int(request.GET['politician_id']))
-            sz = CampaignSerializer(pol.campaign)
+            camp_sz = CampaignSerializer(pol.campaign)
+            pol_sz = PoliticianSerializer(pol)
+            data = merge(pol_sz.data, camp_sz.data)
         elif set(request.GET.keys()) == set():
             sz = PoliticianSerializer(Politician.objects.filter(approved=True), many=True)
+            data = sz.data
         else:
             sz = PoliticianSerializer(Politician.objects.all(), many=True)
-        return Response(sz.data, status=status.HTTP_200_OK)
+            data = sz.data
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class CampaignV(APIView, Meta):

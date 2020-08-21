@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from forward_app.serializers import *
 from rest_framework import status
 from .meta import Meta
+from forward_app.utils.score_system import *
 from django.conf import settings
 
 
@@ -14,12 +15,14 @@ class Signup(APIView, Meta):
         return Response(status=status.HTTP_200_OK)
 
     def post(self, request):
-        # return Response("Sorry. We are not accepting new user signups right now.", status=status.HTTP_204_NO_CONTENT)
+        return Response("Sorry. We are not accepting new user signups right now.", status=status.HTTP_204_NO_CONTENT)
         sz = UserSerializer(data=request.data)
         if sz.is_valid(raise_exception=True):
             sz.save()
             user = User.objects.get(**sz.data)
-            persona = Persona.objects.create(user=user)
+            persona = Persona(user=user)
+            persona.stage = 1
+            persona.save()
             return Response(sz.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -27,12 +30,14 @@ class Signup(APIView, Meta):
 class Login(APIView, Meta):
     def post(self, request):
         username, password = request.data["username"], request.data["password"]
-        if username not in settings.INTERNAL_USERNAMES or password not in settings.INTERNAL_PASSWORDS:
-            return Response("Please login with internal username and password.",
-                            status=status.HTTP_401_UNAUTHORIZED)
+        # if username not in settings.INTERNAL_USERNAMES or password not in settings.INTERNAL_PASSWORDS:
+        #     return Response("Please login with internal username and password.",
+        #                     status=status.HTTP_401_UNAUTHORIZED)
         exists = User.objects.filter(username=username, password=password).exists()
         if exists:
             user = User.objects.get(username=username, password=password)
+            update_scores(pers=Persona.objects.all(), comments=Comment.objects.all())
+            sweep(Persona.objects.all())
             sz = UserSerializer(user)
             try:
                 persona = user.persona
@@ -40,6 +45,7 @@ class Login(APIView, Meta):
                 approved = pol.approved
                 data = sz.data
                 data['approved'] = approved
+                data['is_mod'] = (persona.stage == 2)
                 data['politician_id'] = pol.id
                 return Response(data, status=status.HTTP_202_ACCEPTED)
             except AttributeError:
@@ -168,7 +174,6 @@ class ThreadV(APIView, Meta):
         else:
             return Response("Please provide thread_id or policy_id.", status=status.HTTP_400_BAD_REQUEST)
 
-
     def post(self, request):
         if set(request.data.keys()) != {"policy_id", "username", "content"}:
             return Response("Please provide policy_id, username, and content.", status=status.HTTP_400_BAD_REQUEST)
@@ -185,6 +190,23 @@ class ThreadV(APIView, Meta):
             comment.save()
             return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        user = User.objects.get(username=request.data["username"])
+        stage = user.persona.stage
+        if stage == 2:
+            thread = Thread.objects.get(id=int(request.data["thread_id"]))
+            # delete comments associated with thread
+            cur_comment_id = thread.lead_comment_id
+            comment = Comment.objects.get(id=cur_comment_id)
+            while cur_comment_id != comment.next_comment_id:
+                cur_comment_id = comment.next_comment_id
+                comment.delete()
+                comment = Comment.objects.get(id=cur_comment_id)
+            comment.delete()
+            thread.delete()
+            return Response("You've deleted the thread.", status=status.HTTP_204_NO_CONTENT)
+        return Response("You are not authorized to delete threads.", status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentV(APIView, Meta):
@@ -234,3 +256,17 @@ class CommentV(APIView, Meta):
             return Response(sz.data, status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request):
+        if set(request.data.keys()) != {"username", "prev_comment_id"}:
+            return Response("Please provide username and prev_comment_id.", status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(username=request.data["username"])
+        stage = user.persona.stage
+        if stage == 2:
+            comment = Comment.objects.get(id=int(request.data["prev_comment_id"]))
+            comment_to_del = Comment.objects.get(id=comment.next_comment_id)
+            next_comment = Comment.objects.get(id=comment_to_del.next_comment_id)
+            comment.next_comment_id = next_comment.id
+            comment_to_del.delete()
+            comment.save()
+            return Response("You've deleted the comment.", status=status.HTTP_204_NO_CONTENT)
+        return Response("You are not authorized to delete comments.", status=status.HTTP_400_BAD_REQUEST)
