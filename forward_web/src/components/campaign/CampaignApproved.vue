@@ -88,10 +88,6 @@ export default {
       isApproved: false,
       isUpdated: true,
       isSuccess: false,
-      userException: {
-        message: '',
-        name: 'UserException'
-      }
     };
   },
   methods: {
