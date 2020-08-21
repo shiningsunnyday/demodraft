@@ -82,7 +82,8 @@ export default {
 
 .policy {
   text-align: center;
-
+  height: 100%;
+  margin-bottom: 5rem;
   &__content {
     margin: 1rem 0;
   }

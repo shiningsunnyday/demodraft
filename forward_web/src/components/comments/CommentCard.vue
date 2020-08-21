@@ -7,44 +7,105 @@
         <BIconHandThumbsUp
           class="comments-wrapper__like-icon"
           variant="dark"
-          v-on:click="handleClick(comment.id)"
+          v-on:click="handleLike(comment.id)"
         />
         <span v-if="!liked">{{ comment.likes }}</span>
         <span v-else>{{ likes }}</span>
       </div>
-      <!-- view replies/reply buttons -->
-      <slot name="buttons"></slot>
+      <b-button 
+        v-if="status.hasReplies && !status.isViewingReplies" 
+        @click="handleViewReplies"
+        variant="link"
+      >
+        view replies
+      </b-button>
+      
+      <b-button 
+        v-else-if="status.isViewingReplies && !isChildComment" 
+        @click="handleViewReplies"
+        variant="link"
+      >
+        hide replies
+      </b-button>
+      <b-button 
+        v-else 
+        @click="handleViewReplies"
+        variant="link"
+      >
+        collapse thread
+      </b-button>
+
+      <b-button 
+        v-if="isChildComment"
+        @click="toggleReplyClick"
+        variant="link"
+      >
+        reply to thread
+      </b-button>
+      <b-button 
+        v-else
+        @click="toggleReplyClick"
+        variant="link"
+      >
+        reply
+      </b-button>
     </div>
-    <slot name="reply-form"></slot>
+    <CommentForm
+      v-if="isReplying"
+      :updateComments="updateRepliesView"
+      :threadId="threadId"
+      :isReply="true"
+    ></CommentForm>
   </div>
 </template>
 
 <script>
-import { BButton, BIcon, BIconHandThumbsUp } from 'bootstrap-vue';
+import { BIconHandThumbsUp } from 'bootstrap-vue';
 import { ApiUtil } from '@/_utils/api-utils.js';
+import CommentForm from "@/components/comments/CommentForm";
 
 export default {
   name: 'CommentCard',
   components: {
-    BButton,
-    BIcon,
     BIconHandThumbsUp,
+    CommentForm
   },
   props: {
     comment: Object,
+    threadId: Number,
     className: String,
+    status: {
+      isViewingReplies: Boolean,
+      hasReplies: Boolean,
+    }
   },
   data() {
     return {
       liked: false,
       likes: 0,
+      commentTime: '',
+      isChildComment: false,
+      isReplying: false,
     };
   },
+  created() {
+    const time = this.comment.time;
+    if (this.comment.next_comment_id) {
+      this.isChildComment = true;
+    }
+  },
   methods: {
-    // prevent hard spamming likes for now
-    // will need to use Vuex state managment to handle this
-    // specific user since you can refresh the page and like again
-    async handleClick(id) {
+    handleViewReplies() {
+      this.$emit('handleViewReplies', this.threadId);
+    },
+    toggleReplyClick() {
+      console.log(this.comment);
+      this.isReplying = !this.isReplying;
+    },
+    updateRepliesView() {
+      this.$emit('updateRepliesView', this.comment);
+    },
+    async handleLike(id) { // prevent hard spamming likes for now
       if (!this.liked) {
         this.likes = await ApiUtil.commentLike(id);
         this.liked = true;

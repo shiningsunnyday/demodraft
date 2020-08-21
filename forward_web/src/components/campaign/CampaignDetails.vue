@@ -41,7 +41,7 @@ export default {
       password,
       campaignPending,
     } = this.$store.getters.getUserInfo;
-
+    
     await this.$store.dispatch('login', {
       username,
       password,

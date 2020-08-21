@@ -28,14 +28,11 @@ export class ApiUtil {
   }
 
   static async getThreadFromComment(id) {
-    let response;
-    try {
-      response = await axios.get(`${Config.API_URL}/thread/?thread_id=${id}`);
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data.splice(1);
+    const threadPromise = await apiClient.get(`/thread/?thread_id=${id}`);
+    return {
+      replies: threadPromise.data.splice(1),
+      leadComment: threadPromise.data[0]
+    };
   }
 
   static async putPolicyLike(id) {
