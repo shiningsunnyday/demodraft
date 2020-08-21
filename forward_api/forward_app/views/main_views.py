@@ -253,6 +253,8 @@ class CommentV(APIView, Meta):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
+        if set(request.data.keys()) != {"username", "prev_comment_id"}:
+            return Response("Please provide username and prev_comment_id.", status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.get(username=request.data["username"])
         stage = user.persona.stage
         if stage == 2:
@@ -261,5 +263,6 @@ class CommentV(APIView, Meta):
             next_comment = Comment.objects.get(id=comment_to_del.next_comment_id)
             comment.next_comment_id = next_comment.id
             comment_to_del.delete()
+            comment.save()
             return Response("You've deleted the comment.", status=status.HTTP_204_NO_CONTENT)
         return Response("You are not authorized to delete comments.", status=status.HTTP_400_BAD_REQUEST)
