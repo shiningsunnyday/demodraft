@@ -170,7 +170,6 @@ class ThreadV(APIView, Meta):
         else:
             return Response("Please provide thread_id or policy_id.", status=status.HTTP_400_BAD_REQUEST)
 
-
     def post(self, request):
         if set(request.data.keys()) != {"policy_id", "username", "content"}:
             return Response("Please provide policy_id, username, and content.", status=status.HTTP_400_BAD_REQUEST)
@@ -187,6 +186,23 @@ class ThreadV(APIView, Meta):
             comment.save()
             return Response(status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        user = User.objects.get(username=request.data["username"])
+        stage = user.persona.stage
+        if stage == 2:
+            thread = Thread.objects.get(id=int(request.data["thread_id"]))
+            # delete comments associated with thread
+            cur_comment_id = thread.lead_comment_id
+            comment = Comment.objects.get(id=cur_comment_id)
+            while cur_comment_id != comment.next_comment_id:
+                cur_comment_id = comment.next_comment_id
+                comment.delete()
+                comment = Comment.objects.get(id=cur_comment_id)
+            comment.delete()
+            thread.delete()
+            return Response("You've deleted the thread.", status=status.HTTP_204_NO_CONTENT)
+        return Response("You are not authorized to delete threads.", status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentV(APIView, Meta):
@@ -236,3 +252,17 @@ class CommentV(APIView, Meta):
             return Response(sz.data, status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request):
+        if set(request.data.keys()) != {"username", "prev_comment_id"}:
+            return Response("Please provide username and prev_comment_id.", status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(username=request.data["username"])
+        stage = user.persona.stage
+        if stage == 2:
+            comment = Comment.objects.get(id=int(request.data["prev_comment_id"]))
+            comment_to_del = Comment.objects.get(id=comment.next_comment_id)
+            next_comment = Comment.objects.get(id=comment_to_del.next_comment_id)
+            comment.next_comment_id = next_comment.id
+            comment_to_del.delete()
+            comment.save()
+            return Response("You've deleted the comment.", status=status.HTTP_204_NO_CONTENT)
+        return Response("You are not authorized to delete comments.", status=status.HTTP_400_BAD_REQUEST)

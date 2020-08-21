@@ -31,10 +31,10 @@ def sweep(pers):
     cut = cutoff(pers)
     line_prepender('forward_app/utils/cutoffs.txt', '%s,%f' % (str(datetime.date.today()), cut))
     for p in pers:
-        if p.score >= cut and p.stage == 1:  # regular user that meets cutoff
+        if p.score > cut and p.stage == 1:  # regular user that meets cutoff
             p.stage = 2
             p.save()
-        elif p.score < cut and p.stage == 2:
+        elif p.score <= cut and p.stage == 2:
             p.stage = 1
             p.save()
 
