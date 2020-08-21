@@ -8,6 +8,7 @@
           view replies
         </BButton>
         <BButton variant="link" @click="handleReplyClick"> reply </BButton>
+        <BButton v-if="isMod" variant="link" @click="deleteThread(comment.thread_id)"> delete </BButton>
       </template>
       <!-- End card buttons -->
 
@@ -24,11 +25,15 @@
     <!-- End leading comment -->
 
     <!-- Replies to leading comment -->
-    <div v-if="isViewReplies" v-for="replies in thread" :key="replies.id">
+    <div v-if="isViewReplies" v-for="(reply, index) in thread" :key="reply.id">
       <CommentCard
-        :comment="replies"
+        :comment="reply"
         :className="`comments-wrapper__sub-comment`"
-      ></CommentCard>
+      >
+        <template v-slot:buttons>
+          <BButton v-if="isMod" variant="link" @click="deleteComment(index)"> delete </BButton>
+        </template>
+      </CommentCard>
     </div>
     <!-- End replies to leading comment -->
   </div>
@@ -60,6 +65,7 @@ export default {
       hasReplies: false,
       thread: [],
       isReplying: false,
+      isMod: true,
     };
   },
   async mounted () {
@@ -77,6 +83,23 @@ export default {
     },
     handleReplyClick() {
       this.isReplying = !this.isReplying;
+    },
+    async deleteThread(threadId) {
+      await ApiUtil.deleteThread(threadId, this.$store.getters.username);
+      this.updateComments();
+    },
+    async deleteComment(index) {
+      let id;
+      if (index == 0) {
+        id = this.comment.id;
+      } else {
+        id = this.thread[index-1].id;
+      }
+      console.log(id);
+      await ApiUtil.deleteComment(id, this.$store.getters.username);
+      this.thread = await ApiUtil.getThreadFromComment(
+        this.comment.thread_id
+      );
     },
     async updateRepliesView() {
       this.thread = await ApiUtil.getThreadFromComment(
