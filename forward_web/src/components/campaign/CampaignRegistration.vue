@@ -40,7 +40,6 @@
 <script>
 import CampaignAddressSearch from './CampaignAddressSearch';
 import CampaignFormGroup from './CampaignFormGroup';
-import * as Config from '@/config.json';
 import { ApiUtil } from '@/_utils/api-utils';
 import { simulateApiCall } from '@/_utils/common-utils.js';
 

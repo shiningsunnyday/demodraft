@@ -81,7 +81,12 @@ export default {
   methods: {
     async handleSubmit() {
       this.submitted = true;
-      const { username, email, password, campaignPending } = this.user;
+      const { username, email, password, confirmPassword, campaignPending } = this.user;
+
+      if (password !== confirmPassword) {
+        alert('Make sure your passwords match');
+        return;
+      }
 
       let data = {
         username: username,

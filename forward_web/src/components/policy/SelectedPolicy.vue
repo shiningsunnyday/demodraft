@@ -8,7 +8,7 @@
       {{ `${policy.likes} like(s)` }}
     </b-button>
     <div class="policy__content">
-      <h4 class="policy__statement">{{ policy.statement }}</h4>
+      <!-- <h4 class="policy__statement">{{ policy.statement }}</h4> -->
       <p class="policy__description">{{ policy.description }}</p>
       <PolicyEndorseButton 
         v-if="politician.approved"
@@ -85,6 +85,10 @@ export default {
 
   &__content {
     margin: 1rem 0;
+  }
+
+  &__description {
+    text-align: justify;
   }
 }
 </style>
