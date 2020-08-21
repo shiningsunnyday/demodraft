@@ -19,7 +19,9 @@ class Signup(APIView, Meta):
         if sz.is_valid(raise_exception=True):
             sz.save()
             user = User.objects.get(**sz.data)
-            persona = Persona.objects.create(user=user)
+            persona = Persona(user=user)
+            persona.stage = 1
+            persona.save()
             return Response(sz.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -27,9 +29,9 @@ class Signup(APIView, Meta):
 class Login(APIView, Meta):
     def post(self, request):
         username, password = request.data["username"], request.data["password"]
-        if username not in settings.INTERNAL_USERNAMES or password not in settings.INTERNAL_PASSWORDS:
-            return Response("Please login with internal username and password.",
-                            status=status.HTTP_401_UNAUTHORIZED)
+        # if username not in settings.INTERNAL_USERNAMES or password not in settings.INTERNAL_PASSWORDS:
+        #     return Response("Please login with internal username and password.",
+        #                     status=status.HTTP_401_UNAUTHORIZED)
         exists = User.objects.filter(username=username, password=password).exists()
         if exists:
             user = User.objects.get(username=username, password=password)
