@@ -11,20 +11,20 @@
           Demodraft
         </b-navbar-brand>
 
-        <div class="not-logout">
-          <b-nav-item :to="{ name: 'policies-page' }" v-if="isLoggedIn">
+        <div class="not-logout" v-if="isLoggedIn">
+          <b-nav-item :to="{ name: 'policies-page' }">
             Policies
           </b-nav-item>
 
-          <b-nav-item :to="{ name: 'politician-page' }" v-if="isLoggedIn">
+          <b-nav-item :to="{ name: 'politician-page' }">
             Politicians
           </b-nav-item>
 
-          <b-nav-item :to="{ name: 'about-page' }" v-if="isLoggedIn">
+          <b-nav-item :to="{ name: 'about-page' }">
             About
           </b-nav-item>
 
-          <b-nav-item :to="{ name: 'campaign-page' }" v-if="isLoggedIn">
+          <b-nav-item :to="{ name: 'campaign-page' }">
             <span>Campaign</span>
           </b-nav-item>
         </div>
