@@ -130,12 +130,6 @@ export default {
     @media screen and (min-width: 768px) {
       width: 75%;
     }
-
-    // .btn {
-    //   @media screen and (max-width: 500px) {
-    //     width: 100px;
-    //   }
-    // }
   }
 
   &__top {
