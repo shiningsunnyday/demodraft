@@ -41,10 +41,11 @@ export class ApiUtil {
     try {
       let payload = {thread_id: thread_id, username: username};
       console.log(payload);
-      await axios.delete(`${Config.API_URL}/thread/`, { data: payload });
+      response = await axios.post(`${Config.API_URL}/thread/`, payload );
     } catch (error) {
       console.error(error.message);
     }
+    return response.data;
   }
 
   static async deleteComment(comment_id, username) {
@@ -52,10 +53,11 @@ export class ApiUtil {
     try {
       let payload = {prev_comment_id: comment_id, username: username};
       console.log(payload);
-      await axios.delete(`${Config.API_URL}/comment/`, { data: payload });
+      response = await axios.post(`${Config.API_URL}/comment/`, payload );
     } catch (error) {
       console.error(error.message);
     }
+    return response.data;
   }
 
   static async putPolicyLike(id) {
