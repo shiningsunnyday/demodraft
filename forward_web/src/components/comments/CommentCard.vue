@@ -71,7 +71,6 @@ export default {
     },
   },
   data() {
-    console.log(this.$store.getters.getUserInfo);
     return {
       liked: false,
       likes: 0,

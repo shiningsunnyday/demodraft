@@ -73,7 +73,6 @@ export default {
     this.cardProps.threadId = this.comment.thread_id;
     this.cardProps.hasReplies = thread.replies.length > 0 ? true : false;
     this.cardProps.isMod = this.$store.getters.getUserInfo.isMod;
-    console.log(this.$store.getters.getUserInfo);
     this.replies = thread.replies;
     this.isLoading = false;
   },
