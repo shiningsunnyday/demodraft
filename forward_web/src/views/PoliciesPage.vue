@@ -4,6 +4,7 @@
 
     <div class="policies__filter-container">
       <p id="filter">Filter:</p>
+
       <Multiselect
         v-model="selectedValues"
         @input="filterPolicies"
@@ -16,13 +17,12 @@
         placeholder="Filter by Category"
       />
     </div>
+
     <div v-if="isLoadingPolicies">
       <b-spinner label="Loading" :variant="'secondary'">Loading...</b-spinner>
     </div>
-    <div v-else class="policies__policies-container">
-      <!-- add isfiltered boolean -->
-      <PolicyList v-bind:filteredPolicies="filteredPolicies" />
-    </div>
+
+    <PolicyList v-bind:filteredPolicies="filteredPolicies" v-else />
   </div>
 </template>
 
@@ -59,7 +59,9 @@ export default {
       // remove duplicate filtering options that populate the filtering lists
       this.options = [...new Set(policyCategories)];
     } catch (error) {
-      alert(`Error ${error.response.status}: Something went wrong fetching policies`);
+      alert(
+        `Error ${error.response.status}: Something went wrong fetching policies`
+      );
       console.error(error);
     }
     this.isLoadingPolicies = false;
