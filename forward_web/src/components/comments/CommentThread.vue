@@ -72,6 +72,8 @@ export default {
     const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
     this.cardProps.threadId = this.comment.thread_id;
     this.cardProps.hasReplies = thread.replies.length > 0 ? true : false;
+    this.cardProps.isMod = this.$store.getters.getUserInfo.isMod;
+    console.log(this.$store.getters.getUserInfo);
     this.replies = thread.replies;
     this.isLoading = false;
   },
@@ -97,8 +99,8 @@ export default {
     },
     async deleteThread(threadId) {
       console.log('delete thread: ', threadId);
-      // await ApiUtil.deleteThread(threadId, this.$store.getters.username);
-      // this.updateComments();
+      await ApiUtil.deleteThread(threadId, this.$store.getters.username);
+      this.updateComments();
     },
     async deleteComment(index) {
       let id;
@@ -108,8 +110,8 @@ export default {
         id = this.replies[index-1].id;
       }
       console.log('delete comment: ', id);
-      // await ApiUtil.deleteComment(id, this.$store.getters.username);
-      // this.updateThread(this.cardProps.threadId);
+      await ApiUtil.deleteComment(id, this.$store.getters.username);
+      this.updateThread(this.cardProps.threadId);
     },
   },
 };
