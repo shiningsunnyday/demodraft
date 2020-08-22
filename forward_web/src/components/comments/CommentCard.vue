@@ -22,15 +22,15 @@
           {{ replyText }}
         </b-button>
       </div>
-      <div class="comments-wrapper__delete">
+      <div v-if="prop.isMod" class="comments-wrapper__delete">
         <b-button 
-          v-if="prop.isMod && !isChildComment"
+          v-if="!isChildComment"
           @click="deleteThread" variant="link"
         >
           delete
         </b-button>
         <b-button 
-          v-else-if="prop.isMod"
+          v-else
           @click="deleteComment" 
           variant="link"
         >

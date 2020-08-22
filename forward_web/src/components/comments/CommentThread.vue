@@ -64,7 +64,7 @@ export default {
         isViewingReplies: false,
         hasReplies: false,
         threadId: 0,
-        isMod: false,
+        isMod: false, // change this to true for testing
       }
     };
   },
@@ -110,6 +110,7 @@ export default {
       }
       console.log('delete comment: ', id);
       // await ApiUtil.deleteComment(id, this.$store.getters.username);
+      // this.updateThread(this.cardProps.threadId);
     },
   },
 };
