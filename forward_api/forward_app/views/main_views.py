@@ -45,13 +45,12 @@ class Login(APIView, Meta):
                 approved = pol.approved
                 data = sz.data
                 data['approved'] = approved
-                data['is_mod'] = (persona.stage == 2)
                 data['politician_id'] = pol.id
                 return Response(data, status=status.HTTP_202_ACCEPTED)
             except AttributeError:
                 data = sz.data
                 data['is_mod'] = (persona.stage == 2)
-                return Response(sz.data, status=status.HTTP_200_OK)
+                return Response(data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
