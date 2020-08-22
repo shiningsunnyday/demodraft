@@ -57,7 +57,7 @@ export class ApiUtil {
     } catch (error) {
       console.error(error.message);
     }
-    // return response.data;
+    return response.data;
   }
 
   static async putPolicyLike(id) {

@@ -71,11 +71,13 @@ export default {
     },
   },
   data() {
+    console.log(this.$store.getters.getUserInfo);
     return {
       liked: false,
       likes: 0,
       isChildComment: false,
       isReplying: false,
+      isMod: this.$store.getters.getUserInfo.isMod,
     };
   },
   created() {

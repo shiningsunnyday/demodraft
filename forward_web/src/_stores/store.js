@@ -64,21 +64,40 @@ export const store = new Vuex.Store({
         });
         
         if (response) {
-          const { username, email, password, approved, politician_id } = response.data;
-          // temp token
-          const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
-          const authUser = {
-            username: username,
-            password: password, // security risk, will need to use session cookies/JWT
-            email: email,
-            approved: approved,
-            politician_id: politician_id,
-            campaignPending: user.campaignPending,
-          };
-          const stateData = { token: token, user: authUser };
-          sessionStorage.setItem("token", token);
-          // axios.defaults.headers.common["Authorization"] = token;
-          commit("auth_success", stateData);
+          console.log(response.status);
+
+          if (response.status == 204) {
+            const { username, email, password, approved, politician_id } = response.data;
+            // temp token
+            const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
+            const authUser = {
+              username: username,
+              password: password, // security risk, will need to use session cookies/JWT
+              email: email,
+              approved: approved,
+              isMod: false,
+              politician_id: politician_id,
+              campaignPending: user.campaignPending,
+            };
+            const stateData = { token: token, user: authUser };
+            sessionStorage.setItem("token", token);
+            // axios.defaults.headers.common["Authorization"] = token;
+            commit("auth_success", stateData);
+          } else {
+            const { username, email, password, is_mod } = response.data;
+            // temp token
+            const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
+            const authUser = {
+              username: username,
+              password: password, // security risk, will need to use session cookies/JWT
+              email: email,
+              isMod: is_mod
+            };
+            const stateData = { token: token, user: authUser };
+            sessionStorage.setItem("token", token);
+            // axios.defaults.headers.common["Authorization"] = token;
+            commit("auth_success", stateData);
+          }
         }
       } catch(error) {
         commit("auth_error");
