@@ -1,7 +1,5 @@
 <template>
-  <div v-if="isLoading" class="policy-loading">
-    <b-spinner label="Loading" :variant="'secondary'">Loading...</b-spinner>
-  </div>
+  <LoadingSpinner v-if="isLoading"></LoadingSpinner>
   <b-container v-else class="policy">
     <h1 class="policy__title">{{ policy.name }}</h1>
     <b-button @click="likePolicy" class="policy__like">
@@ -10,10 +8,11 @@
     <div class="policy__content">
       <!-- <h4 class="policy__statement">{{ policy.statement }}</h4> -->
       <p class="policy__description">{{ policy.description }}</p>
-      <PolicyEndorseButton 
+      <PolicyEndorseButton
         v-if="politician.approved"
         :politician="politician"
-        :policy="policy">
+        :policy="policy"
+      >
       </PolicyEndorseButton>
     </div>
     <hr />
@@ -25,6 +24,7 @@
 import CommentList from '@/components/comments/CommentList';
 import CommentForm from '@/components/comments/CommentForm';
 import PolicyEndorseButton from '@/components/policy/PolicyEndorseButton';
+import LoadingSpinner from '@/components/_common/LoadingSpinner';
 import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
@@ -33,6 +33,7 @@ export default {
     CommentList,
     CommentForm,
     PolicyEndorseButton,
+    LoadingSpinner,
   },
   data() {
     return {
@@ -47,13 +48,15 @@ export default {
     try {
       this.policy = await ApiUtil.getPolicy(this.$route.params.id);
     } catch (error) {
-      alert(`Error ${error.response.status}: Something when wrong fetching this policy`);
+      alert(
+        `Error ${error.response.status}: Something when wrong fetching this policy`
+      );
       console.log(error);
     }
-    
+
     const user = this.$store.getters.getUserInfo;
     if (user.approved) {
-      this.politician = await ApiUtil.getModifiedPolitician({ user});
+      this.politician = await ApiUtil.getModifiedPolitician({ user });
       const endorsedPolicies = this.politician.endorsed;
       for (const endorsement of endorsedPolicies) {
         if (endorsement.policy_id === this.policy.id) {

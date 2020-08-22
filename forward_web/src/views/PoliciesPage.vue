@@ -16,9 +16,7 @@
         placeholder="Filter by Category"
       />
     </div>
-    <div v-if="isLoadingPolicies">
-      <b-spinner label="Loading" :variant="'secondary'">Loading...</b-spinner>
-    </div>
+    <LoadingSpinner v-if="isLoading"></LoadingSpinner>
     <div v-else class="policies__policies-container">
       <!-- add isfiltered boolean -->
       <PolicyList v-bind:filteredPolicies="filteredPolicies" />
@@ -30,12 +28,14 @@
 import PolicyList from '@/components/policy/PolicyList';
 import Multiselect from 'vue-multiselect';
 import { ApiUtil } from '@/_utils/api-utils';
+import LoadingSpinner from '@/components/_common/LoadingSpinner';
 
 export default {
   name: 'policies-page',
   components: {
     PolicyList,
     Multiselect,
+    LoadingSpinner,
   },
   data() {
     return {
@@ -43,7 +43,7 @@ export default {
       filteredPolicies: [], // holds the policies currently rendered to browser
       options: [], // holds all the values that populate the filter list
       selectedValues: null, // holds the selected filtering options the user selects
-      isLoadingPolicies: true,
+      isLoading: true,
     };
   },
   async created() {
@@ -59,10 +59,12 @@ export default {
       // remove duplicate filtering options that populate the filtering lists
       this.options = [...new Set(policyCategories)];
     } catch (error) {
-      alert(`Error ${error.response.status}: Something went wrong fetching policies`);
+      alert(
+        `Error ${error.response.status}: Something went wrong fetching policies`
+      );
       console.error(error);
     }
-    this.isLoadingPolicies = false;
+    this.isLoading = false;
   },
   methods: {
     filterPolicies() {

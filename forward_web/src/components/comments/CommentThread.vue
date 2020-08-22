@@ -70,7 +70,6 @@ export default {
   },
   async created() {
     const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
-    console.log(thread.data);
     this.cardProps.threadId = this.comment.thread_id;
     this.cardProps.hasReplies = thread.replies.length > 0 ? true : false;
     this.replies = thread.replies;

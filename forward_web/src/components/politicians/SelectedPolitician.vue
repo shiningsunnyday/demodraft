@@ -1,5 +1,6 @@
 <template>
-  <b-container class="selected-politician">
+  <LoadingSpinner v-if="isLoading"></LoadingSpinner>
+  <b-container v-else class="selected-politician">
     <div class="selected-politician__left">
       <h1>{{ politician.first }} {{ politician.last }}</h1>
       <div class="selected-politician__img-wrapper">
@@ -9,23 +10,27 @@
       </div>
       <div class="selected-politician__description">
         <p>Running for {{ politician.name }}</p>
-        <p v-if="politician.actblue">Actblue:
-          <a :href="politician.actblue" target="_blank" rel="noopener noreferrer">{{ politician.actblue }}</a>
+        <p v-if="politician.actblue">
+          Actblue:
+          <a
+            :href="politician.actblue"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ politician.actblue }}
+          </a>
         </p>
       </div>
     </div>
-    
+
     <div class="selected-politician__right">
       <h3>Endorsed</h3>
-      <div v-if="isLoading" class="loading-spinner">
-        <b-spinner label="Loading..."></b-spinner>
-      </div>
-      <div 
-        v-else 
-        v-for="policy in endorsed" v-bind:key="policy.id"
-        class="selected-politician__list" 
+      <div
+        v-for="policy in endorsed"
+        v-bind:key="policy.id"
+        class="selected-politician__list"
       >
-        <b-button 
+        <b-button
           @click="handleSelectedPolicy(policy.id)"
           variant="link"
           class="selected-politician__route"
@@ -40,9 +45,13 @@
 
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
+import LoadingSpinner from '@/components/_common/LoadingSpinner';
 
 export default {
   name: 'SelectedPolitician',
+  components: {
+    LoadingSpinner,
+  },
   data() {
     return {
       politician: {},
@@ -59,27 +68,30 @@ export default {
     const stanceResponse = await ApiUtil.getStance(this.politician.id);
     this.stances = stanceResponse.data;
 
-    const policySet = new Set();
-    this.stances.forEach((stance) => {
-      if (!policySet.has(stance.policy_id)) {
-        policySet.add(stance.policy_id);
-        this.endorsed.push({
-          name: stance.policy_name,
-          message: stance.message,
-          id: stance.policy_id,
-        });
-      }
-    });
+    if (this.stances.length > 0) {
+      const policySet = new Set();
+      this.stances.forEach((stance) => {
+        if (!policySet.has(stance.policy_id)) {
+          policySet.add(stance.policy_id);
+          this.endorsed.push({
+            name: stance.policy_name,
+            message: stance.message,
+            id: stance.policy_id,
+          });
+        }
+      });
+    }
+
     this.isLoading = false;
   },
   methods: {
     handleSelectedPolicy(policyId) {
-      this.$router.push({ 
-        name: 'selected-policy', 
-        params: { id: policyId }
+      this.$router.push({
+        name: 'selected-policy',
+        params: { id: policyId },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -101,7 +113,7 @@ export default {
     }
   }
 
-  &__left{
+  &__left {
     @include flex-column-center;
     @media screen and (min-width: 1280px) {
       width: 500px;
