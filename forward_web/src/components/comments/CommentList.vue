@@ -13,7 +13,7 @@
       v-for="(comment, index) in comments" 
       :key="`comment-${index}`"
     >
-      <CommentThread :comment="comment"></CommentThread>
+      <CommentThread :comment="comment" :updateComments="updateComments"></CommentThread>
     </div>
   </div>
   </div>

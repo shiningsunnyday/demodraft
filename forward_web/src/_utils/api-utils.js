@@ -30,9 +30,34 @@ export class ApiUtil {
   static async getThreadFromComment(id) {
     const threadPromise = await apiClient.get(`/thread/?thread_id=${id}`);
     return {
-      replies: threadPromise.data.splice(1),
+      data: threadPromise.data,
+      replies: threadPromise.data.slice(1),
       leadComment: threadPromise.data[0]
     };
+  }
+
+  static async deleteThread(thread_id, username) {
+    let response;
+    try {
+      let payload = {thread_id: thread_id, username: username};
+      console.log(payload);
+      response = await axios.delete(`${Config.API_URL}/thread/`, { data: payload });
+    } catch (error) {
+      console.error(error.message);
+    }
+    return response.data;
+  }
+
+  static async deleteComment(comment_id, username) {
+    let response;
+    try {
+      let payload = {prev_comment_id: comment_id, username: username};
+      console.log(payload);
+      response = await axios.delete(`${Config.API_URL}/comment/`, { data: payload });
+    } catch (error) {
+      console.error(error.message);
+    }
+    // return response.data;
   }
 
   static async putPolicyLike(id) {
