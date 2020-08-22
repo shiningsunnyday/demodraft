@@ -133,3 +133,9 @@ Backend
 - [Serializer relations](https://www.django-rest-framework.org/api-guide/relations/)
 
 - [Server-side setup with Django](https://www.youtube.com/watch?v=u0oEIqQV_-E)
+
+- [Django CORS support](https://github.com/adamchainz/django-cors-headers#configuration)
+
+- [Route one request method to another using middleware](https://www.guguweb.com/2014/06/25/put-and-delete-http-requests-with-django-and-jquery/#:~:text=Django%20does%20not%20put%20data,with%20GET%20or%20POST%20data.) (outdated so use latest Django documentation)
+
+
