@@ -77,10 +77,12 @@ export default {
   &__filter-container {
     display: flex;
     align-items: center;
-
+    margin: 1rem 0;
+    height: 50px;
+    
     #filter {
       padding: 0;
-      margin: 0 15px;
+      margin: 0 1rem;
     }
 
     .multiselect {
