@@ -85,6 +85,7 @@ export const store = new Vuex.Store({
             commit("auth_success", stateData);
           } else {
             const { username, email, password, is_mod } = response.data;
+            console.log(is_mod);
             // temp token
             const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
             const authUser = {
