@@ -63,12 +63,9 @@ yarn build
 - Go through [tech folder](https://drive.google.com/drive/u/1/folders/1mzIpEBgastJnrVOOt-JvNQSlSmSnBuAp)
   - Understand data models and relations on MVP slide deck
   - Expected API endpoints and example behavior in ./api_endpoints
-- To reset a db.sqlite3 from /forward_api:
+- To reset a db.sqlite3 from /forward_api (concatenating cause you'll be running this a lot):
 ```
-rm db.sqlite3
-python manage.py makemigrations
-python manage.py migrate
-./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney')"
+rm db.sqlite3 && python manage.py makemigrations && python manage.py migrate && ./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney')"
 python manage.py runserver
 ```
 Ping Michael for a script that adds a specifiable amount of Yang2020 policies, two approved politicians and optional # of aspiring politicians. For duration of development, api_dev is a backup of db on the server, so you can commit db.sqlite3 and pull on the server.
