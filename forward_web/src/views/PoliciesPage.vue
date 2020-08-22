@@ -4,6 +4,7 @@
 
     <div class="policies__filter-container">
       <p id="filter">Filter:</p>
+
       <Multiselect
         v-model="selectedValues"
         @input="filterPolicies"
@@ -16,11 +17,10 @@
         placeholder="Filter by Category"
       />
     </div>
+
     <LoadingSpinner v-if="isLoading"></LoadingSpinner>
-    <div v-else class="policies__policies-container">
-      <!-- add isfiltered boolean -->
-      <PolicyList v-bind:filteredPolicies="filteredPolicies" />
-    </div>
+
+    <PolicyList v-else :filteredPolicies="filteredPolicies" />
   </div>
 </template>
 

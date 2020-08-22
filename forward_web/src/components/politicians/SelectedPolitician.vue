@@ -1,31 +1,41 @@
 <template>
   <LoadingSpinner v-if="isLoading"></LoadingSpinner>
   <b-container v-else class="selected-politician">
-    <div class="selected-politician__left">
+    <div class="selected-politician__follow-button-container">
+      <b-button size="sm"> <BIconPersonPlus /> Follow </b-button>
+    </div>
+
+    <div class="selected-politician__top">
       <h1>{{ politician.first }} {{ politician.last }}</h1>
+
       <div class="selected-politician__img-wrapper">
         <img
           src="https://i.picsum.photos/id/1025/4951/3301.jpg?hmac=_aGh5AtoOChip_iaMo8ZvvytfEojcgqbCH7dzaz-H8Y"
         />
       </div>
+
       <div class="selected-politician__description">
         <p>Running for {{ politician.name }}</p>
-        <p v-if="politician.actblue">
-          Actblue:
+
+        <p v-if="politician.actblue" class="selected-politician__actblue-link">
           <a
             :href="politician.actblue"
             target="_blank"
             rel="noopener noreferrer"
           >
-            {{ politician.actblue }}
+            Actblue
           </a>
         </p>
       </div>
     </div>
 
-    <div class="selected-politician__right">
+    <div class="selected-politician__bottom">
       <h3>Endorsed</h3>
+
+      <LoadingSpinner v-if="isLoading"></LoadingSpinner>
+
       <div
+        v-else
         v-for="policy in endorsed"
         v-bind:key="policy.id"
         class="selected-politician__list"
@@ -37,6 +47,7 @@
         >
           {{ policy.name }}
         </b-button>
+
         <p class="selected-politician__message">"{{ policy.message }}"</p>
       </div>
     </div>
@@ -46,11 +57,13 @@
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
 import LoadingSpinner from '@/components/_common/LoadingSpinner';
+import { BIconPersonPlus } from 'bootstrap-vue';
 
 export default {
   name: 'SelectedPolitician',
   components: {
     LoadingSpinner,
+    BIconPersonPlus,
   },
   data() {
     return {
@@ -105,26 +118,41 @@ export default {
 .selected-politician {
   font-size: 14px;
 
-  @media screen and (min-width: 1280px) {
-    display: flex;
+  @media screen and (min-width: 768px) {
+    @include flex-column-center;
     font-size: 1rem;
     > * {
       padding: 1rem;
     }
   }
 
-  &__left {
+  &__follow-button-container {
+    display: flex;
+    justify-content: flex-end;
+
+    @media screen and (min-width: 768px) {
+      width: 75%;
+    }
+  }
+
+  &__top {
     @include flex-column-center;
-    @media screen and (min-width: 1280px) {
+    @media screen and (min-width: 768px) {
       width: 500px;
     }
   }
 
-  &__right {
+  &__bottom {
     @include flex-column-center;
-    @media screen and (min-width: 1280px) {
+    @media screen and (min-width: 768px) {
       width: 500px;
     }
+  }
+
+  &__actblue-link {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 1.2rem;
   }
 
   &__img-wrapper {
