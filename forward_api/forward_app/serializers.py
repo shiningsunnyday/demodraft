@@ -79,9 +79,15 @@ class MyCampaignSerializer(CampaignSerializer):
 
 
 class PolicySerializer(serializers.ModelSerializer):
+    likes = serializers.SerializerMethodField("get_likes")
+
+    def get_likes(self, policy):
+        pop = policy.popularity
+        return pop.likes
+
     class Meta:
         model = Policy
-        fields = ['id', 'created', 'category', 'name', 'statement']
+        fields = ['id', 'created', 'category', 'name', 'statement', 'likes']
 
 
 class PolicyDetailedSerializer(serializers.ModelSerializer):
