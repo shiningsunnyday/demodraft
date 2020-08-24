@@ -6,7 +6,7 @@ Our tech stack is **AWS -> Django REST -> Vue.js**. We use ec2 instance as our s
 
 The static development site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com). There's a boilerplate app. It fetches the API for politicians from the server.
 
-The development API endpoint is [here](http://ec2-54-151-48-129.us-west-1.compute.amazonaws.comm). It should be on track with api_dev branch. It will nearly always be working. Upon launch there will be a production API endpoint on track with master branch that will always be working.
+The development API endpoint is [here](http://ec2-54-151-48-129.us-west-1.compute.amazonaws.com). It should be on track with api_dev branch. It will nearly always be working. Upon launch there will be a production API endpoint on track with master branch that will always be working.
 
 Keep master always functional and base work on dev branch off api_dev or web_dev then make pr into api_dev or web_dev. Make pr into master once it's tested and other devs can fast-forward their dev branches.
 
