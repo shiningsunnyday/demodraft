@@ -131,8 +131,8 @@ CORS_ALLOW_METHODS = [
     'GET',
     'POST',
     'PUT',
-    'PATCH'
-
+    'PATCH',
+    'DELETE',
 ]
 
 #SMTP Configuration
@@ -146,3 +146,5 @@ EMAIL_HOST_PASSWORD = '321Chicken!'
 INTERNAL_USERNAMES = ["normalperson", "averagejoe"] + ['aspiringpolitician%d' % i for i in range(1, 21)]
 INTERNAL_PASSWORDS = ["freehealthcare", "universalbasicincome", "iwanttolaunchacampaign"]
 
+# HELPFUL
+# ./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney')"

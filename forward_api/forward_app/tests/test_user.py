@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.test import Client
+from ..utils.score_system import *
 from django.contrib.auth.models import User
 from forward_app.core_models import Persona
 from forward_app.utils.civic import fetchPositions, normalizeAddress, toAddress
@@ -47,7 +48,13 @@ class PersonaTest(TestCase):
         self.assertEqual(norm_address['zip'],'22911')
 
 
+class ScoreTest(TestCase):
+    def setUp(self):
+        pass
 
+    def testSweep(self):
+        pers = Persona.objects.all()
+        sweep(pers)
 
 
 

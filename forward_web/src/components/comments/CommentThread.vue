@@ -7,21 +7,28 @@
       <!-- Leading comment -->
       <CommentCard
         :comment="comment"
-        :status="status"
-        :threadId="threadId"
+        :prop="cardProps"
         @handleViewReplies="handleViewReplies"
         @updateRepliesView="updateRepliesView"
+        @deleteThread="deleteThread"
+        @deleteComment="deleteComment"
       ></CommentCard>
       <!-- End leading comment -->
 
       <!-- Replies to leading comment -->
-      <div v-if="status.isViewingReplies" v-for="reply in replies" :key="reply.id">
+      <div 
+        v-if="cardProps.isViewingReplies" 
+        v-for="(reply, index) in replies" 
+        :key="reply.id"
+      >
         <CommentCard
           :comment="reply"
-          :threadId="threadId"
-          :status="status"
+          :index="index"
+          :prop="cardProps"
           @handleViewReplies="handleViewReplies"
           @updateRepliesView="updateRepliesView"
+          @deleteThread="deleteThread"
+          @deleteComment="deleteComment"
           :className="`comments-wrapper__sub-comment`"
         ></CommentCard>
       </div>
@@ -31,7 +38,6 @@
 </template>
 
 <script>
-import { BButton, BIcon, BIconHandThumbsUp } from 'bootstrap-vue';
 import CommentCard from './CommentCard';
 import CommentCardPlaceholder from './CommentCardPlaceholder';
 import CommentForm from '@/components/comments/CommentForm';
@@ -40,9 +46,6 @@ import { ApiUtil } from '@/_utils/api-utils.js';
 export default {
   name: 'CommentThread',
   components: {
-    'b-button': BButton,
-    BIcon,
-    BIconHandThumbsUp,
     CommentCard,
     CommentForm,
     CommentCardPlaceholder
@@ -54,21 +57,23 @@ export default {
   },
   data() {
     return {
-      threadId: 0,
       replies: [],
-      status: {
-        isViewingReplies: false,
-        hasReplies: false,
-      },
       replyComment: {}, // in progress
       isLoading: true,
+      cardProps: {
+        isViewingReplies: false,
+        hasReplies: false,
+        threadId: 0,
+        isMod: false, // change this to true for testing
+      }
     };
   },
   async created() {
-    this.threadId = this.comment.thread_id;
-    const thread = await ApiUtil.getThreadFromComment(this.threadId);
+    const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
+    this.cardProps.threadId = this.comment.thread_id;
+    this.cardProps.hasReplies = thread.replies.length > 0 ? true : false;
+    this.cardProps.isMod = this.$store.getters.getUserInfo.isMod;
     this.replies = thread.replies;
-    this.status.hasReplies = this.replies.length > 0 ? true : false;
     this.isLoading = false;
   },
   methods: {
@@ -78,18 +83,34 @@ export default {
     },
     handleViewReplies(threadId) {
       // only make api call when viewing replies
-      if (!this.status.isViewingReplies) {
+      if (!this.cardProps.isViewingReplies) {
         this.updateThread(threadId);
       }
-      this.status.isViewingReplies = !this.status.isViewingReplies;
+      this.cardProps.isViewingReplies = !this.cardProps.isViewingReplies;
     },
     updateRepliesView() {
-      this.updateThread(this.threadId);
+      this.updateThread(this.cardProps.threadId);
       // only open replies if closed
-      if (!this.status.isViewingReplies) { 
-        this.status.isViewingReplies = !this.status.isViewingReplies;
+      if (!this.cardProps.isViewingReplies) { 
+        this.cardProps.isViewingReplies = !this.cardProps.isViewingReplies;
       }
-      this.status.hasReplies = true;
+      this.cardProps.hasReplies = true;
+    },
+    async deleteThread(threadId) {
+      console.log('delete thread: ', threadId);
+      await ApiUtil.deleteThread(threadId, this.$store.getters.username);
+      this.updateComments();
+    },
+    async deleteComment(index) {
+      let id;
+      if (index == 0) {
+        id = this.comment.id;
+      } else {
+        id = this.replies[index-1].id;
+      }
+      console.log('delete comment: ', id);
+      await ApiUtil.deleteComment(id, this.$store.getters.username);
+      this.updateThread(this.cardProps.threadId);
     },
   },
 };
@@ -105,6 +126,7 @@ export default {
     border: 1px solid rgb(224, 224, 224);
     padding: 10px;
     margin-left: 2rem;
+    font-size: 14px;
   }
 }
 </style>

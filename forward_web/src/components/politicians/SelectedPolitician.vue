@@ -1,5 +1,6 @@
 <template>
-  <b-container class="selected-politician">
+  <LoadingSpinner v-if="isLoading"></LoadingSpinner>
+  <b-container v-else class="selected-politician">
     <div class="selected-politician__follow-button-container">
       <b-button size="sm"> <BIconPersonPlus /> Follow </b-button>
     </div>
@@ -31,9 +32,7 @@
     <div class="selected-politician__bottom">
       <h3>Endorsed</h3>
 
-      <div v-if="isLoading" class="loading-spinner">
-        <b-spinner label="Loading..."></b-spinner>
-      </div>
+      <LoadingSpinner v-if="isLoading"></LoadingSpinner>
 
       <div
         v-else
@@ -57,11 +56,13 @@
 
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
+import LoadingSpinner from '@/components/_common/LoadingSpinner';
 import { BIconPersonPlus } from 'bootstrap-vue';
 
 export default {
   name: 'SelectedPolitician',
   components: {
+    LoadingSpinner,
     BIconPersonPlus,
   },
   data() {
@@ -80,17 +81,19 @@ export default {
     const stanceResponse = await ApiUtil.getStance(this.politician.id);
     this.stances = stanceResponse.data;
 
-    const policySet = new Set();
-    this.stances.forEach((stance) => {
-      if (!policySet.has(stance.policy_id)) {
-        policySet.add(stance.policy_id);
-        this.endorsed.push({
-          name: stance.policy_name,
-          message: stance.message,
-          id: stance.policy_id,
-        });
-      }
-    });
+    if (this.stances.length > 0) {
+      const policySet = new Set();
+      this.stances.forEach((stance) => {
+        if (!policySet.has(stance.policy_id)) {
+          policySet.add(stance.policy_id);
+          this.endorsed.push({
+            name: stance.policy_name,
+            message: stance.message,
+            id: stance.policy_id,
+          });
+        }
+      });
+    }
 
     this.isLoading = false;
   },

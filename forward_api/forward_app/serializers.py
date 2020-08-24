@@ -15,6 +15,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password']
 
 
+class PersonaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Persona
+        fields = ['user', 'stage', 'score']
+
+
 class UsernameSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

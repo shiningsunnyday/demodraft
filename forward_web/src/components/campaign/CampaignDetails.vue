@@ -1,8 +1,6 @@
 <template>
   <div class="campaign-details">
-    <div v-if="isLoading">
-      <b-spinner :variant="'secondary'" label="Loading..."></b-spinner>
-    </div>
+    <LoadingSpinner v-if="isLoading"></LoadingSpinner>
     <div v-else class="campaign-details__content">
       <div v-if="!isApproved">
         <h1>Thank you for submitting your campaign! 😄</h1>
@@ -20,11 +18,13 @@
 import { ApiUtil } from '@/_utils/api-utils';
 import { simulateApiCall } from '@/_utils/common-utils';
 import CampaignApproved from './CampaignApproved';
+import LoadingSpinner from '@/components/_common/LoadingSpinner';
 
 export default {
   name: 'CampaignDetails',
   components: {
     CampaignApproved,
+    LoadingSpinner
   },
   data() {
     return {
