@@ -102,6 +102,17 @@ class PopularitySerializer(serializers.ModelSerializer):
         fields = ['likes']
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.SerializerMethodField("get_email")
+
+    def get_email(self, pers):
+        return pers.user.email
+
+    class Meta:
+        model = Persona
+        fields = ['stage', 'email', 'score']
+
+
 class CommentSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField("get_username")
 

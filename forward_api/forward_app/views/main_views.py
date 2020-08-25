@@ -56,9 +56,14 @@ class Login(APIView, Meta):
 
 class Users(APIView, Meta):
     def get(self, request):
-        users = User.objects.all()
-        sz = UsernameSerializer(users, many=True)
-        return Response(sz.data, status=status.HTTP_200_OK)
+        if set(request.GET.keys()) == {"user_id"}:
+            user = User.objects.get(id=int(request.GET["user_id"]))
+            sz = ProfileSerializer(user.persona)
+            return Response(sz.data, status=status.HTTP_200_OK)
+        else:
+            users = User.objects.all()
+            sz = UsernameSerializer(users, many=True)
+            return Response(sz.data, status=status.HTTP_200_OK)
 
 
 class Policies(APIView, Meta):
