@@ -5,6 +5,7 @@ from .politician import *
 from .policy import *
 from .user import Persona
 
+
 """
 Can define intermediate models for many-to-many relations here
 """

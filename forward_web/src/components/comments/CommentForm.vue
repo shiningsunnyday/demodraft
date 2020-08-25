@@ -2,11 +2,22 @@
   <div class="comment-form">
     <b-form @submit.prevent="handleSave">
       <b-form-textarea
+        v-if="isReply"
         class="comment-form__text-area"
         id="textarea-no-auto-shrink"
-        placeholder="Comment on this policy"
         rows="3"
         max-rows="8"
+        placeholder="Reply to OP of the thread (reply to user in progress)"
+        no-auto-shrink
+        v-model="text"
+      ></b-form-textarea>
+      <b-form-textarea
+        v-else
+        class="comment-form__text-area"
+        id="textarea-no-auto-shrink"
+        rows="3"
+        max-rows="8"
+        placeholder="Comment on this policy"
         no-auto-shrink
         v-model="text"
       ></b-form-textarea>
@@ -25,7 +36,7 @@ export default {
     policyId: Number,
     threadId: Number,
     updateComments: Function,
-    isReply: Boolean,
+    isReply: Boolean
   },
   data() {
     return {
@@ -47,7 +58,7 @@ export default {
           content: this.text,
         });
       }
-      await this.updateComments();
+      this.updateComments();
       this.text = '';
     },
   },

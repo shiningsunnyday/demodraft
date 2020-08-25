@@ -15,6 +15,9 @@ class Persona(models.Model):
     city = models.CharField(max_length=200, blank=True, default='')
     state = models.CharField(max_length=20, blank=True, default='')
     zipcode = models.IntegerField(default=0)
+
+    score = models.FloatField(default=.0)
+
     class Meta:
         ordering = ['created']
 

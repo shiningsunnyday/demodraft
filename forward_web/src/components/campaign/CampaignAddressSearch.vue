@@ -15,11 +15,13 @@
             required
           />
         </b-form-group>
-        <b-button v-if="isSearching" dsiabled>
+
+        <b-button v-if="isSearching" class="campaign__search-button" block disabled>
           <b-spinner small type="grow"></b-spinner>
           Searching...
         </b-button>
-        <b-button v-else type="submit">Search</b-button>
+
+        <b-button v-else type="submit" class="campaign__search-button" block>Search</b-button>
       </b-form>
     </b-container>
   </div>
@@ -51,7 +53,13 @@ export default {
   &__address-form {
     @media screen and (min-width: 768px) {
       width: 500px;
+      margin: 0 auto;
     }
+  }
+
+  &__search-button {
+    width: 200px;
+    margin: 0 auto;
   }
 }
 </style>
