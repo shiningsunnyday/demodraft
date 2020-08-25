@@ -24,7 +24,10 @@
         />
       </BFormGroup>
       <div class="login__footer">
-        <BButton type="submit" variant="primary">Submit</BButton>
+        <b-button v-if="isLoading" disabled>
+          <b-spinner small></b-spinner>Submit
+        </b-button>
+        <BButton v-else type="submit" variant="primary">Submit</BButton>
         <router-link :to="{ name: 'signup' }" class="login__link">
           Don't have an account? Sign up!
         </router-link>
@@ -35,6 +38,8 @@
 
 <script>
 import { BButton, BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
+import LoadingSpinner from '@/components/_common/LoadingSpinner';
+
 export default {
   name: 'login-page',
   components: {
@@ -42,6 +47,7 @@ export default {
     'b-form': BForm,
     'b-form-group': BFormGroup,
     'b-form-input': BFormInput,
+    LoadingSpinner
   },
   data() {
     return {
@@ -51,15 +57,18 @@ export default {
         password: '',
         campaignPending: false
       },
+      isLoading: false,
     };
   },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
       const { username, email, password, campaignPending } = this.user;
-      this.$store
+      this.isLoading = true;
+      await this.$store
         .dispatch('login', { username, password, campaignPending })
         .then(() => this.$router.push('/'))
         .catch((err) => console.log(err));
+      this.isLoading = false;
     },
   },
 };
@@ -81,10 +90,18 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        margin-right: 5px;
+      }
+    }
   }
 
   &__link {
-    font-size: 12px;
+    font-size: 11px;
   }
 }
 </style>

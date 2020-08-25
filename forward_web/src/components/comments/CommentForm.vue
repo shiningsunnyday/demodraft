@@ -36,7 +36,8 @@ export default {
     policyId: Number,
     threadId: Number,
     updateComments: Function,
-    isReply: Boolean
+    isReply: Boolean,
+    replyTo: Object
   },
   data() {
     return {
@@ -46,6 +47,21 @@ export default {
   methods: {
     async handleSave() {
       if (this.isReply) {
+        const user = {
+          threadId: this.threadId,
+          content: this.text
+        };
+        
+        const replyToUser = {
+          id: this.replyTo.id,
+          username: this.replyTo.username,
+          content: this.replyTo.content,
+          threadId: this.threadId
+        };
+        
+        console.log('user: ', user);
+        console.log('reply to:', replyToUser);
+
         await ApiUtil.addNewReply({
           thread_id: this.threadId,
           username: this.$store.getters.username,

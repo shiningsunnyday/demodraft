@@ -1,72 +1,51 @@
 import axios from 'axios';
 import * as Config from '../config.json';
-
-const apiClient = axios.create({
-  baseURL: Config.API_URL,
-  auth: Config.API_AUTH,
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  }
-});
+axios.defaults.baseURL = Config.API_URL;
+axios.defaults.auth = Config.API_AUTH;
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export class ApiUtil {
   
   static async getPolicies() {
-    const policiesPromise = await apiClient.get('/policies/');
+    const policiesPromise = await axios.get('/policies/');
     return policiesPromise.data;
   }
 
   static async getPolicy(id) {
-    const policyPromise = await apiClient.get(`/policy/?id=${id}`);
+    const policyPromise = await axios.get(`/policy/?id=${id}`);
     return policyPromise.data;
   }
 
   static async getPolicyComments(id) {
-    const policyCommentsPromise = await apiClient.get(`/thread/?policy_id=${id}`);
+    const policyCommentsPromise = await axios.get(`/thread/?policy_id=${id}`);
     return policyCommentsPromise.data;
   }
 
   static async getThreadFromComment(id) {
-    const threadPromise = await apiClient.get(`/thread/?thread_id=${id}`);
+    const threadPromise = await axios.get(`/thread/?thread_id=${id}`);
     return {
       data: threadPromise.data,
       replies: threadPromise.data.slice(1),
-      leadComment: threadPromise.data[0]
+      leadComment: threadPromise.data[0],
+      lastComment: threadPromise.data[threadPromise.data.length - 1]
     };
   }
 
   static async deleteThread(thread_id, username) {
-    let response;
-    try {
-      let payload = {thread_id: thread_id, username: username};
-      console.log(payload);
-      response = await axios.post(`${Config.API_URL}/thread/`, payload );
-    } catch (error) {
-      console.error(error.message);
-    }
-    return response.data;
+    const payload = { thread_id: thread_id, username: username };
+    const deleteThreadPromise = await axios.post(`/thread/`, payload );
+    return deleteThreadPromise.data;
   }
 
   static async deleteComment(comment_id, username) {
-    let response;
-    try {
-      let payload = {prev_comment_id: comment_id, username: username};
-      console.log(payload);
-      response = await axios.post(`${Config.API_URL}/comment/`, payload );
-    } catch (error) {
-      console.error(error.message);
-    }
-    return response.data;
+    const payload = { prev_comment_id: comment_id, username: username };
+    const deleteCommentPromise = await axios.post(`/comment/`, payload );
+    return deleteCommentPromise.data;
   }
 
   static async putPolicyLike(id) {
-    try {
-      const policyLikePromise = await apiClient.put(`/policy/`, { id: id });
-      return policyLikePromise.data.likes;
-    } catch (error) {
-      console.error(error.message);
-    }
+    const policyLikePromise = await axios.put(`/policy/`, { id: id });
+    return policyLikePromise.data.likes;
   }
 
   static async commentLike(id) {
@@ -124,18 +103,13 @@ export class ApiUtil {
     return response.data;
   }
 
+  /**
+   * Posts an address to backend on address search
+   * @param {Object} data - { username, password, address } 
+   */
   static async postAddress(data) {
-    try {
-      return await axios({
-        method: 'post',
-        url: `${Config.API_URL}/address/`,
-        data: data,
-        headers: { "content-type": "application/json" },
-        auth: Config.API_AUTH
-      });
-    } catch (error) {
-      console.error(error.message);
-    }
+    const postAddressPromise = await axios.post(`/address/`, data);
+    return postAddressPromise.data;
   }
 
   static async submitCampaign(data) {
@@ -153,7 +127,7 @@ export class ApiUtil {
   }
 
   static async putCampaign(data) {
-    const putCampaignPromise = await apiClient.put('/campaign/', data);
+    const putCampaignPromise = await axios.put('/campaign/', data);
     return putCampaignPromise.data;
   }
 
