@@ -12,6 +12,7 @@
         @updateRepliesView="updateRepliesView"
         @deleteThread="deleteThread"
         @deleteComment="deleteComment"
+        class="comments-wrapper__lead-comment"
       ></CommentCard>
       <!-- End leading comment -->
 
@@ -20,6 +21,7 @@
         v-if="cardProps.isViewingReplies" 
         v-for="(reply, index) in replies" 
         :key="reply.id"
+        class="reply-wrapper"
       >
         <CommentCard
           :comment="reply"
@@ -29,7 +31,7 @@
           @updateRepliesView="updateRepliesView"
           @deleteThread="deleteThread"
           @deleteComment="deleteComment"
-          :className="`comments-wrapper__sub-comment`"
+          :className="`reply-wrapper__comment`"
         ></CommentCard>
       </div>
       <!-- End replies to leading comment -->
@@ -110,7 +112,7 @@ export default {
       }
       console.log('delete comment: ', id);
       await ApiUtil.deleteComment(id, this.$store.getters.username);
-      this.updateThread(this.cardProps.threadId);
+      this.updateComments();
     },
   },
 };
@@ -121,12 +123,32 @@ export default {
   text-align: start;
   max-width: 700px;
   margin: 0 auto;
+  &__lead-comment {
+    padding: 10px;
+    border: 1px solid rgb(224, 224, 224);
+    margin-bottom: 8px;
+  }
+}
 
-  &__sub-comment {
+.reply-wrapper {
+  margin-bottom: 8px;
+
+  &__comment {
     border: 1px solid rgb(224, 224, 224);
     padding: 10px;
     margin-left: 2rem;
     font-size: 14px;
+    position: relative;
+
+    &::before {
+      content: '';
+      width: 3px;
+      height: 100%;
+      background-color: grey;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
   }
 }
 </style>

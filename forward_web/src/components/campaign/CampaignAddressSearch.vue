@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-container>
-      <b-form class="campaign__address-form" @submit.prevent="handleSubmit">
+      <b-form class="campaign__address-form" @submit.prevent="handleSearch">
         <b-form-group
           id="address-group"
           label="Address"
@@ -41,8 +41,8 @@ export default {
     };
   },
   methods: {
-    async handleSubmit() {
-      this.$emit('handle-submit', this.internalAddress);
+    handleSearch() {
+      this.$emit('handleSearch', this.internalAddress);
     },
   },
 };

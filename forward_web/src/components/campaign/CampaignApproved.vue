@@ -32,7 +32,7 @@
         <p><span class="campaign-details--bold">Funds Raised: </span>{{ politician.fundraised }}</p>
       </div>
       <hr />
-      <b-form @submit.prevent="handleSubmit" class="campaign-details__form">
+      <b-form @submit.prevent="handleUpdate" class="campaign-details__form">
         <b-form-group label="Actblue" label-for="mycampaign-actblue">
           <b-form-input
             id="mycampaign-actblue"
@@ -97,7 +97,7 @@ export default {
         params: { id: this.politician.id },
       });
     },
-    async handleSubmit() {
+    async handleUpdate() {
       try {
         this.isUpdated = false;
         const user = this.$store.getters.getUserInfo;

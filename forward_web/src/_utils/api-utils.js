@@ -124,18 +124,13 @@ export class ApiUtil {
     return response.data;
   }
 
+  /**
+   * Posts an address to backend on address search
+   * @param {Object} data - { username, password, address } 
+   */
   static async postAddress(data) {
-    try {
-      return await axios({
-        method: 'post',
-        url: `${Config.API_URL}/address/`,
-        data: data,
-        headers: { "content-type": "application/json" },
-        auth: Config.API_AUTH
-      });
-    } catch (error) {
-      console.error(error.message);
-    }
+    const postAddressPromise = await apiClient.post(`/address/`, data);
+    return postAddressPromise.data;
   }
 
   static async submitCampaign(data) {

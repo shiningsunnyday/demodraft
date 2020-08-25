@@ -39,6 +39,10 @@ export default {
     PolicyEndorseButton,
     LoadingSpinner,
   },
+  props: {
+    pushedPolicy: Object,
+    isPushed: Boolean,
+  },
   data() {
     return {
       policy: {},
@@ -48,13 +52,18 @@ export default {
     };
   },
   async created() {
-    try {
-      this.policy = await ApiUtil.getPolicy(this.$route.params.id);
-    } catch (error) {
-      alert(
-        `Error ${error.response.status}: Something when wrong fetching this policy`
-      );
-      console.log(error);
+    console.log(this.isPushed);
+    if (this.isPushed) {
+      this.policy = this.pushedPolicy;
+    } else {
+      try {
+        this.policy = await ApiUtil.getPolicy(this.$route.params.id);
+      } catch (error) {
+        alert(
+          `Error ${error.response.status}: Something when wrong fetching this policy`
+        );
+        console.log(error);
+      }
     }
 
     const user = this.$store.getters.getUserInfo;

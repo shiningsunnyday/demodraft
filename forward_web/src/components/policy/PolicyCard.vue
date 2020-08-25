@@ -32,6 +32,7 @@
           class="like-button"
           style="width: 25px; height: 25px;"
         />
+        <span>{{ policy.likes }}</span>
       </b-button>
 
       <b-button variant="outline">
@@ -63,10 +64,15 @@ export default {
     policy: Object,
   },
   methods: {
-    handleLearnMore() {
+    async handleLearnMore() {
+      const pushedPolicy = await ApiUtil.getPolicy(this.policy.id);
       this.$router.push({
         name: 'selected-policy',
-        params: { id: this.policy.id },
+        params: { 
+          id: this.policy.id,
+          isPushed: true,
+          pushedPolicy: pushedPolicy,
+        },
       });
     },
   },

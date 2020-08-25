@@ -7,7 +7,7 @@
     </b-container>
 
     <CampaignAddressSearch
-      @handle-submit="handleSubmit"
+      @handleSearch="handleSearch"
       :isSearching="isSearching"
     />
 
@@ -59,22 +59,21 @@ export default {
     };
   },
   methods: {
-    async handleSubmit(event) {
+    async handleSearch(address) {
       try {
         this.isSearching = true;
-        const response = await ApiUtil.postAddress({
+        this.civicData = await ApiUtil.postAddress({
           username: this.$store.getters.username,
           password: this.$store.getters.password, // security risk, will need to use session cookies/JWT
-          address: event,
+          address: address,
         });
-        this.civicData = response.data;
         this.positions = {
           local: this.civicData.local,
           state: this.civicData.state,
           country: this.civicData.country,
         };
       } catch (error) {
-        alert(`Oops, that's not a valid address!`);
+        alert(`Oops, we couldn't find positions for that address. Make sure it's in the correct format!`);
       }
       this.isSearching = false;
     },

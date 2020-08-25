@@ -1,6 +1,10 @@
 <template>
-  <div class="comments-wrapper__lead-comment" :class="className">
-    <p class="comments-wrapper__comment-header">
+  <div :class="className">
+    <p v-if="highlightUser" class="comments-wrapper__comment-header --highlight">
+      <span>{{ comment.username }}</span>
+      <span>{{ timePosted }}</span>
+    </p>
+    <p v-else class="comments-wrapper__comment-header">
       <span>{{ comment.username }}</span>
       <span>{{ timePosted }}</span>
     </p>
@@ -42,6 +46,7 @@
       v-if="isReplying"
       :updateComments="updateRepliesView"
       :threadId="prop.threadId"
+      :replyTo="comment"
       :isReply="true"
     ></CommentForm>
   </div>
@@ -76,12 +81,17 @@ export default {
       likes: 0,
       isChildComment: false,
       isReplying: false,
-      isMod: this.$store.getters.getUserInfo.isMod,
+      highlightUser: false,
     };
   },
   created() {
     const { next_comment_id } = this.comment;
     this.isChildComment = next_comment_id ? true : false;
+
+    const currentUser = this.$store.getters.username;
+    if (this.comment.username === currentUser) {
+      this.highlightUser = true;
+    }
   },
   computed: {
     replyText() {
@@ -91,15 +101,19 @@ export default {
       const { isChildComment } = this;
       const { hasReplies, isViewingReplies } = this.prop;
 
-      if (hasReplies && !isViewingReplies) {
+      if (!isViewingReplies && hasReplies) {
         return 'view replies';
-      }
+      } 
 
-      if (isViewingReplies && !isChildComment) {
-        return 'hide replies';
+      // For the sake of clarity
+      if (isViewingReplies) {
+        if (isChildComment) {
+          return 'collapse thread';
+        } 
+        if (!isChildComment) {
+          return 'hide replies';
+        }
       }
-
-      return 'collapse thread';
     },
     timePosted() {
       const { time } = this.comment;
@@ -114,7 +128,7 @@ export default {
       this.isReplying = !this.isReplying;
     },
     updateRepliesView() {
-      this.$emit('updateRepliesView', this.comment);
+      this.$emit('updateRepliesView');
     },
     deleteThread() {
       this.$emit('deleteThread', this.prop.threadId);
@@ -135,18 +149,12 @@ export default {
 
 <style lang="scss" scoped>
 .comments-wrapper {
-  &__lead-comment {
-    padding: 10px;
-    border: 1px solid rgb(224, 224, 224);
-    margin-bottom: 8px;
-  }
-
+  
   &__comment-header {
     display: flex;
     justify-content: space-between;
     padding: 8px;
     background: #627b9c;
-    font-weight: bold;
     color: white;
   }
 
@@ -181,6 +189,10 @@ export default {
     &:hover {
       fill: green;
     }
+  }
+  
+  .--highlight {
+    background: #1C94DC;
   }
 }
 </style>
