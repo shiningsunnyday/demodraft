@@ -26,8 +26,12 @@
       </b-card-text>
     </div>
 
-    <div class="like-and-modal">
-      <b-button variant="outline" @click="handlePolicyLike">
+    <div class="like-and-modal-container">
+      <b-button
+        class="like-btn-wrapper"
+        variant="outline"
+        @click="handlePolicyLike"
+      >
         <BIconHandThumbsUp
           class="like-button"
           style="width: 25px; height: 25px;"
@@ -35,7 +39,7 @@
         <span>{{ policy.likes }}</span>
       </b-button>
 
-      <b-button variant="outline">
+      <b-button class="modal-btn-wrapper" variant="outline">
         <BIconThreeDots
           class="modal-button"
           style="width: 25px; height: 25px;"
@@ -73,7 +77,7 @@ export default {
       const pushedPolicy = await ApiUtil.getPolicy(this.policy.id);
       this.$router.push({
         name: 'selected-policy',
-        params: { 
+        params: {
           id: this.policy.id,
           isPushed: true,
           pushedPolicy: pushedPolicy,
@@ -98,30 +102,51 @@ export default {
 @import '@/_styles';
 
 .policy-card-container {
-  width: 300px;
+  width: 375px;
   height: 300px;
   margin: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
   @media screen and (min-width: 768px) {
     width: 500px;
   }
 
   .card-body {
+    // desktop
     @media screen and (min-width: 768px) {
       display: flex;
       flex-direction: row;
       justify-content: space-evenly;
-      // padding: 15px 10px;
+    }
+
+    // mobile
+    @media screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .policy-icon {
+      // mobile
+      @media screen and (max-width: 768px) {
+        // display: flex;
+        // justify-content: flex-start;
+        order: 1;
+      }
     }
 
     .card-content {
+      // desktop
       @media screen and (min-width: 768px) {
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
         width: 350px;
         padding: 0 15px;
+      }
+
+      // mobile
+      @media screen and (max-width: 768px) {
+        order: 2;
       }
 
       .module {
@@ -155,7 +180,8 @@ export default {
       }
     }
 
-    .like-and-modal {
+    .like-and-modal-container {
+      // desktop
       @media screen and (min-width: 768px) {
         display: flex;
         flex-direction: column;
@@ -166,22 +192,35 @@ export default {
           padding: 0;
         }
 
-        .like-button {
-          display: block;
+        .like-btn-wrapper {
+          .like-button {
+            display: block;
+          }
         }
 
-        .modal-button {
-          display: block;
+        .modal-btn-wrapper {
+          .modal-button {
+            display: block;
+          }
         }
       }
-    }
 
-    .like-button {
-      display: none;
-    }
+      // mobile
+      @media screen and (max-width: 768px) {
+        order: 3;
 
-    .modal-button {
-      display: none;
+        .like-btn-wrapper {
+          .like-button {
+            display: none;
+          }
+        }
+
+        .modal-btn-wrapper {
+          .modal-button {
+            display: none;
+          }
+        }
+      }
     }
   }
 }
