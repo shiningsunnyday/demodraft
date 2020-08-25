@@ -43,6 +43,7 @@ export const store = new Vuex.Store({
       state.user = data.user;
     }
   },
+  // all actions are asynchronous
   actions: {
     /**
      * @param {Object} user - Holds username, password, launchStatusTest

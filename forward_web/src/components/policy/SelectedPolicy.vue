@@ -52,24 +52,22 @@ export default {
     };
   },
   async created() {
-    console.log(this.isPushed);
-    if (this.isPushed) {
-      this.policy = this.pushedPolicy;
-    } else {
-      try {
+    try {
+      if (this.isPushed) {
+        this.policy = this.pushedPolicy;
+      } else {
         this.policy = await ApiUtil.getPolicy(this.$route.params.id);
-      } catch (error) {
-        alert(
-          `Error ${error.response.status}: Something when wrong fetching this policy`
-        );
-        console.log(error);
       }
+    } catch (error) {
+      alert(`Error ${error.response.status}: On fetching policy`);
+      console.log(error);
     }
-
+    
     const user = this.$store.getters.getUserInfo;
     if (user.approved) {
       this.politician = await ApiUtil.getModifiedPolitician({ user });
       const endorsedPolicies = this.politician.endorsed;
+      console.log(endorsedPolicies);
       for (const endorsement of endorsedPolicies) {
         if (endorsement.policy_id === this.policy.id) {
           this.politician.hasEndorsed = true;
@@ -82,8 +80,12 @@ export default {
   methods: {
     async likePolicy() {
       if (!this.hasLiked) {
-        this.policy.likes = await ApiUtil.putPolicyLike(this.policy.id);
-        this.hasLiked = true;
+        try {
+          this.policy.likes = await ApiUtil.putPolicyLike(this.policy.id);
+          this.hasLiked = true;
+        } catch (error) {
+          alert(error.message);
+        }
       }
     },
   },

@@ -6,8 +6,9 @@
     <div v-else>
       <!-- Leading comment -->
       <CommentCard
-        :comment="comment"
+        :comment="leadComment"
         :prop="cardProps"
+        :isLeadComment="true"
         @handleViewReplies="handleViewReplies"
         @updateRepliesView="updateRepliesView"
         @deleteThread="deleteThread"
@@ -17,23 +18,38 @@
       <!-- End leading comment -->
 
       <!-- Replies to leading comment -->
-      <div 
-        v-if="cardProps.isViewingReplies" 
-        v-for="(reply, index) in replies" 
+      <div
+        v-show="cardProps.isViewingReplies"
+        v-for="(reply, index) in replies"
         :key="reply.id"
         class="reply-wrapper"
       >
+        <div @click="handleBarClick" class="reply-wrapper__bar"></div>
         <CommentCard
           :comment="reply"
           :index="index"
           :prop="cardProps"
           @handleViewReplies="handleViewReplies"
           @updateRepliesView="updateRepliesView"
-          @deleteThread="deleteThread"
-          @deleteComment="deleteComment"
+          @deleteThread="handleDeleteThread"
+          @deleteComment="handleDeleteComment"
           :className="`reply-wrapper__comment`"
         ></CommentCard>
       </div>
+      <b-button
+        v-if="cardProps.isViewingReplies"
+        @click="handleReplyToThread"
+        variant="link"
+      >
+        reply to thread
+      </b-button>
+      <CommentForm
+        v-if="isRepyThread"
+        :updateComments="updateRepliesView"
+        :threadId="comment.thread_id"
+        :replyTo="comment"
+        :isReply="true"
+      ></CommentForm>
       <!-- End replies to leading comment -->
     </div>
   </div>
@@ -50,7 +66,7 @@ export default {
   components: {
     CommentCard,
     CommentForm,
-    CommentCardPlaceholder
+    CommentCardPlaceholder,
   },
   props: {
     comment: Object,
@@ -59,21 +75,23 @@ export default {
   },
   data() {
     return {
-      replies: [],
+      replies: [], // might use stack datastructure
       replyComment: {}, // in progress
       isLoading: true,
-      cardProps: {
+      leadComment: this.comment,
+      isRepyThread: false,
+      cardProps: { // needs refactoring
         isViewingReplies: false,
         hasReplies: false,
         threadId: 0,
         isMod: false, // change this to true for testing
-      }
+      },
     };
   },
   async created() {
     const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
     this.cardProps.threadId = this.comment.thread_id;
-    this.cardProps.hasReplies = thread.replies.length > 0 ? true : false;
+    this.cardProps.hasReplies = thread.replies.length > 0;
     this.cardProps.isMod = this.$store.getters.getUserInfo.isMod;
     this.replies = thread.replies;
     this.isLoading = false;
@@ -83,7 +101,11 @@ export default {
       const thread = await ApiUtil.getThreadFromComment(threadId);
       this.replies = thread.replies;
     },
-    handleViewReplies(threadId) {
+    async handleAddReply() {
+      const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
+      this.replies.push(thread.lastComment);
+    },
+    async handleViewReplies(threadId) {
       // only make api call when viewing replies
       if (!this.cardProps.isViewingReplies) {
         this.updateThread(threadId);
@@ -91,28 +113,39 @@ export default {
       this.cardProps.isViewingReplies = !this.cardProps.isViewingReplies;
     },
     updateRepliesView() {
-      this.updateThread(this.cardProps.threadId);
-      // only open replies if closed
-      if (!this.cardProps.isViewingReplies) { 
-        this.cardProps.isViewingReplies = !this.cardProps.isViewingReplies;
+      this.handleAddReply();
+      const isRepliesOpen = this.cardProps.isViewingReplies;
+      if (!isRepliesOpen) {
+        const openReplies = !isRepliesOpen;
+        this.cardProps.isViewingReplies = openReplies;
       }
       this.cardProps.hasReplies = true;
     },
-    async deleteThread(threadId) {
-      console.log('delete thread: ', threadId);
-      await ApiUtil.deleteThread(threadId, this.$store.getters.username);
-      this.updateComments();
-    },
-    async deleteComment(index) {
-      let id;
-      if (index == 0) {
-        id = this.comment.id;
-      } else {
-        id = this.replies[index-1].id;
+    async handleDeleteThread(threadId) {
+      try {
+        await ApiUtil.deleteThread(threadId, this.$store.getters.username);
+        this.updateComments();
+      } catch (error) {
+        alert(error.response);
+        console.log(error);
       }
-      console.log('delete comment: ', id);
-      await ApiUtil.deleteComment(id, this.$store.getters.username);
-      this.updateComments();
+    },
+    async handleDeleteComment(data) {
+      const { index, comment } = data;
+      const id = index === 0 ? this.comment.id : this.replies[index - 1].id;
+      try {
+        await ApiUtil.deleteComment(id, this.$store.getters.username);
+        this.replies.pop();
+      } catch (error) {
+        alert(error.response);
+        console.log(error);
+      }
+    },
+    handleBarClick() {
+      this.handleViewReplies();
+    },
+    handleReplyToThread() {
+      this.isRepyThread = !this.isRepyThread;
     },
   },
 };
@@ -123,7 +156,9 @@ export default {
   text-align: start;
   max-width: 700px;
   margin: 0 auto;
+
   &__lead-comment {
+    font-size: 12px;
     padding: 10px;
     border: 1px solid rgb(224, 224, 224);
     margin-bottom: 8px;
@@ -132,23 +167,26 @@ export default {
 
 .reply-wrapper {
   margin-bottom: 8px;
+  position: relative;
+
+  &__bar {
+    content: '';
+    width: 5px;
+    height: calc(100% + 8px);
+    background-color: grey;
+    position: absolute;
+    left: 1rem;
+    top: -8px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
 
   &__comment {
     border: 1px solid rgb(224, 224, 224);
     padding: 10px;
     margin-left: 2rem;
-    font-size: 14px;
-    position: relative;
-
-    &::before {
-      content: '';
-      width: 3px;
-      height: 100%;
-      background-color: grey;
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
+    font-size: 12px;
   }
 }
 </style>

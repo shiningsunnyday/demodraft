@@ -17,7 +17,6 @@ const routes = [
     component: loadView('PoliciesPage'),
     meta: {
       requiresAuth: true,
-      keepAlive: true,
     },
   },
   {

@@ -27,7 +27,7 @@
     </div>
 
     <div class="like-and-modal">
-      <b-button variant="outline">
+      <b-button variant="outline" @click="handlePolicyLike">
         <BIconHandThumbsUp
           class="like-button"
           style="width: 25px; height: 25px;"
@@ -63,6 +63,11 @@ export default {
   props: {
     policy: Object,
   },
+  data() {
+    return {
+      hasLiked: false,
+    };
+  },
   methods: {
     async handleLearnMore() {
       const pushedPolicy = await ApiUtil.getPolicy(this.policy.id);
@@ -74,6 +79,16 @@ export default {
           pushedPolicy: pushedPolicy,
         },
       });
+    },
+    async handlePolicyLike() {
+      if (!this.hasLiked) {
+        try {
+          this.policy.likes = await ApiUtil.putPolicyLike(this.policy.id);
+          this.hasLiked = true;
+        } catch (error) {
+          alert(error.message);
+        }
+      }
     },
   },
 };

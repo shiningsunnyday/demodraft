@@ -74,6 +74,7 @@ export default {
       threadId: Number,
       isMod: Boolean,
     },
+    isLeadComment: Boolean,
   },
   data() {
     return {
@@ -82,20 +83,23 @@ export default {
       isChildComment: false,
       isReplying: false,
       highlightUser: false,
+      isLastReply: false,
     };
   },
   created() {
-    const { next_comment_id } = this.comment;
+    const { next_comment_id, id} = this.comment;
     this.isChildComment = next_comment_id ? true : false;
+    this.isLastReply = id === next_comment_id;
 
-    const currentUser = this.$store.getters.username;
-    if (this.comment.username === currentUser) {
+    if (this.comment.username === this.$store.getters.username) {
       this.highlightUser = true;
     }
   },
   computed: {
     replyText() {
-      return this.isChildComment ? 'reply to thread' : 'reply';
+      if (this.isLeadComment) {
+        return 'reply';
+      }
     },
     viewRepliesText() {
       const { isChildComment } = this;
@@ -105,14 +109,8 @@ export default {
         return 'view replies';
       } 
 
-      // For the sake of clarity
-      if (isViewingReplies) {
-        if (isChildComment) {
-          return 'collapse thread';
-        } 
-        if (!isChildComment) {
-          return 'hide replies';
-        }
+      if (isViewingReplies && !isChildComment) {
+        return 'hide replies';
       }
     },
     timePosted() {
@@ -127,14 +125,20 @@ export default {
     toggleReplyClick() {
       this.isReplying = !this.isReplying;
     },
-    updateRepliesView() {
+    async updateRepliesView() {
       this.$emit('updateRepliesView');
+      this.isReplying = !this.isReplying;
     },
     deleteThread() {
       this.$emit('deleteThread', this.prop.threadId);
     },
     deleteComment() {
-      this.$emit('deleteComment', this.index);
+      const data = {
+        index: this.index,
+        comment: this.comment,
+      };
+
+      this.$emit('deleteComment', data);
     },
     async handleLike(id) {
       // prevent hard spamming likes for now
@@ -164,7 +168,7 @@ export default {
     align-items: center;
     .btn {
       margin-left: 8px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: bold;
       padding: 0;
     }
