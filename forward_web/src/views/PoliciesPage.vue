@@ -29,6 +29,7 @@ import PolicyList from '@/components/policy/PolicyList';
 import Multiselect from 'vue-multiselect';
 import { ApiUtil } from '@/_utils/api-utils';
 import LoadingSpinner from '@/components/_common/LoadingSpinner';
+import * as Config from '@/config.json';
 
 export default {
   name: 'policies-page',
@@ -50,12 +51,19 @@ export default {
     // move this to navbar.vue method
     try {
       this.policies = await ApiUtil.getPolicies();
+      // converts policy cateogry ids into actual category names on the frontend
+      // e.g. category_id 1 = "economy", category_id 2 = "education", etc. etc.
+      this.policies.forEach(policy => {
+        policy.category = Config.policy_categories[policy.category];
+      });
       this.filteredPolicies = this.policies;
-      // Populates a components filter list with filtering options that are linked to the incoming data
+
+      // Populates the Vue Multiselect list with filtering options that are linked to the incoming data
       const policyCategories = [];
       this.policies.forEach((policy) => {
         policyCategories.push(policy.category);
       });
+
       // remove duplicate filtering options that populate the filtering lists
       this.options = [...new Set(policyCategories)];
     } catch (error) {
