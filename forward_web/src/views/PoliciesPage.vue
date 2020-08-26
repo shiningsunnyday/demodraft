@@ -113,8 +113,10 @@ export default {
   &__filter-container {
     display: flex;
     align-items: center;
+    justify-content: center;
     margin: 1rem 0;
     height: 50px;
+    padding-right: 10px;
 
     #filter {
       padding: 0;

@@ -1,9 +1,6 @@
 <template>
   <div class="policy-list-container">
-    <div
-      v-for="policy in filteredPolicies"
-      :key="policy.id"
-    >
+    <div v-for="policy in filteredPolicies" :key="policy.id">
       <PolicyCard :policy="policy"></PolicyCard>
     </div>
   </div>
