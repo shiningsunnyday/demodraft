@@ -116,7 +116,7 @@ export default {
     justify-content: center;
     margin: 1rem 0;
     height: 50px;
-    padding-right: 15px;
+    padding-right: 10px;
 
     #filter {
       padding: 0;
