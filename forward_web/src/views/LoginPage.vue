@@ -64,10 +64,12 @@ export default {
     async handleSubmit() {
       const { username, email, password, campaignPending } = this.user;
       this.isLoading = true;
-      await this.$store
-        .dispatch('login', { username, password, campaignPending })
-        .then(() => this.$router.push('/'))
-        .catch((err) => console.log(err));
+      try {
+        await this.$store.dispatch('login', { username, password, campaignPending });
+        this.$router.push('/');  
+      } catch (error) {
+        console.log(error);
+      }
       this.isLoading = false;
     },
   },
@@ -101,7 +103,7 @@ export default {
   }
 
   &__link {
-    font-size: 11px;
+    font-size: 12px;
   }
 }
 </style>
