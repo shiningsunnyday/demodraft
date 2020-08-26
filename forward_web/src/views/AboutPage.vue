@@ -1,7 +1,29 @@
 <template>
   <div class="about">
-    <h2>About</h2>
-    <p>General page</p>
+    <h1>About</h1>
+
+    <h3>Vision</h3>
+    <p>
+      Demodraft is empowering a new generation of politicians who reflect the
+      communities they represent without influence from big money.
+    </p>
+
+    <h3>Mission</h3>
+    <p>
+      We are an incubator for normal people to “test the waters” before they
+      officially declare candidacy. After their ideas achieve traction, we serve
+      as a launchpad for their campaign run. We measure our success by the
+      number of underdog victories we drive and the number of office incumbents
+      we unseat.
+    </p>
+
+    <h3>People</h3>
+    <p>
+      On our platform, users can discover, fund, and support other users before
+      they decide to run for office. They can let their ideas flourish through
+      forums, polls and content, so those ideas can bring true change to our
+      democracy.
+    </p>
   </div>
 </template>
 
@@ -14,5 +36,15 @@ export default {
 <style lang="scss" scoped>
 .about {
   text-align: center;
+
+  @media screen and (min-width: 768px) {
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 800px;
+  }
+
+  h1 {
+    margin-bottom: 100px;
+  }
 }
 </style>
