@@ -35,16 +35,28 @@ export default {
 
 <style lang="scss" scoped>
 .about {
+  padding: 0 20px;
+  margin: 0 auto;
   text-align: center;
 
   @media screen and (min-width: 768px) {
-    margin: 0 auto;
-    padding: 0 20px;
     width: 800px;
   }
 
   h1 {
+    font-weight: bold;
     margin-bottom: 100px;
+  }
+
+  h3 {
+    font-weight: bold;
+  }
+
+  p {
+    margin-bottom: 50px;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    line-height: 1.8rem;
   }
 }
 </style>
