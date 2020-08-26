@@ -1,17 +1,15 @@
 <template>
   <BCard class="policy-card-container">
-    <div class="policy-icon">
-      <BIconCircleSquare style="width: 30px; height: 30px;" />
-    </div>
-
     <div class="card-content">
-      <b-card-title>
-        {{ policy.name }}
-      </b-card-title>
+      <div class="card-title-wrapper">
+        <b-card-title>
+          {{ policy.name }}
+        </b-card-title>
+      </div>
 
       <hr />
 
-      <div class="module line-clamp">
+      <div class="policy-statement line-clamp">
         <p>
           {{ policy.statement }}
         </p>
@@ -26,9 +24,13 @@
       </b-card-text>
     </div>
 
-    <div class="like-and-modal-container">
+    <div class="card-data-container">
+      <div class="policy-icon card-data-btn">
+        <BIconCircleSquare style="width: 27px; height: 27px;" />
+      </div>
+
       <b-button
-        class="like-btn-wrapper"
+        class="like-btn-wrapper card-data-btn"
         variant="outline"
         @click="handlePolicyLike"
       >
@@ -36,7 +38,7 @@
           class="like-button"
           style="width: 25px; height: 25px;"
         />
-        <span>{{ policy.likes }}</span>
+        <span class="likes-counter">{{ policy.likes }}</span>
       </b-button>
 
       <b-button class="modal-btn-wrapper" variant="outline">
@@ -102,63 +104,71 @@ export default {
 @import '@/_styles';
 
 .policy-card-container {
-  width: 375px;
-  height: 300px;
+  width: 500px;
+  height: 365px;
   margin: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
-  @media screen and (min-width: 768px) {
-    width: 500px;
+  // mobile
+  @media screen and (max-width: 768px) {
+    width: 300px;
   }
 
   .card-body {
-    // desktop
-    @media screen and (min-width: 768px) {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-    }
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 450px;
+    padding: 20px 0px 10px 0px;
 
     // mobile
     @media screen and (max-width: 768px) {
       display: flex;
       flex-direction: column;
-    }
-
-    .policy-icon {
-      // mobile
-      @media screen and (max-width: 768px) {
-        // display: flex;
-        // justify-content: flex-start;
-        order: 1;
-      }
+      width: 275px;
     }
 
     .card-content {
-      // desktop
-      @media screen and (min-width: 768px) {
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        width: 350px;
-        padding: 0 15px;
-      }
+      display: flex;
+      flex-direction: column;
+      padding: 10px 15px;
 
       // mobile
       @media screen and (max-width: 768px) {
-        order: 2;
+        padding: 10px 5px;
       }
 
-      .module {
-        width: 250px;
+      .card-title-wrapper {
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .card-title {
+          margin: 0;
+          text-align: center;
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+      }
+
+      .policy-statement {
+        width: 350px;
+        height: 75px;
         margin: 0 auto;
         text-align: center;
         overflow: hidden;
+
+        // mobile
+        @media screen and (max-width: 768px) {
+          width: 245px;
+        }
       }
-      .module p {
+      .policy-statement p {
         margin: 0;
       }
 
+      // keeps the policy statement 3 lines long and adds ellipses to the end
       .line-clamp {
         display: -webkit-box;
         -webkit-line-clamp: 3;
@@ -173,53 +183,43 @@ export default {
         background-color: lightgray;
         height: 1px;
       }
-
-      .card-title {
-        font-size: 1.2rem;
-        font-weight: bold;
-      }
     }
 
-    .like-and-modal-container {
-      // desktop
-      @media screen and (min-width: 768px) {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding-top: 2px;
-
-        .btn {
-          padding: 0;
-        }
-
-        .like-btn-wrapper {
-          .like-button {
-            display: block;
-          }
-        }
-
-        .modal-btn-wrapper {
-          .modal-button {
-            display: block;
-          }
-        }
-      }
+    .card-data-container {
+      display: flex;
+      flex-direction: row;
+      padding: 0 15px;
+      width: 100%;
+      margin-top: auto;
 
       // mobile
       @media screen and (max-width: 768px) {
-        order: 3;
+        padding: 0 5px;
+      }
 
-        .like-btn-wrapper {
-          .like-button {
-            display: none;
-          }
-        }
+      .like-btn-wrapper {
+        padding: 0;
+        display: block;
 
-        .modal-btn-wrapper {
-          .modal-button {
-            display: none;
-          }
+        .likes-counter {
+          margin-left: 3px;
         }
+      }
+
+      .modal-btn-wrapper {
+        padding: 0;
+        display: block;
+        margin-left: auto;
+        margin-right: 0;
+
+        // mobile
+        @media screen and (max-width: 768px) {
+          display: none;
+        }
+      }
+
+      .card-data-btn {
+        margin-right: 20px;
       }
     }
   }
