@@ -44,7 +44,7 @@ export default {
 
 <style lang="scss">
 #app {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Heebo', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;

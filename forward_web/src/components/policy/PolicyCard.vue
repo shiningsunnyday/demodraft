@@ -87,13 +87,15 @@ export default {
       });
     },
     async handlePolicyLike() {
+      // will need database to keep track of likes
       if (!this.hasLiked) {
+        this.policy.likes++;
         try {
-          this.policy.likes = await ApiUtil.putPolicyLike(this.policy.id);
-          this.hasLiked = true;
+          await ApiUtil.putPolicyLike(this.policy.id);
         } catch (error) {
           alert(error.message);
         }
+        this.hasLiked = true;
       }
     },
   },
