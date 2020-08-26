@@ -112,6 +112,7 @@ export default {
   // mobile
   @media screen and (max-width: 768px) {
     width: 300px;
+    margin: 20px 5px;
   }
 
   .card-body {
