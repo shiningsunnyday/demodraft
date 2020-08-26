@@ -1,12 +1,8 @@
 <template>
   <div class="login">
     <h1 class="login__title">Login</h1>
-    <BForm class=login__form @submit.prevent="handleSubmit">
-      <BFormGroup
-        id="username-group"
-        label="Username:"
-        label-for="username"
-      >
+    <BForm class="login__form" @submit.prevent="handleSubmit">
+      <BFormGroup id="username-group" label="Username:" label-for="username">
         <BFormInput
           id="username"
           v-model="user.username"
@@ -47,7 +43,7 @@ export default {
     'b-form': BForm,
     'b-form-group': BFormGroup,
     'b-form-input': BFormInput,
-    LoadingSpinner
+    LoadingSpinner,
   },
   data() {
     return {
@@ -55,7 +51,7 @@ export default {
         username: '',
         email: '',
         password: '',
-        campaignPending: false
+        campaignPending: false,
       },
       isLoading: false,
     };
@@ -64,10 +60,16 @@ export default {
     async handleSubmit() {
       const { username, email, password, campaignPending } = this.user;
       this.isLoading = true;
-      await this.$store
-        .dispatch('login', { username, password, campaignPending })
-        .then(() => this.$router.push('/'))
-        .catch((err) => console.log(err));
+      try {
+        await this.$store.dispatch('login', {
+          username,
+          password,
+          campaignPending,
+        });
+        this.$router.push('/');
+      } catch (error) {
+        console.log(error);
+      }
       this.isLoading = false;
     },
   },

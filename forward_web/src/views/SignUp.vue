@@ -95,10 +95,12 @@ export default {
         campaignPending: campaignPending,
       };
 
-      this.$store
-        .dispatch('register', data)
-        .then(() => this.$router.push('/'))
-        .catch((err) => console.log('err', err));
+      try {
+        await this.$store.dispatch('register', data);
+        this.$router.push('/');
+      } catch (error) {
+        console.log('err', error);
+      }
     },
   },
 };

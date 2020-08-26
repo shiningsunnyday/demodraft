@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     async updateComments() {
-      // "diffing" allows efficient rerendering - instead of rerendering entire comment section
       this.comments = await ApiUtil.getPolicyComments(
         this.$route.params.id
       );
