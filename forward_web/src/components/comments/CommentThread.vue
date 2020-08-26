@@ -11,8 +11,8 @@
         :isLeadComment="true"
         @handleViewReplies="handleViewReplies"
         @updateRepliesView="updateRepliesView"
-        @deleteThread="deleteThread"
-        @deleteComment="deleteComment"
+        @deleteThread="handleDeleteThread"
+        @deleteComment="handleDeleteComment"
         class="comments-wrapper__lead-comment"
       ></CommentCard>
       <!-- End leading comment -->
@@ -105,7 +105,7 @@ export default {
       const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
       this.replies.push(thread.lastComment);
     },
-    async handleViewReplies(threadId) {
+    handleViewReplies(threadId) {
       // only make api call when viewing replies
       if (!this.cardProps.isViewingReplies) {
         this.updateThread(threadId);
@@ -158,7 +158,7 @@ export default {
   margin: 0 auto;
 
   &__lead-comment {
-    font-size: 12px;
+    font-size: 14px;
     padding: 10px;
     border: 1px solid rgb(224, 224, 224);
     margin-bottom: 8px;
@@ -186,7 +186,7 @@ export default {
     border: 1px solid rgb(224, 224, 224);
     padding: 10px;
     margin-left: 2rem;
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 </style>
