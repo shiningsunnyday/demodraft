@@ -32,7 +32,7 @@ const routes = [
   {
     path: '/policy/:id',
     name: 'selected-policy',
-    component: () => import(/* webpackChunkName: "comp-[request]" */ `../components/policy/SelectedPolicy.vue`),
+    component: () => import(/* webpackChunkName: "selected-policy" */ `../components/policy/SelectedPolicy.vue`),
     props: true,
     meta: {
       requiresAuth: true,
@@ -55,7 +55,7 @@ const routes = [
   {
     path: '/politicians/:id',
     name: 'selected-politician',
-    component: loadView('SelectedPolitician'),
+    component: () => import(/* webpackChunkName: "selected-politician" */ `../components/politicians/SelectedPolitician.vue`),
     props: true,
     meta: {
       requiresAuth: true,
