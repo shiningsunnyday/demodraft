@@ -6,13 +6,14 @@
       :policyId="policyId" 
       :isReply="false"
     ></CommentForm>
+    <div v-if="isLoading">Loading...</div>
     <div 
       class="comments-wrapper"
-      v-if="comments.length" 
+      v-else-if="!isLoading && comments.length" 
       v-for="(comment, index) in comments" 
       :key="`comment-${index}`"
     >
-      <CommentThread :comment="comment"></CommentThread>
+      <CommentThread :comment="comment" :updateComments="updateComments"></CommentThread>
     </div>
   </div>
   </div>
@@ -35,7 +36,7 @@ export default {
   data() {
     return {
       comments: [],
-      isViewReplies: false,
+      isLoading: true,
     };
   },
   async created() {
@@ -45,10 +46,10 @@ export default {
       alert(`Error ${error.response.status}: Something when wrong fetching this policy's comments`);
       console.log(error);
     }
+    this.isLoading = false;
   },
   methods: {
     async updateComments() {
-      // "diffing" allows efficient rerendering - instead of rerendering entire comment section
       this.comments = await ApiUtil.getPolicyComments(
         this.$route.params.id
       );

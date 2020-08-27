@@ -1,28 +1,45 @@
 <template>
   <div>
-    <b-container class="campaign-reg__description">Search for representative positions at every level of government that represents your address. Then select a position you would like to launch your campaign for.</b-container>
-    <CampaignAddressSearch @handle-submit="handleSubmit" :isSearching="isSearching"/>
+    <b-container class="campaign-reg__description">
+      Search for representative positions at every level of government that
+      represents your address. Then select a position you would like to launch
+      your campaign for.
+    </b-container>
+
+    <CampaignAddressSearch
+      @handleSearch="handleSearch"
+      :isSearching="isSearching"
+    />
+
     <hr />
-    <b-form @submit.prevent="handleSubmitCampaign">
-      <b-container>
+
+    <b-container>
+      <b-form @submit.prevent="handleSubmitCampaign">
         <CampaignFormGroup
           :positions="positions"
           @update-selected-pos="updateSelectedPos"
         />
+
         <b-button class="launch-button" v-if="isLaunching" disabled>
           <b-spinner small type="grow"></b-spinner>
           Launching...
         </b-button>
-        <b-button v-else-if="civicData.local" class="launch-button" type="submit">Launch</b-button>
-      </b-container>
-    </b-form>
+
+        <b-button
+          v-else-if="civicData.local"
+          class="launch-button"
+          type="submit"
+        >
+          Launch
+        </b-button>
+      </b-form>
+    </b-container>
   </div>
 </template>
 
 <script>
 import CampaignAddressSearch from './CampaignAddressSearch';
 import CampaignFormGroup from './CampaignFormGroup';
-import * as Config from '@/config.json';
 import { ApiUtil } from '@/_utils/api-utils';
 import { simulateApiCall } from '@/_utils/common-utils.js';
 
@@ -42,22 +59,21 @@ export default {
     };
   },
   methods: {
-    async handleSubmit(event) {
+    async handleSearch(address) {
       try {
         this.isSearching = true;
-        const response = await ApiUtil.postAddress({
+        this.civicData = await ApiUtil.postAddress({
           username: this.$store.getters.username,
           password: this.$store.getters.password, // security risk, will need to use session cookies/JWT
-          address: event,
+          address: address,
         });
-        this.civicData = response.data;
         this.positions = {
           local: this.civicData.local,
           state: this.civicData.state,
           country: this.civicData.country,
         };
       } catch (error) {
-        alert(`Oops, that's not a valid address!`);
+        alert(`Oops, we couldn't find positions for that address. Make sure it's in the correct format!`);
       }
       this.isSearching = false;
     },

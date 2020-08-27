@@ -2,42 +2,37 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { store } from '@/_stores/store';
 
-import LoginPage from '@/views/LoginPage';
-import PoliciesPage from '@/views/PoliciesPage';
-import SignUp from '@/views/SignUp';
-import SelectedPolicy from '@/components/policy/SelectedPolicy';
-import AboutPage from '@/views/AboutPage';
-import PoliticianPage from '@/views/PoliticianPage';
-import SelectedPolitician from '@/components/politicians/SelectedPolitician';
-import CampaignPage from '@/views/CampaignPage';
 import NotFound from '@/views/404';
 
 Vue.use(VueRouter);
+
+const loadView = (view) => {
+  return () => import(/* webpackChunkName: "view-[request]" */ `../views/${view}.vue`);
+};
 
 const routes = [
   {
     path: '/',
     name: 'policies-page',
-    component: PoliciesPage,
+    component: loadView('PoliciesPage'),
     meta: {
       requiresAuth: true,
-      keepAlive: true,
     },
   },
   {
     path: '/login',
     name: 'login-page',
-    component: LoginPage,
+    component: loadView('LoginPage'),
   },
   {
     path: '/signup',
     name: 'signup',
-    component: SignUp,
+    component: loadView('SignUp'),
   },
   {
     path: '/policy/:id',
     name: 'selected-policy',
-    component: SelectedPolicy,
+    component: () => import(/* webpackChunkName: "selected-policy" */ `../components/policy/SelectedPolicy.vue`),
     props: true,
     meta: {
       requiresAuth: true,
@@ -46,12 +41,12 @@ const routes = [
   {
     path: '/about',
     name: 'about-page',
-    component: AboutPage,
+    component: loadView('AboutPage'),
   },
   {
     path: '/politicians',
     name: 'politician-page',
-    component: PoliticianPage,
+    component: loadView('PoliticianPage'),
     meta: {
       requiresAuth: true,
       keepAlive: true,
@@ -60,7 +55,7 @@ const routes = [
   {
     path: '/politicians/:id',
     name: 'selected-politician',
-    component: SelectedPolitician,
+    component: () => import(/* webpackChunkName: "selected-politician" */ `../components/politicians/SelectedPolitician.vue`),
     props: true,
     meta: {
       requiresAuth: true,
@@ -69,7 +64,7 @@ const routes = [
   {
     path: '/campaign',
     name: 'campaign-page',
-    component: CampaignPage,
+    component: loadView('CampaignPage'),
     meta: {
       requiresAuth: true,
     },
@@ -86,8 +81,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isLoggedIn) {
-      next();
-      return;
+      return next();
     }
     next('/login');
   } else {
