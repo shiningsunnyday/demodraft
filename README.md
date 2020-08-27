@@ -61,12 +61,14 @@ yarn build
 - Go through [tech folder](https://drive.google.com/drive/u/1/folders/1mzIpEBgastJnrVOOt-JvNQSlSmSnBuAp)
   - Understand data models and relations on MVP slide deck
   - Expected API endpoints and example behavior in ./api_endpoints
-- To reset a db.sqlite3 from /forward_api (concatenating cause you'll be running this a lot):
+- To reset a db.sqlite3 from /forward_api (concatenating cause you'll be running this a lot) and create an admin user:
 ```
-rm db.sqlite3 && python manage.py makemigrations && python manage.py migrate && ./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney')"
+rm db.sqlite3 && python manage.py makemigrations && python manage.py migrate && ./manage.py shell -c "from django.contrib.auth.models import User; user=User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney'); user.is_staff=False; user.save()"
 python manage.py runserver
 ```
-Ping Michael for a script that adds a specifiable amount of Yang2020 policies, two approved politicians and optional # of aspiring politicians. For duration of development, api_dev is a backup of db on the server, so you can commit db.sqlite3 and pull on the server.
+For local debugging, that removs the db, re-migrates the models, then creates a superuser with limited permissions to interact with all views on the site. This superuser will be the one our mailing list uses to interact with our initial Beta, and its permissions can be changed easily. Only Michael (and at max a few of his trusted confidants) holds the username and password for an admin user with full permissions (can delete other users, delete policies, post policies, etc.) to the site.
+
+On the tech folder, there is a script that populates the site with all the scraped Yang2020 policies and a group of politician and non-politician users. For duration of development, api_dev is a backup of db on the server, so you can commit db.sqlite3 and pull on the server.
 
 ## AWS
 
