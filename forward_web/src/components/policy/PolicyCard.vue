@@ -1,5 +1,19 @@
 <template>
   <BCard class="policy-card-container">
+    <!-- <div class="card-data-container">
+      <b-button
+        class="like-btn-wrapper card-data-btn"
+        variant="outline"
+        @click="handlePolicyLike"
+      >
+        <BIconHandThumbsUp
+          class="like-button"
+          style="width: 25px; height: 25px;"
+        />
+        <span class="likes-counter">{{ policy.likes }}</span>
+      </b-button>
+    </div> -->
+
     <div class="card-content">
       <div class="card-title-wrapper">
         <b-card-title>
@@ -22,13 +36,11 @@
       <b-card-text class="policy__category">
         Category: {{ policy.category }}
       </b-card-text>
+
+      <hr />
     </div>
 
     <div class="card-data-container">
-      <div class="policy-icon card-data-btn">
-        <BIconCircleSquare style="width: 27px; height: 27px;" />
-      </div>
-
       <b-button
         class="like-btn-wrapper card-data-btn"
         variant="outline"
@@ -40,31 +52,18 @@
         />
         <span class="likes-counter">{{ policy.likes }}</span>
       </b-button>
-
-      <b-button class="modal-btn-wrapper" variant="outline">
-        <BIconThreeDots
-          class="modal-button"
-          style="width: 25px; height: 25px;"
-        />
-      </b-button>
     </div>
   </BCard>
 </template>
 
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
-import {
-  BIconCircleSquare,
-  BIconHandThumbsUp,
-  BIconThreeDots,
-} from 'bootstrap-vue';
+import { BIconHandThumbsUp } from 'bootstrap-vue';
 
 export default {
   name: 'PolicyCard',
   components: {
-    BIconCircleSquare,
     BIconHandThumbsUp,
-    BIconThreeDots,
   },
   props: {
     policy: Object,
@@ -134,11 +133,11 @@ export default {
     .card-content {
       display: flex;
       flex-direction: column;
-      padding: 10px 15px;
+      padding: 10px 15px 0 15px;
 
       // mobile
       @media screen and (max-width: 768px) {
-        padding: 10px 5px;
+        padding: 10px 5px 0 5px;
       }
 
       .card-title-wrapper {
@@ -191,9 +190,10 @@ export default {
     .card-data-container {
       display: flex;
       flex-direction: row;
+      // justify-content: flex-end;
       padding: 0 15px;
       width: 100%;
-      margin-top: auto;
+      // margin-top: 10px;
 
       // mobile
       @media screen and (max-width: 768px) {
@@ -207,22 +207,6 @@ export default {
         .likes-counter {
           margin-left: 3px;
         }
-      }
-
-      .modal-btn-wrapper {
-        padding: 0;
-        display: block;
-        margin-left: auto;
-        margin-right: 0;
-
-        // mobile
-        @media screen and (max-width: 768px) {
-          display: none;
-        }
-      }
-
-      .card-data-btn {
-        margin-right: 20px;
       }
     }
   }
