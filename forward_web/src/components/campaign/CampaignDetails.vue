@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <div v-if="isLoading"><b-spinner label="Loading..."></b-spinner></div>
-    <div v-else>
+  <div class="campaign-details">
+    <LoadingSpinner v-if="isLoading"></LoadingSpinner>
+    <div v-else class="campaign-details__content">
       <div v-if="!isApproved">
         <h1>Thank you for submitting your campaign! 😄</h1>
         <h3>
@@ -9,41 +9,7 @@
         </h3>
         <h4>We'll notify you when your submission status is updated</h4>
       </div>
-
-      <div v-else>
-        <h1>Your Campaign Info</h1>
-        <p>Running for: {{ campaign.name }}</p>
-        <hr />
-
-        <ul>
-          <li>ActBlue: <a :href="campaign.actblue" target="_blank" rel="noopener noreferrer">{{ campaign.actblue }}</a></li>
-          <li>Fundraise Goal: {{ campaign.fundraise_goal }}</li>
-          <li>Funds Raised: {{ campaign.fundraised }}</li>
-        </ul>
-        <b-form @submit.prevent="handleSubmit">
-
-          <b-form-group
-            id="mycampaign-group"
-            label="My Campaign"
-            label-for="mycampaign"
-            description="Update any info for your current campaign"
-          >
-            <b-form-input
-              id="mycampaign"
-              v-model="actblue"
-              type="text"
-              required
-            />
-            <b-form-input
-              id="mycampaign"
-              v-model="fundraiseGoal"
-              type="text"
-              required
-            />
-          </b-form-group>
-          <b-button type="submit">Update</b-button>
-        </b-form>
-      </div>
+      <CampaignApproved v-else :politician="politician" />
     </div>
   </div>
 </template>
@@ -51,55 +17,59 @@
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
 import { simulateApiCall } from '@/_utils/common-utils';
+import CampaignApproved from './CampaignApproved';
+import LoadingSpinner from '@/components/_common/LoadingSpinner';
 
 export default {
   name: 'CampaignDetails',
+  components: {
+    CampaignApproved,
+    LoadingSpinner
+  },
   data() {
     return {
-      user: {},
-      campaign: {},
-      actblue: "",
-      fundraiseGoal: 0,
+      politician: {},
       isApproved: false,
       isLoading: true,
+      isUpdated: true,
+      isSuccess: false,
     };
   },
   async created() {
-    const { username, email, password, campaignPending } = this.$store.getters.getUserInfo;
-    await this.$store.dispatch('login', { username, password, campaignPending });
-    try {
-      const user = this.$store.getters.getUserInfo;
-      if (user.approved) {
-        this.campaign = await ApiUtil.getCampaign(user.politician_id);
-        this.fundraiseGoal = this.campaign.fundraise_goal;
-        this.actblue = this.campaign.actblue;
-        this.isApproved = true;
-        if (user.campaignPending) {
-          this.$store.dispatch('changeCampaignPending');
-        }
-      }
-    } catch (error) {
-      alert('Oops, something went wrong checking your campaign status.');
-    }
+    const {
+      username,
+      password,
+      campaignPending,
+    } = this.$store.getters.getUserInfo;
     
+    await this.$store.dispatch('login', {
+      username,
+      password,
+      campaignPending,
+    });
+
+    const user = this.$store.getters.getUserInfo;
+
+    if (user.approved) {
+      this.politician = await ApiUtil.getModifiedPolitician({ user });
+      this.isApproved = this.politician.approved;
+
+      if (user.campaignPending) {
+        this.$store.dispatch('changeCampaignPending');
+      }
+    }
+
     this.isLoading = false;
   },
-  methods: {
-    async handleSubmit() {
-      const currentUser = this.$store.getters.getUserInfo;
-      try {
-        const response = await ApiUtil.putCampaign({
-          politician_id: currentUser.politician_id,
-          actblue: this.actblue,
-          fundraise_goal: this.fundraiseGoal
-        });
-        this.campaign = await ApiUtil.getCampaign(currentUser.politician_id);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-  }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.campaign-details {
+  font-size: 14px;
+
+  @media screen and (min-width: 768px) {
+    font-size: 1rem;
+  }
+}
+</style>

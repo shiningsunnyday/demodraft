@@ -1,53 +1,72 @@
 <template>
   <div class="comments-wrapper__comment">
-    <!-- Leading comment -->
-    <CommentCard :comment="comment">
-      <!-- Card buttons -->
-      <template v-slot:buttons>
-        <BButton v-if="hasReplies" @click="handleViewReplies(comment.thread_id)" variant="link">
-          view replies
-        </BButton>
-        <BButton variant="link" @click="handleReplyClick"> reply </BButton>
-      </template>
-      <!-- End card buttons -->
-
-      <!-- Reply form -->
-      <template v-slot:reply-form v-if="isReplying">
-        <CommentForm
-          :updateComments="updateRepliesView"
-          :threadId="comment.thread_id"
-          :isReply="true"
-        ></CommentForm>
-      </template>
-      <!-- End reply form -->
-    </CommentCard>
-    <!-- End leading comment -->
-
-    <!-- Replies to leading comment -->
-    <div v-if="isViewReplies" v-for="replies in thread" :key="replies.id">
-      <CommentCard
-        :comment="replies"
-        :className="`comments-wrapper__sub-comment`"
-      ></CommentCard>
+    <div v-if="isLoading">
+      <CommentCardPlaceholder />
     </div>
-    <!-- End replies to leading comment -->
+    <div v-else>
+      <!-- Leading comment -->
+      <CommentCard
+        :comment="leadComment"
+        :prop="cardProps"
+        :isLeadComment="true"
+        @handleViewReplies="handleViewReplies"
+        @updateRepliesView="updateRepliesView"
+        @deleteThread="handleDeleteThread"
+        @deleteComment="handleDeleteComment"
+        class="comments-wrapper__lead-comment"
+      ></CommentCard>
+      <!-- End leading comment -->
+
+      <!-- Replies to leading comment -->
+      <div
+        v-show="cardProps.isViewingReplies"
+        v-for="(reply, index) in replies"
+        :key="reply.id"
+        class="reply-wrapper"
+      >
+        <div @click="handleBarClick" class="reply-wrapper__bar"></div>
+        <CommentCard
+          :comment="reply"
+          :index="index"
+          :prop="cardProps"
+          @handleViewReplies="handleViewReplies"
+          @updateRepliesView="updateRepliesView"
+          @deleteThread="handleDeleteThread"
+          @deleteComment="handleDeleteComment"
+          :className="`reply-wrapper__comment`"
+        ></CommentCard>
+      </div>
+      <b-button
+        v-if="cardProps.isViewingReplies"
+        @click="handleReplyToThread"
+        variant="link"
+      >
+        reply to thread
+      </b-button>
+      <CommentForm
+        v-if="isRepyThread"
+        :updateComments="updateRepliesView"
+        :threadId="comment.thread_id"
+        :replyTo="comment"
+        :isReply="true"
+      ></CommentForm>
+      <!-- End replies to leading comment -->
+    </div>
   </div>
 </template>
 
 <script>
-import { BButton, BIcon, BIconHandThumbsUp } from 'bootstrap-vue';
 import CommentCard from './CommentCard';
-import CommentForm from "@/components/comments/CommentForm";
-import { ApiUtil } from "@/_utils/api-utils.js";
+import CommentCardPlaceholder from './CommentCardPlaceholder';
+import CommentForm from '@/components/comments/CommentForm';
+import { ApiUtil } from '@/_utils/api-utils.js';
 
 export default {
   name: 'CommentThread',
   components: {
-    'b-button': BButton,
-    BIcon,
-    BIconHandThumbsUp,
     CommentCard,
-    CommentForm
+    CommentForm,
+    CommentCardPlaceholder,
   },
   props: {
     comment: Object,
@@ -56,38 +75,78 @@ export default {
   },
   data() {
     return {
-      isViewReplies: false,
-      hasReplies: false,
-      thread: [],
-      isReplying: false,
+      replies: [], // might use stack datastructure
+      replyComment: {}, // in progress
+      isLoading: true,
+      leadComment: this.comment,
+      isRepyThread: false,
+      cardProps: { // needs refactoring
+        isViewingReplies: false,
+        hasReplies: false,
+        threadId: 0,
+        isMod: false, // change this to true for testing
+      },
     };
   },
-  async mounted () {
-    const { comment } = this; // props
-    this.thread = await ApiUtil.getThreadFromComment(comment.thread_id);
-    this.hasReplies = this.thread.length > 0 ? true : false;
+  async created() {
+    const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
+    this.cardProps.threadId = this.comment.thread_id;
+    this.cardProps.hasReplies = thread.replies.length > 0;
+    this.cardProps.isMod = this.$store.getters.getUserInfo.isMod;
+    this.replies = thread.replies;
+    this.isLoading = false;
   },
   methods: {
-    async handleViewReplies(threadId) {
-      // prevent unecessary api calls when closing replies
-      if (!this.isViewReplies) {
-        this.thread = await ApiUtil.getThreadFromComment(threadId);
-      }
-      this.isViewReplies = !this.isViewReplies;
+    async updateThread(threadId) {
+      const thread = await ApiUtil.getThreadFromComment(threadId);
+      this.replies = thread.replies;
     },
-    handleReplyClick() {
-      this.isReplying = !this.isReplying;
+    async handleAddReply() {
+      const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
+      this.replies.push(thread.lastComment);
     },
-    async updateRepliesView() {
-      this.thread = await ApiUtil.getThreadFromComment(
-        this.comment.thread_id
-      );
-      // Only open replies if closed
-      if (!this.isViewReplies) {
-        this.isViewReplies = !this.isViewReplies;
+    handleViewReplies(threadId) {
+      // only make api call when viewing replies
+      if (!this.cardProps.isViewingReplies) {
+        this.updateThread(threadId);
       }
-      this.hasReplies = true;
-    }
+      this.cardProps.isViewingReplies = !this.cardProps.isViewingReplies;
+    },
+    updateRepliesView() {
+      this.handleAddReply();
+      const isRepliesOpen = this.cardProps.isViewingReplies;
+      if (!isRepliesOpen) {
+        const openReplies = !isRepliesOpen;
+        this.cardProps.isViewingReplies = openReplies;
+      }
+      this.cardProps.hasReplies = true;
+    },
+    async handleDeleteThread(threadId) {
+      try {
+        await ApiUtil.deleteThread(threadId, this.$store.getters.username);
+        this.updateComments();
+      } catch (error) {
+        alert(error.response);
+        console.log(error);
+      }
+    },
+    async handleDeleteComment(data) {
+      const { index, comment } = data;
+      const id = index === 0 ? this.comment.id : this.replies[index - 1].id;
+      try {
+        await ApiUtil.deleteComment(id, this.$store.getters.username);
+        this.replies.pop();
+      } catch (error) {
+        alert(error.response);
+        console.log(error);
+      }
+    },
+    handleBarClick() {
+      this.handleViewReplies();
+    },
+    handleReplyToThread() {
+      this.isRepyThread = !this.isRepyThread;
+    },
   },
 };
 </script>
@@ -97,11 +156,37 @@ export default {
   text-align: start;
   max-width: 700px;
   margin: 0 auto;
-  
-  &__sub-comment {
+
+  &__lead-comment {
+    font-size: 14px;
+    padding: 10px;
+    border: 1px solid rgb(224, 224, 224);
+    margin-bottom: 8px;
+  }
+}
+
+.reply-wrapper {
+  margin-bottom: 8px;
+  position: relative;
+
+  &__bar {
+    content: '';
+    width: 5px;
+    height: calc(100% + 8px);
+    background-color: grey;
+    position: absolute;
+    left: 1rem;
+    top: -8px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &__comment {
     border: 1px solid rgb(224, 224, 224);
     padding: 10px;
     margin-left: 2rem;
+    font-size: 14px;
   }
 }
 </style>

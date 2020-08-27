@@ -1,9 +1,10 @@
 <template>
-  <div class="home">
-    <h1 class="home__title">Home</h1>
+  <div class="policies">
+    <h1 class="policies__title">Policies</h1>
 
-    <div class="home__filter-container">
+    <div class="policies__filter-container">
       <p id="filter">Filter:</p>
+
       <Multiselect
         v-model="selectedValues"
         @input="filterPolicies"
@@ -16,11 +17,10 @@
         placeholder="Filter by Category"
       />
     </div>
-    <div v-if="isLoadingPolicies">Loading...</div>
-    <div v-else class="home__policies-container">
-      <!-- add isfiltered boolean -->
-      <PolicyList v-bind:filteredPolicies="filteredPolicies" />
-    </div>
+
+    <LoadingSpinner v-if="isLoading"></LoadingSpinner>
+
+    <PolicyList v-else :filteredPolicies="filteredPolicies" />
   </div>
 </template>
 
@@ -28,12 +28,15 @@
 import PolicyList from '@/components/policy/PolicyList';
 import Multiselect from 'vue-multiselect';
 import { ApiUtil } from '@/_utils/api-utils';
+import LoadingSpinner from '@/components/_common/LoadingSpinner';
+import * as Config from '@/config.json';
 
 export default {
-  name: 'home-page',
+  name: 'policies-page',
   components: {
     PolicyList,
     Multiselect,
+    LoadingSpinner,
   },
   data() {
     return {
@@ -41,19 +44,35 @@ export default {
       filteredPolicies: [], // holds the policies currently rendered to browser
       options: [], // holds all the values that populate the filter list
       selectedValues: null, // holds the selected filtering options the user selects
-      isLoadingPolicies: true,
+      isLoading: true,
     };
   },
   async created() {
-    this.policies = await ApiUtil.getPolicies();
-    this.filteredPolicies = this.policies;
+    // move this to navbar.vue method
+    try {
+      this.policies = await ApiUtil.getPolicies();
+      // converts policy cateogry ids into actual category names on the frontend
+      // e.g. category_id 1 = "economy", category_id 2 = "education", etc. etc.
+      this.policies.forEach(policy => {
+        policy.category = Config.policy_categories[policy.category];
+      });
+      this.filteredPolicies = this.policies;
 
-    // Populates a components filter list with filtering options that are linked to the incoming data
-    let tempPoliciesArr = [];
-    this.policies.forEach((policy) => tempPoliciesArr.push(policy.category));
-    // remove duplicate filtering options that populate the filtering lists
-    this.options = [...new Set(tempPoliciesArr)];
-    this.isLoadingPolicies = false;
+      // Populates the Vue Multiselect list with filtering options that are linked to the incoming data
+      const policyCategories = [];
+      this.policies.forEach((policy) => {
+        policyCategories.push(policy.category);
+      });
+
+      // remove duplicate filtering options that populate the filtering lists
+      this.options = [...new Set(policyCategories)];
+    } catch (error) {
+      alert(
+        `Error ${error.response.status}: Something went wrong fetching policies`
+      );
+      console.error(error);
+    }
+    this.isLoading = false;
   },
   methods: {
     filterPolicies() {
@@ -88,16 +107,20 @@ export default {
   align-items: center;
 }
 
-.home {
+.policies {
   text-align: center;
 
   &__filter-container {
     display: flex;
     align-items: center;
+    justify-content: center;
+    margin: 1rem 0;
+    height: 50px;
+    padding-right: 10px;
 
     #filter {
       padding: 0;
-      margin: 0 15px;
+      margin: 0 1rem;
     }
 
     .multiselect {
