@@ -34,6 +34,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/_styles';
+
 .about {
   padding: 0 20px;
   margin: 0 auto;
@@ -54,9 +56,7 @@ export default {
 
   p {
     margin-bottom: 50px;
-    font-size: 1.2rem;
-    letter-spacing: 1px;
-    line-height: 1.8rem;
+    @include font-sizing;
   }
 }
 </style>

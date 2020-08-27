@@ -1,24 +1,38 @@
 <template>
   <LoadingSpinner v-if="isLoading"></LoadingSpinner>
+
   <b-container v-else class="policy">
     <h1 class="policy__title">{{ policy.name }}</h1>
 
-    <b-button @click="likePolicy" class="policy__like">
-      {{ `${policy.likes} like(s)` }}
-    </b-button>
-
     <div class="policy__content">
       <div class="policy__description-container">
-        <p v-for="paragraph in description" class="policy__description">
+        <p
+          v-for="paragraph in description"
+          :key="description.indexOf(paragraph)"
+          class="policy__description"
+        >
           {{ paragraph }}
         </p>
       </div>
-      <PolicyEndorseButton
-        v-if="politician.approved"
-        :politician="politician"
-        :policy="policy"
-      >
-      </PolicyEndorseButton>
+
+      <hr />
+
+      <div class="policy__btns-container">
+        <b-button @click="likePolicy" class="policy__like" variant="outline">
+          <BIconHandThumbsUp
+            class="like-button"
+            style="width: 25px; height: 25px;"
+          />
+          <span>{{ policy.likes }}</span>
+        </b-button>
+
+        <PolicyEndorseButton
+          v-if="politician.approved"
+          :politician="politician"
+          :policy="policy"
+        >
+        </PolicyEndorseButton>
+      </div>
     </div>
 
     <hr />
@@ -34,6 +48,7 @@ import PolicyEndorseButton from '@/components/policy/PolicyEndorseButton';
 import LoadingSpinner from '@/components/_common/LoadingSpinner';
 import { ApiUtil } from '@/_utils/api-utils';
 import { splitDescription } from '@/_utils/common-utils.js';
+import { BIconHandThumbsUp } from 'bootstrap-vue';
 
 export default {
   name: 'selected-policy',
@@ -42,6 +57,7 @@ export default {
     CommentForm,
     PolicyEndorseButton,
     LoadingSpinner,
+    BIconHandThumbsUp,
   },
   props: {
     pushedPolicy: Object,
@@ -75,7 +91,7 @@ export default {
     if (user.approved) {
       this.politician = await ApiUtil.getModifiedPolitician({ user });
       const endorsedPolicies = this.politician.endorsed;
-      console.log(endorsedPolicies);
+
       for (const endorsement of endorsedPolicies) {
         if (endorsement.policy_id === this.policy.id) {
           this.politician.hasEndorsed = true;
@@ -103,6 +119,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/_styles';
+
 .policy-loading {
   text-align: center;
 }
@@ -112,17 +130,34 @@ export default {
   height: 100%;
   margin-bottom: 5rem;
 
-  &__like {
-    margin: 1em;
+  &__title-and-likes {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    font-weight: bold;
+    margin-bottom: 25px;
+  }
+
+  &__description {
+    text-align: left;
   }
 
   &__content {
     margin: 0 auto;
     max-width: 700px;
+    @include font-sizing;
   }
 
-  &__description {
-    text-align: justify;
+  &__btns-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 }
 </style>

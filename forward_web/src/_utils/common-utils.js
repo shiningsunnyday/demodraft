@@ -9,6 +9,7 @@ export const splitDescription = (description) => {
   let prevPointer = 0;
   let sentence = 0;
   const result = [];
+
   for (let i = 0; i < toSplit.length; i++) {
     if (
       (description[i] === '.' &&
@@ -28,6 +29,8 @@ export const splitDescription = (description) => {
       sentence = 0;
     }
   }
+
   result.push(toSplit.slice(prevPointer, toSplit.length));
+
   return result;
 };
