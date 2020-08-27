@@ -33,6 +33,8 @@ class Policies(APIView, Meta):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request):
+        if not request.user.is_staff:
+            return Response(status=status.HTTP_403_FORBIDDEN)
         if "policy_id" in set(request.data.keys()):
             policy = Policy.objects.get(id=int(request.data['policy_id']))
             for k in request.data.keys():
@@ -55,6 +57,8 @@ class Policies(APIView, Meta):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
+        if not request.user.is_staff:
+            return Response(status=status.HTTP_403_FORBIDDEN)
         id = request.data.get('id')
         policy = Policy.objects.get(id=id)
         policy.delete()

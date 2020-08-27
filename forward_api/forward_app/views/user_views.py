@@ -2,21 +2,27 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from forward_app.serializers import *
 from rest_framework import status
-from .meta import Meta
+from .meta import *
 from forward_app.utils.score_system import *
+from forward_app.utils.email_csv import search
 
 
 class Signup(APIView, Meta):
+
     def delete(self, request):
-        username, password = request.data["username"], request.data["password"]
-        user = User.objects.get(username=username, password=password)
-        user.delete()
-        return Response(status=status.HTTP_200_OK)
+        if request.user.is_staff:
+            username, password = request.data["username"], request.data["password"]
+            user = User.objects.get(username=username, password=password)
+            user.delete()
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     def post(self, request):
         # return Response("Sorry. We are not accepting new user signups right now.", status=status.HTTP_204_NO_CONTENT)
         sz = UserSerializer(data=request.data)
         if sz.is_valid(raise_exception=True):
+            # if not search(request.data["email"], "./forward_app/utils/contact_list.txt"):
+            #     return Response(status=status.HTTP_400_BAD_REQUEST)
             sz.save()
             user = User.objects.get(**sz.data)
             persona = Persona(user=user)
@@ -54,6 +60,8 @@ class Login(APIView, Meta):
 
 
 class Users(APIView, Meta):
+    permission_classes = [IsAdminUser]
+
     def get(self, request):
         if set(request.GET.keys()) == {"user_id"}:
             user = User.objects.get(id=int(request.GET["user_id"]))

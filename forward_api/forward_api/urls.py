@@ -1,4 +1,5 @@
 from django.urls import include, path
+from django.contrib import admin
 from rest_framework import routers
 from forward_app import views
 
@@ -11,6 +12,7 @@ router = routers.DefaultRouter()
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
+    path('admin/', admin.site.urls),
     path('signup/', views.Signup.as_view(), name="signup"),
     path('login/', views.Login.as_view(), name="login"),
     path('users/', views.Users.as_view(), name="users"),
