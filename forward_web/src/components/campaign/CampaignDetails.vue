@@ -3,7 +3,7 @@
     <LoadingSpinner v-if="isLoading"></LoadingSpinner>
 
     <div v-else>
-      <div class="campaign-details__pending-status" v-if="isApproved">
+      <div class="campaign-details__pending-status" v-if="!isApproved">
         <h4>
           Thank you for submitting a request to launch your campaign!
         </h4>
