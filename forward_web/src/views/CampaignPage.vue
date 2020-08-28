@@ -1,9 +1,7 @@
 <template>
   <b-container>
-    <div class="center">
-      <CampaignRegistration v-if="!isCampaignLaunched" @handle-campaign-launch="handleCampaignLaunch"/>
-      <CampaignDetails v-if="isCampaignLaunched" />
-    </div>
+    <CampaignRegistration v-if="!isCampaignLaunched" @handle-campaign-launch="handleCampaignLaunch"/>
+    <CampaignDetails v-if="isCampaignLaunched" />
   </b-container>
 </template>
 
@@ -11,7 +9,7 @@
 import CampaignRegistration from '@/components/campaign/CampaignRegistration';
 import CampaignDetails from '@/components/campaign/CampaignDetails';
 import * as Config from '@/config.json';
-import { ApiUtil } from "../_utils/api-utils";
+import { ApiUtil } from '../_utils/api-utils';
 
 export default {
   name: 'CampaignPage',
@@ -26,14 +24,17 @@ export default {
   },
   created() {
     const currentUser = this.$store.getters.getUserInfo;
-    if (typeof currentUser.approved !== 'undefined' || currentUser.campaignPending) {
+    if (
+      typeof currentUser.approved !== 'undefined' ||
+      currentUser.campaignPending
+    ) {
       this.isCampaignLaunched = true;
     }
   },
   methods: {
     handleCampaignLaunch(event) {
       this.isCampaignLaunched = event;
-    }
+    },
   },
 };
 </script>
