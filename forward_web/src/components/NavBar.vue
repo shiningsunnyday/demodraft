@@ -29,9 +29,10 @@
           </b-nav-item>
         </div>
 
-        <b-nav-item class="logout" v-if="isLoggedIn" @click="logout">
-          Logout
-        </b-nav-item>
+        <b-nav-item-dropdown class="navbar__user" v-if="isLoggedIn" text="User" right >
+          <b-dropdown-item :to="{ name: 'profile-page' }">Profile</b-dropdown-item>
+          <b-dropdown-item  @click="handleLogout">Logout</b-dropdown-item>
+        </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -46,7 +47,7 @@ export default {
     },
   },
   methods: {
-    logout() {
+    handleLogout() {
       this.$store.dispatch('logout').then(() => {
         this.$router.push('/login');
       });
@@ -84,13 +85,14 @@ $uncollapsed-breakpoint: 992px;
   .navbar-nav {
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 100%;
     height: 100%;
 
     @include navbar-no-burger {
       flex-direction: row;
       justify-content: space-between;
+      align-items: center;
+
       .not-logout {
         display: flex;
         height: 100%;
@@ -106,9 +108,12 @@ $uncollapsed-breakpoint: 992px;
       a {
         display: flex;
         align-items: center;
-        justify-content: center;
         width: 100%;
         color: white;
+        
+        @include navbar-no-burger {
+          justify-content: center;
+        }
       }
 
       .router-link-exact-active {
