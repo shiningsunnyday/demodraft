@@ -3,7 +3,7 @@
     <LoadingSpinner v-if="isLoading"></LoadingSpinner>
 
     <div v-else>
-      <div class="campaign-details__pending-status" v-if="!isApproved">
+      <div class="campaign-details__pending-status" v-if="isApproved">
         <h4>
           Thank you for submitting a request to launch your campaign!
         </h4>
@@ -73,11 +73,13 @@ export default {
 
 .campaign-details {
   @include font-sizing;
-  display: flex;
-  justify-content: center;
-  margin-top: 100px;
+  
 
   &__pending-status {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 100px;
     text-align: center;
 
     h4 {
