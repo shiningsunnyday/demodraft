@@ -10,25 +10,27 @@
       <hr />
 
       <div class="policy-statement line-clamp">
-        <p>
-          {{ policy.statement }}
+        <p>{{ policy.statement }}</p>
+      </div>
+
+      <div class="policy-card__flex-barrier">
+        <b-button 
+          variant="link" 
+          @click="handleLearnMore"
+          class="policy-card__learn-more"
+        >
+          Learn more
+        </b-button>
+      </div>
+
+      <div class="policy-card__flex-barrier">
+        <p class="policy-card__category-name">
+          {{ policy.categoryName }}
         </p>
       </div>
-
-      <b-button variant="link" @click="handleLearnMore">
-        Learn more
-      </b-button>
-
-      <b-card-text class="policy__category">
-        Category: {{ policy.category }}
-      </b-card-text>
+      <hr />
     </div>
-
     <div class="card-data-container">
-      <div class="policy-icon card-data-btn">
-        <BIconCircleSquare style="width: 27px; height: 27px;" />
-      </div>
-
       <b-button
         class="like-btn-wrapper card-data-btn"
         variant="outline"
@@ -40,31 +42,18 @@
         />
         <span class="likes-counter">{{ policy.likes }}</span>
       </b-button>
-
-      <b-button class="modal-btn-wrapper" variant="outline">
-        <BIconThreeDots
-          class="modal-button"
-          style="width: 25px; height: 25px;"
-        />
-      </b-button>
     </div>
   </BCard>
 </template>
 
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
-import {
-  BIconCircleSquare,
-  BIconHandThumbsUp,
-  BIconThreeDots,
-} from 'bootstrap-vue';
+import { BIconHandThumbsUp } from 'bootstrap-vue';
 
 export default {
   name: 'PolicyCard',
   components: {
-    BIconCircleSquare,
     BIconHandThumbsUp,
-    BIconThreeDots,
   },
   props: {
     policy: Object,
@@ -134,11 +123,11 @@ export default {
     .card-content {
       display: flex;
       flex-direction: column;
-      padding: 10px 15px;
+      padding: 10px 15px 0 15px;
 
       // mobile
       @media screen and (max-width: 768px) {
-        padding: 10px 5px;
+        padding: 10px 5px 0 5px;
       }
 
       .card-title-wrapper {
@@ -191,9 +180,10 @@ export default {
     .card-data-container {
       display: flex;
       flex-direction: row;
+      // justify-content: flex-end;
       padding: 0 15px;
       width: 100%;
-      margin-top: auto;
+      // margin-top: 10px;
 
       // mobile
       @media screen and (max-width: 768px) {
@@ -208,22 +198,27 @@ export default {
           margin-left: 3px;
         }
       }
+    }
+  }
+}
 
-      .modal-btn-wrapper {
-        padding: 0;
-        display: block;
-        margin-left: auto;
-        margin-right: 0;
+.policy-card {
 
-        // mobile
-        @media screen and (max-width: 768px) {
-          display: none;
-        }
-      }
+  &__learn-more{
+    display: inline-block;
+    margin-bottom: 8px;
+  }
 
-      .card-data-btn {
-        margin-right: 20px;
-      }
+  &__category-name {
+    display: inline-block;
+    background: #2c3e50;
+    color: white;
+    padding: 3px 10px;
+    margin: 0;
+    border-radius: 5px;
+    font-size: 12px;
+    @media screen and (min-width: 768px) {
+      font-size: 14px;
     }
   }
 }

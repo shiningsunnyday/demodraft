@@ -71,7 +71,7 @@ export const store = new Vuex.Store({
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
           const authUser = {
             username: username,
-            password: password, // security risk, will need to use session cookies/JWT
+            password: password,
             email: email,
             approved: approved,
             isMod: response.status === 204 ? false : is_mod,
@@ -80,7 +80,7 @@ export const store = new Vuex.Store({
           };
           console.log('isMod: ', authUser.isMod);
           const stateData = { token: token, user: authUser };
-          sessionStorage.setItem("token", token);
+          // sessionStorage.setItem("token", token);
           // axios.defaults.headers.common["Authorization"] = token;
           commit("auth_success", stateData);
         }
@@ -119,11 +119,11 @@ export const store = new Vuex.Store({
           const newUser = {
             username: username,
             email: email,
-            password: password, // security risk, will need to use session cookies/JWT
+            password: password,
             campaignPending: user.campaignPending,
           };
           const stateData = { token: token, user: newUser };
-          sessionStorage.setItem("token", token);
+          // sessionStorage.setItem("token", token);
           // axios.defaults.headers.common["Authorization"] = token;
           commit("auth_success", stateData);
         }
@@ -162,7 +162,7 @@ export const store = new Vuex.Store({
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
     username: (state) => state.user.username,
-    password: (state) => state.user.password, // security risk, will need to use session cookies/JWT
+    password: (state) => state.user.password,
     getUserInfo: (state) => state.user,
   },
 });

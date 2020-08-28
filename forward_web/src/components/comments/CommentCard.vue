@@ -154,6 +154,10 @@ export default {
 <style lang="scss" scoped>
 .comments-wrapper {
   
+  &__content {
+    white-space: pre-wrap;
+  }
+
   &__comment-header {
     display: flex;
     justify-content: space-between;

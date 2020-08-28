@@ -64,7 +64,7 @@ export default {
         this.isSearching = true;
         this.civicData = await ApiUtil.postAddress({
           username: this.$store.getters.username,
-          password: this.$store.getters.password, // security risk, will need to use session cookies/JWT
+          password: this.$store.getters.password,
           address: address,
         });
         this.positions = {
