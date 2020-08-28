@@ -1,16 +1,16 @@
 <template>
   <div class="campaign-details">
     <LoadingSpinner v-if="isLoading"></LoadingSpinner>
-    <div v-else class="campaign-details__content">
-      <div v-if="!isApproved">
-        <h1>Thank you for submitting your campaign! 😄</h1>
-        <h3>
-          Your current submission is: Pending
-        </h3>
-        <h4>We'll notify you when your submission status is updated</h4>
-      </div>
-      <CampaignApproved v-else :politician="politician" />
+
+    <div class="campaign-details__pending-status" v-if="!isApproved">
+      <p>
+        Thank you for submitting a request to launch your campaign!
+        <br>
+        You will be notified when your application is accepted.
+      </p>
     </div>
+
+    <CampaignApproved v-else :politician="politician" />
   </div>
 </template>
 
@@ -24,7 +24,7 @@ export default {
   name: 'CampaignDetails',
   components: {
     CampaignApproved,
-    LoadingSpinner
+    LoadingSpinner,
   },
   data() {
     return {
@@ -41,7 +41,7 @@ export default {
       password,
       campaignPending,
     } = this.$store.getters.getUserInfo;
-    
+
     await this.$store.dispatch('login', {
       username,
       password,
@@ -65,11 +65,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.campaign-details {
-  font-size: 14px;
+@import '@/_styles';
 
-  @media screen and (min-width: 768px) {
-    font-size: 1rem;
+.campaign-details {
+  @include font-sizing;
+
+  &__pending-status {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

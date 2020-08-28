@@ -1,19 +1,5 @@
 <template>
   <BCard class="policy-card-container">
-    <!-- <div class="card-data-container">
-      <b-button
-        class="like-btn-wrapper card-data-btn"
-        variant="outline"
-        @click="handlePolicyLike"
-      >
-        <BIconHandThumbsUp
-          class="like-button"
-          style="width: 25px; height: 25px;"
-        />
-        <span class="likes-counter">{{ policy.likes }}</span>
-      </b-button>
-    </div> -->
-
     <div class="card-content">
       <div class="card-title-wrapper">
         <b-card-title>
