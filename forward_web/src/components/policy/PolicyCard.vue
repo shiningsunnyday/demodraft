@@ -10,20 +10,25 @@
       <hr />
 
       <div class="policy-statement line-clamp">
-        <p>
-          {{ policy.statement }}
-        </p>
+        <p>{{ policy.statement }}</p>
       </div>
 
-      <b-button variant="link" @click="handleLearnMore">
-        Learn more
-      </b-button>
+      <div class="policy-card__flex-barrier">
+        <b-button 
+          variant="link" 
+          @click="handleLearnMore"
+          class="policy-card__learn-more"
+        >
+          Learn more
+        </b-button>
+      </div>
 
-      <b-card-text class="policy__category">
-        Category: {{ policy.category }}
-      </b-card-text>
+      <div class="policy-card__flex-barrier">
+        <p class="policy-card__category-name">
+          {{ policy.categoryName }}
+        </p>
+      </div>
     </div>
-
     <div class="card-data-container">
       <div class="policy-icon card-data-btn">
         <BIconCircleSquare style="width: 27px; height: 27px;" />
@@ -224,6 +229,28 @@ export default {
       .card-data-btn {
         margin-right: 20px;
       }
+    }
+  }
+}
+
+.policy-card {
+  &__flex-barrier {
+    margin: 4px 0;
+  }
+
+  &__learn-more{
+    display: inline-block;
+  }
+
+  &__category-name {
+    display: inline-block;
+    background: #2c3e50;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    @media screen and (min-width: 768px) {
+      font-size: 14px;
     }
   }
 }

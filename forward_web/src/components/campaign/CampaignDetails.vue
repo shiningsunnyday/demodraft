@@ -36,6 +36,8 @@ export default {
     };
   },
   async created() {
+    // will need to store approved politician to Vuex state
+    // to get rid of unnecessary calls
     const {
       username,
       password,

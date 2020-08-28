@@ -57,6 +57,8 @@ export default {
     };
   },
   async created() {
+    window.scrollTo(0,0);
+    
     try {
       if (this.isPushed) {
         this.policy = this.pushedPolicy;
@@ -83,6 +85,7 @@ export default {
         }
       }
     }
+    
     this.isLoading = false;
   },
   methods: {

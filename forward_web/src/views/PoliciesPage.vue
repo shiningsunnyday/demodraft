@@ -20,7 +20,11 @@
 
     <LoadingSpinner v-if="isLoading"></LoadingSpinner>
 
-    <PolicyList v-else :filteredPolicies="filteredPolicies" />
+    <PolicyList 
+      v-else 
+      :filteredPolicies="filteredPolicies" 
+      :isFiltering="isFiltering" 
+    />
   </div>
 </template>
 
@@ -44,6 +48,7 @@ export default {
       filteredPolicies: [], // holds the policies currently rendered to browser
       options: [], // holds all the values that populate the filter list
       selectedValues: null, // holds the selected filtering options the user selects
+      isFiltering: false,
       isLoading: true,
     };
   },
@@ -51,17 +56,19 @@ export default {
     // move this to navbar.vue method
     try {
       this.policies = await ApiUtil.getPolicies();
+      
       // converts policy cateogry ids into actual category names on the frontend
       // e.g. category_id 1 = "economy", category_id 2 = "education", etc. etc.
       this.policies.forEach(policy => {
-        policy.category = Config.policy_categories[policy.category];
+        policy.categoryName = Config.policy_categories[policy.category];
+        
       });
       this.filteredPolicies = this.policies;
 
       // Populates the Vue Multiselect list with filtering options that are linked to the incoming data
       const policyCategories = [];
       this.policies.forEach((policy) => {
-        policyCategories.push(policy.category);
+        policyCategories.push(policy.categoryName);
       });
 
       // remove duplicate filtering options that populate the filtering lists
@@ -80,10 +87,12 @@ export default {
       // otherwise, only render policies whose 'userId' property match the currently selected filter option
       if (this.selectedValues.length === 0) {
         this.filteredPolicies = this.policies;
+        this.isFiltering = false;
       } else {
+        this.isFiltering = true;
         // *** I think the best way to go about filtering out the policies based on what's selected is to use "URL querying", but this will have to be built into the backend API ***
         let filteredResults = this.policies.filter(function(policy) {
-          return this.indexOf(policy.category) > -1;
+          return this.indexOf(policy.categoryName) > -1;
         }, this.selectedValues);
 
         this.filteredPolicies = filteredResults;

@@ -3,5 +3,18 @@
     "username": "replace me",
     "password": "replace me"
   },
-  "API_URL": "replace me"
+  "API_URL": "replace me",
+  "policy_categories": {
+    "0": "criminal-justice-reform",
+    "1": "economy",
+    "2": "education",
+    "3": "environment",
+    "4": "family-social",
+    "5": "foreign-policy",
+    "6": "government-reform",
+    "7": "healthcare",
+    "8": "immigration",
+    "9": "voting-reform",
+    "10": "women"
+  }
 }
