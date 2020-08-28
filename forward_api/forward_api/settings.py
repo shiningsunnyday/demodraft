@@ -25,12 +25,12 @@ SECRET_KEY = 'dkfhan$aj3)wt%3)y8v3@nc2lu09&n686h+f0mckutf5erx-4u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 ALLOWED_HOSTS = ['*']
-# CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:8080",
-    "http://localhost:8081",
-    "http://humanityforward.s3-website-us-east-1.amazonaws.com"
-]
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = [
+#     "http://localhost:8080",
+#     "http://localhost:8081",
+#     "http://humanityforward.s3-website-us-east-1.amazonaws.com"
+# ]
 
 # Application definition
 
