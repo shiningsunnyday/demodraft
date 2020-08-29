@@ -66,13 +66,15 @@ export const store = new Vuex.Store({
         
         if (response) {
           console.log('status: ', response.status);
-          const { username, email, password, approved, politician_id, is_mod } = response.data;
+          const { username, email, password, approved, first_name, last_name, politician_id, is_mod } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
           const authUser = {
             username: username,
             password: password,
             email: email,
+            first_name: first_name,
+            last_name: last_name,
             approved: approved,
             isMod: response.status === 204 ? false : is_mod,
             politician_id: politician_id,
@@ -93,13 +95,15 @@ export const store = new Vuex.Store({
       }
     },
     /**
-     * @param {Object} user - Holds username, email, password, campaignLaunchStatus
+     * @param {Object} user - Holds username, email, password, first_name, last_name, campaignLaunchStatus
      */
     async register({ commit }, user) {
       const userData = {
         username: user.username,
         email: user.email,
         password: user.password,
+        first_name: user.first_name,
+        last_name: user.last_name
       };
 
       try {
@@ -113,13 +117,15 @@ export const store = new Vuex.Store({
         });
 
         if (response) {
-          const { username, email, password } = response.data;
+          const { username, email, password, first_name, last_name } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64'); 
           const newUser = {
             username: username,
             email: email,
             password: password,
+            first_name: first_name,
+            last_name: last_name,
             campaignPending: user.campaignPending,
           };
           const stateData = { token: token, user: newUser };
