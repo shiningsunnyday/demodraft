@@ -1,14 +1,16 @@
 <template>
   <div class="campaign-details">
     <LoadingSpinner v-if="isLoading"></LoadingSpinner>
+
     <div v-else>
       <div class="campaign-details__pending-status" v-if="!isApproved">
-        <p>
+        <h4>
           Thank you for submitting a request to launch your campaign!
-          <br>
-          You will be notified when your application is accepted.
-        </p>
+        </h4>
+        <!-- <br /> -->
+        <h4>You will be notified when your application is accepted.</h4>
       </div>
+
       <CampaignApproved v-else :politician="politician" />
     </div>
   </div>
@@ -71,12 +73,18 @@ export default {
 
 .campaign-details {
   @include font-sizing;
+  
 
   &__pending-status {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    margin-top: 100px;
+    text-align: center;
+
+    h4 {
+      margin-bottom: 20px;
+    }
   }
 }
 </style>

@@ -168,7 +168,6 @@ export default {
       }
 
       hr {
-        // border: 0;
         clear: both;
         display: block;
         width: 100%;
@@ -180,10 +179,8 @@ export default {
     .card-data-container {
       display: flex;
       flex-direction: row;
-      // justify-content: flex-end;
       padding: 0 15px;
       width: 100%;
-      // margin-top: 10px;
 
       // mobile
       @media screen and (max-width: 768px) {
