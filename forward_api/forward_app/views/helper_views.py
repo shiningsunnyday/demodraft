@@ -103,7 +103,7 @@ class PoliticianV(APIView, Meta):
             return Response("Either username or password is wrong.", status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.get(username=request.data['username'])
         persona = user.persona
-        persona.stage = 2
+        persona.stage = 3
         pol = persona.politician
         if pol.approved:
             sz = PoliticianSerializer(pol)

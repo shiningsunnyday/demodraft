@@ -1,18 +1,21 @@
 from django.contrib.auth.models import User
 from forward_app.core_models import *
 from rest_framework import serializers
+from forward_app.utils.email_csv import search
 
 
 class UserSerializer(serializers.ModelSerializer):
     def validate_email(self, email):
         exists = User.objects.filter(email=email).exists()
+        if not search(email, "./forward_app/utils/contact_list.txt"):
+            raise serializers.ValidationError("Email not on approved list.")
         if exists:
             raise serializers.ValidationError("Email already exists.")
         return email
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email', 'password', 'first_name', 'last_name']
 
 
 class PersonaSerializer(serializers.ModelSerializer):
@@ -79,9 +82,15 @@ class MyCampaignSerializer(CampaignSerializer):
 
 
 class PolicySerializer(serializers.ModelSerializer):
+    likes = serializers.SerializerMethodField("get_likes")
+
+    def get_likes(self, policy):
+        pop = policy.popularity
+        return pop.likes
+
     class Meta:
         model = Policy
-        fields = ['id', 'created', 'category', 'name', 'statement']
+        fields = ['id', 'created', 'category', 'name', 'statement', 'likes']
 
 
 class PolicyDetailedSerializer(serializers.ModelSerializer):
@@ -96,26 +105,53 @@ class PopularitySerializer(serializers.ModelSerializer):
         fields = ['likes']
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.SerializerMethodField("get_email")
+
+    def get_email(self, pers):
+        return pers.user.email
+
+    class Meta:
+        model = Persona
+        fields = ['stage', 'email', 'score']
+
+
 class CommentSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField("get_username")
+    first = serializers.SerializerMethodField("get_first")
+    last = serializers.SerializerMethodField("get_last")
 
     def get_username(self, comment):
         return comment.user.username
 
+    def get_first(self, comment):
+        return comment.user.first_name
+
+    def get_last(self, comment):
+        return comment.user.last_name
+
     class Meta:
         model = Comment
-        fields = ['id', 'time', 'username', 'next_comment_id', 'content', 'likes']
+        fields = ['id', 'time', 'username', 'next_comment_id', 'first_name', 'last_name', 'content', 'likes']
 
 
 class LeadingCommentSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField("get_username")
+    first = serializers.SerializerMethodField("get_first")
+    last = serializers.SerializerMethodField("get_last")
 
     def get_username(self, comment):
         return comment.user.username
 
+    def get_first(self, comment):
+        return comment.user.first_name
+
+    def get_last(self, comment):
+        return comment.user.last_name
+
     class Meta:
         model = Comment
-        fields = ['id', 'time', 'username', 'content', 'likes']
+        fields = ['id', 'time', 'username', 'first_name', 'last_name', 'content', 'likes']
 
 
 class UpdatedCommentSerializer(serializers.ModelSerializer):
@@ -154,7 +190,18 @@ class FirstCommentSerializer(serializers.ModelSerializer):
 
 class NextCommentSerializer(serializers.ModelSerializer):
     thread_id = serializers.IntegerField(min_value=1)
-    username = serializers.CharField(max_length=150)
+    username = serializers.SerializerMethodField("get_username")
+    first = serializers.SerializerMethodField("get_first")
+    last = serializers.SerializerMethodField("get_last")
+
+    def get_username(self, comment):
+        return comment.user.username
+
+    def get_first(self, comment):
+        return comment.user.first_name
+
+    def get_last(self, comment):
+        return comment.user.last_name
 
     def validate_thread_id(self, id):
         exists = Thread.objects.filter(id=id).exists()
@@ -170,7 +217,7 @@ class NextCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'thread_id', 'username', 'content']
+        fields = ['id', 'thread_id', 'username', 'first_name', 'last_name', 'content']
 
 
 class StanceSerializer(serializers.ModelSerializer):
