@@ -51,9 +51,10 @@
         <p class="selected-politician__message">"{{ policy.message }}"</p>
       </div>
     </div>
-    <CommentList2 :politicianId="politician.id"></CommentList2>
-
-    
+    <hr />
+    <div class="selected-politician__comments">
+      <CommentList2 :politicianId="politician.id"></CommentList2>
+    </div>
   </b-container>
 </template>
 
@@ -152,6 +153,10 @@ export default {
     @media screen and (min-width: 768px) {
       width: 500px;
     }
+  }
+
+  &__comments{
+    width: 100%;
   }
 
   &__actblue-link {
