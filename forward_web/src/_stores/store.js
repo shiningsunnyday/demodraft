@@ -65,11 +65,11 @@ export const store = new Vuex.Store({
         });
         
         if (response) {
-          console.log('status: ', response.status);
-          const { username, email, password, approved, politician_id, is_mod } = response.data;
+          const { id, username, email, password, approved, politician_id, is_mod } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
           const authUser = {
+            id: id,
             username: username,
             password: password,
             email: email,
@@ -78,7 +78,6 @@ export const store = new Vuex.Store({
             politician_id: politician_id,
             campaignPending: user.campaignPending,
           };
-          console.log('isMod: ', authUser.isMod);
           const stateData = { token: token, user: authUser };
           // sessionStorage.setItem("token", token);
           // axios.defaults.headers.common["Authorization"] = token;
@@ -113,10 +112,11 @@ export const store = new Vuex.Store({
         });
 
         if (response) {
-          const { username, email, password } = response.data;
+          const { id, username, email, password } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64'); 
           const newUser = {
+            id: id,
             username: username,
             email: email,
             password: password,
