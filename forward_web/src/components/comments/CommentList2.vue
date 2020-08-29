@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Comments</h1>
+    <h1 class="comment-title">Comments</h1>
     <CommentForm2 
       :updateComments="updateComments"
       :politicianId="politicianId" 
@@ -59,6 +59,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.comment-title {
+  display: flex;
+  justify-content: center;
+}
 .comments-wrapper {
   text-align: start;
   max-width: 700px;
