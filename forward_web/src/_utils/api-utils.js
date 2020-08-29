@@ -196,4 +196,14 @@ export class ApiUtil {
       console.error(error);
     }
   }
+
+  static async getUserScore(req) {
+    const payload = { 
+      user_id: req.user_id, 
+      username: req.username, 
+      password: req.password 
+    };
+    const userPromise = await axios.post(`/users/`, payload);
+    return userPromise.data.score;
+  }
 }
