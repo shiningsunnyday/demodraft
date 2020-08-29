@@ -58,14 +58,19 @@ class Login(APIView, Meta):
 
 
 class Users(APIView, Meta):
-    permission_classes = [IsAdminUser]
 
     def get(self, request):
-        if set(request.GET.keys()) == {"user_id"}:
-            user = User.objects.get(id=int(request.GET["user_id"]))
-            sz = ProfileSerializer(user.persona)
-            return Response(sz.data, status=status.HTTP_200_OK)
-        else:
+        if request.user.is_staff:
             users = User.objects.all()
             sz = UsernameSerializer(users, many=True)
             return Response(sz.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def post(self, request):
+        if set(request.data.keys()) == {"user_id", "username", "password"}:
+            user = User.objects.get(id=int(request.data["user_id"]), username=request.data["username"],
+                                    password=request.data["password"])
+            sz = ProfileSerializer(user.persona)
+            return Response(sz.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'first_name', 'last_name']
+        fields = ['id', 'username', 'email', 'password', 'first_name', 'last_name']
 
 
 class PersonaSerializer(serializers.ModelSerializer):
@@ -118,8 +118,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField("get_username")
-    first = serializers.SerializerMethodField("get_first")
-    last = serializers.SerializerMethodField("get_last")
+    first_name = serializers.SerializerMethodField("get_first")
+    last_name = serializers.SerializerMethodField("get_last")
 
     def get_username(self, comment):
         return comment.user.username
@@ -137,8 +137,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class LeadingCommentSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField("get_username")
-    first = serializers.SerializerMethodField("get_first")
-    last = serializers.SerializerMethodField("get_last")
+    first_name = serializers.SerializerMethodField("get_first")
+    last_name = serializers.SerializerMethodField("get_last")
 
     def get_username(self, comment):
         return comment.user.username
@@ -188,11 +188,33 @@ class FirstCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'policy_id', 'username', 'content']
 
 
+class FirstPolCommentSerializer(serializers.ModelSerializer):
+    politician_id = serializers.IntegerField(min_value=1)
+    username = serializers.CharField(max_length=150)
+    content = serializers.CharField(max_length=1000)
+
+    def validate_politician_id(self, id):
+        exists = Politician.objects.filter(id=id).exists()
+        if not exists:
+            raise serializers.ValidationError("Politician doesn't exist.")
+        return id
+
+    def validate_username(self, username):
+        exists = User.objects.filter(username=username).exists()
+        if not exists:
+            raise serializers.ValidationError("Username doesn't exist.")
+        return username
+
+    class Meta:
+        model = Thread
+        fields = ['id', 'politician_id', 'username', 'content']
+
+
 class NextCommentSerializer(serializers.ModelSerializer):
     thread_id = serializers.IntegerField(min_value=1)
     username = serializers.SerializerMethodField("get_username")
-    first = serializers.SerializerMethodField("get_first")
-    last = serializers.SerializerMethodField("get_last")
+    first_name = serializers.SerializerMethodField("get_first")
+    last_name = serializers.SerializerMethodField("get_last")
 
     def get_username(self, comment):
         return comment.user.username

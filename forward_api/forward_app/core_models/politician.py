@@ -16,6 +16,19 @@ class Politician(models.Model):
         ordering = ['created']
 
 
+class Constituency(models.Model):
+    politician = models.OneToOneField(
+        Politician,
+        on_delete=models.CASCADE,
+        primary_key=True
+    )
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created']
+
+
 class Stance(models.Model):
     politician = models.ForeignKey(Politician, on_delete=models.CASCADE)
     policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
