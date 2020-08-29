@@ -188,6 +188,28 @@ class FirstCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'policy_id', 'username', 'content']
 
 
+class FirstPolCommentSerializer(serializers.ModelSerializer):
+    politician_id = serializers.IntegerField(min_value=1)
+    username = serializers.CharField(max_length=150)
+    content = serializers.CharField(max_length=1000)
+
+    def validate_politician_id(self, id):
+        exists = Politician.objects.filter(id=id).exists()
+        if not exists:
+            raise serializers.ValidationError("Politician doesn't exist.")
+        return id
+
+    def validate_username(self, username):
+        exists = User.objects.filter(username=username).exists()
+        if not exists:
+            raise serializers.ValidationError("Username doesn't exist.")
+        return username
+
+    class Meta:
+        model = Thread
+        fields = ['id', 'politician_id', 'username', 'content']
+
+
 class NextCommentSerializer(serializers.ModelSerializer):
     thread_id = serializers.IntegerField(min_value=1)
     username = serializers.SerializerMethodField("get_username")
