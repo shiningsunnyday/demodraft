@@ -34,6 +34,17 @@ class ThreadV(APIView, Meta):
                 data['thread_id'] = thread.id
                 all_threads.append(data)
             return Response(all_threads, status=status.HTTP_200_OK)
+        elif set(request.GET.keys()) == {"politician_id"}:
+            pol = Politician.objects.get(id=int(request.GET["politician_id"]))
+            threads = pol.constituency.thread_set.all()
+            all_threads = []
+            for thread in threads:
+                comment = Comment.objects.get(id=thread.lead_comment_id)
+                sz = LeadingCommentSerializer(comment)
+                data = sz.data
+                data['thread_id'] = thread.id
+                all_threads.append(data)
+            return Response(all_threads, status=status.HTTP_200_OK)
         else:
             return Response("Please provide thread_id or policy_id.", status=status.HTTP_400_BAD_REQUEST)
 
@@ -67,6 +78,19 @@ class ThreadV(APIView, Meta):
                 thread.delete()
                 return Response("You've deleted the thread.", status=status.HTTP_204_NO_CONTENT)
             return Response("You are not authorized to delete threads.", status=status.HTTP_400_BAD_REQUEST)
+        elif set(request.data.keys()) == {"politician_id", "username", "content"}:
+            sz = FirstPolCommentSerializer(data=request.data)
+            if sz.is_valid(raise_exception=True):
+                pol = Politician.objects.get(id=request.data["politician_id"])
+                constituency = pol.constituency
+                thread = Thread.objects.create(constituency=constituency)
+                user = User.objects.get(username=sz.data["username"])
+                comment = Comment.objects.create(user=user, thread=thread, content=sz.data["content"])
+                thread.lead_comment_id = comment.id
+                comment.next_comment_id = comment.id
+                thread.save()
+                comment.save()
+                return Response(status=status.HTTP_202_ACCEPTED)
         else:
             return Response("Please provide policy_id, username, and content.", status=status.HTTP_400_BAD_REQUEST)
 
