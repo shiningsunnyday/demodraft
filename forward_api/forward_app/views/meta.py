@@ -4,6 +4,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticate
 
 
 class Meta(object):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     authentication_classes = [BasicAuthentication]
     parser_classes = [JSONParser]
