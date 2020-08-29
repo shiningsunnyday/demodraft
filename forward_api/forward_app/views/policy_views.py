@@ -65,15 +65,13 @@ class Policies(APIView, Meta):
         return Response(status=status.HTTP_200_OK)
 
     def get(self, request):
-        c_id = request.data.get('category_id')
-        if c_id != None and isinstance(c_id, int):
-            return Policies.by_category(request, c_id)
-        id = request.data.get('id')
-        if id != None and isinstance(id, int):
-            return Policies.by_id(id)
-        sz = PolicySerializer(Policy.objects.all(), many=True)
-
-        return Response(sz.data, status=status.HTTP_200_OK)
+        if set(request.GET.keys()) == {'category_id'}:
+            return Policies.by_category(request, int(request.GET['category_id']))
+        elif set(request.GET.keys()) == {'id'}:
+            return Policies.by_id(int(request.GET['id']))
+        else:
+            sz = PolicySerializer(Policy.objects.all(), many=True)
+            return Response(sz.data, status=status.HTTP_200_OK)
 
 
 class PolicyV(APIView, Meta):

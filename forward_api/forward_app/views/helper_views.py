@@ -82,9 +82,11 @@ class PoliticianV(APIView, Meta):
                 pol = Politician.objects.get(persona=persona)
                 pol.office_id = pos['id']
                 pol.name = pos['name']
+                pol.save()
             else:
                 pol = Politician(persona=persona, office_id=pos['id'], name=pos['name'])
-            pol.save()
+                pol.save()
+                Constituency.objects.create(politician=pol)
             data = merge(UserSerializer(user).data, PoliticianSerializer(pol).data)
 
             email = EmailMessage(
