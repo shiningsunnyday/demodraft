@@ -4,7 +4,6 @@ from forward_app.serializers import *
 from rest_framework import status
 from .meta import *
 from forward_app.utils.score_system import *
-from forward_app.utils.email_csv import search
 
 
 class Signup(APIView, Meta):
@@ -19,17 +18,16 @@ class Signup(APIView, Meta):
 
     def post(self, request):
         # return Response("Sorry. We are not accepting new user signups right now.", status=status.HTTP_204_NO_CONTENT)
-        sz = UserSerializer(data=request.data)
-        if sz.is_valid(raise_exception=True):
-            # if not search(request.data["email"], "./forward_app/utils/contact_list.txt"):
-            #     return Response(status=status.HTTP_400_BAD_REQUEST)
-            sz.save()
-            user = User.objects.get(**sz.data)
-            persona = Persona(user=user)
-            persona.stage = 1
-            persona.save()
-            return Response(sz.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        if set(request.data.keys()) == {"username", "email", "password", "first_name", "last_name"}:
+            sz = UserSerializer(data=request.data)
+            if sz.is_valid(raise_exception=True):
+                sz.save()
+                user = User.objects.get(**sz.data)
+                persona = Persona(user=user)
+                persona.stage = 1
+                persona.save()
+                return Response(sz.data, status=status.HTTP_201_CREATED)
+        return Response("Please provide username, email, password, first name and last name.", status=status.HTTP_400_BAD_REQUEST)
 
 
 class Login(APIView, Meta):
@@ -60,14 +58,19 @@ class Login(APIView, Meta):
 
 
 class Users(APIView, Meta):
-    permission_classes = [IsAdminUser]
 
     def get(self, request):
-        if set(request.GET.keys()) == {"user_id"}:
-            user = User.objects.get(id=int(request.GET["user_id"]))
-            sz = ProfileSerializer(user.persona)
-            return Response(sz.data, status=status.HTTP_200_OK)
-        else:
+        if request.user.is_staff:
             users = User.objects.all()
             sz = UsernameSerializer(users, many=True)
             return Response(sz.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def post(self, request):
+        if set(request.data.keys()) == {"user_id", "username", "password"}:
+            user = User.objects.get(id=int(request.data["user_id"]), username=request.data["username"],
+                                    password=request.data["password"])
+            sz = ProfileSerializer(user.persona)
+            return Response(sz.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
