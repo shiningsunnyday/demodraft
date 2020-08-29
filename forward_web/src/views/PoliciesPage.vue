@@ -24,6 +24,8 @@
       v-else 
       :filteredPolicies="filteredPolicies" 
       :isFiltering="isFiltering" 
+      :selectedValues="selectedValues"
+      :filterPolicies="filterPolicies"
     />
   </div>
 </template>
@@ -47,7 +49,7 @@ export default {
       policies: [], // holds all the policies coming from API in this component's state
       filteredPolicies: [], // holds the policies currently rendered to browser
       options: [], // holds all the values that populate the filter list
-      selectedValues: null, // holds the selected filtering options the user selects
+      selectedValues: [], // holds the selected filtering options the user selects
       isFiltering: false,
       isLoading: true,
     };

@@ -16,12 +16,24 @@
         :key="category.id"
         class="policy-list__policies-container"
       >
-        <h3 class="policy-list__title">{{ category.name }}</h3>
+        <div class="policy-list__header">
+          <h3 class="policy-list__title">
+            {{ category.name.charAt(0).toUpperCase() + category.name.slice(1) }}
+          </h3>
+          <b-button 
+            @click="handleSeeMore(category.name)"
+            variant="link" 
+            class="policy-list__see-more"
+          >
+            see more >>
+          </b-button>
+        </div>
+        
         <div class="policy-list__policies">
           <PolicyCard 
-            v-for="policy in category.policies" 
-            :key="policy.id" 
-            :policy="policy"
+            v-for="n in 3" 
+            :key="category.policies[n].id" 
+            :policy="category.policies[n]"
           >
           </PolicyCard>
         </div>
@@ -48,6 +60,8 @@ export default {
       type: Array,
       required: true,
     },
+    filterPolicies: Function,
+    selectedValues: Array,
     isFiltering: Boolean
   },
   data() {
@@ -55,6 +69,12 @@ export default {
     };
   },
   computed: {
+    /**
+     * returns an object
+     * { 
+     *  id: { name: policy.categoryName, policies: [...policy] }
+     * }
+     */
     groupedCategories() {
       const groups = {};
       this.filteredPolicies.forEach((policy) => {
@@ -71,17 +91,33 @@ export default {
       return groups;
     }
   },
+  methods: {
+    handleSeeMore(category) {
+      this.selectedValues.push(category);
+      this.filterPolicies();
+      window.scrollTo(0,0);
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .policy-list-container {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .policy-list {
+
+  &__header {
+    display: flex;
+    justify-content: center;
+    > * {
+      margin: 0 4px;
+    }
+  }
+
   &__title {
     font-weight: bold;
   }
