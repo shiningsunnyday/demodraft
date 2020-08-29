@@ -118,8 +118,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField("get_username")
-    first = serializers.SerializerMethodField("get_first")
-    last = serializers.SerializerMethodField("get_last")
+    first_name = serializers.SerializerMethodField("get_first")
+    last_name = serializers.SerializerMethodField("get_last")
 
     def get_username(self, comment):
         return comment.user.username
@@ -137,8 +137,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class LeadingCommentSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField("get_username")
-    first = serializers.SerializerMethodField("get_first")
-    last = serializers.SerializerMethodField("get_last")
+    first_name = serializers.SerializerMethodField("get_first")
+    last_name = serializers.SerializerMethodField("get_last")
 
     def get_username(self, comment):
         return comment.user.username
@@ -191,8 +191,8 @@ class FirstCommentSerializer(serializers.ModelSerializer):
 class NextCommentSerializer(serializers.ModelSerializer):
     thread_id = serializers.IntegerField(min_value=1)
     username = serializers.SerializerMethodField("get_username")
-    first = serializers.SerializerMethodField("get_first")
-    last = serializers.SerializerMethodField("get_last")
+    first_name = serializers.SerializerMethodField("get_first")
+    last_name = serializers.SerializerMethodField("get_last")
 
     def get_username(self, comment):
         return comment.user.username
