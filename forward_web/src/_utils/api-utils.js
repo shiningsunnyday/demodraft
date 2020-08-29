@@ -21,6 +21,11 @@ export class ApiUtil {
     return policyCommentsPromise.data;
   }
 
+  static async getPoliticianComments(id) {
+    const polCommentsPromise = await axios.get(`/thread/?politician_id=${id}`);
+    return polCommentsPromise.data;
+  }
+
   static async getThreadFromComment(id) {
     const threadPromise = await axios.get(`/thread/?thread_id=${id}`);
     return {
