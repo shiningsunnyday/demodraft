@@ -25,8 +25,12 @@ SECRET_KEY = 'dkfhan$aj3)wt%3)y8v3@nc2lu09&n686h+f0mckutf5erx-4u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 ALLOWED_HOSTS = ['*']
-CORS_ORIGIN_ALLOW_ALL = True
-
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:8080",
+    "http://localhost:8081",
+    "http://humanityforward.s3-website-us-east-1.amazonaws.com"
+]
 
 # Application definition
 
@@ -126,7 +130,6 @@ STATIC_URL = '/static/'
 
 
 # CORS
-CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_METHODS = [
     'GET',
     'POST',
@@ -143,8 +146,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'librian2000@gmail.com'
 EMAIL_HOST_PASSWORD = '321Chicken!'
 
-INTERNAL_USERNAMES = ["normalperson", "averagejoe"] + ['aspiringpolitician%d' % i for i in range(1, 21)]
-INTERNAL_PASSWORDS = ["freehealthcare", "universalbasicincome", "iwanttolaunchacampaign"]
+# INTERNAL_USERNAMES = ["normalperson", "averagejoe"] + ['aspiringpolitician%d' % i for i in range(1, 21)]
+# INTERNAL_PASSWORDS = ["freehealthcare", "universalbasicincome", "iwanttolaunchacampaign"]
 
 # HELPFUL
-# ./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney')"
+# rm db.sqlite3 && python manage.py makemigrations && python manage.py migrate && ./manage.py shell -c "from django.contrib.auth.models import User; user=User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney'); user.is_staff=False; user.save(); User.objects.create_superuser('demolead', '', 'YC7Gbh*?R6hYthhkqv9p')"

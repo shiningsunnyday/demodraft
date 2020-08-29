@@ -6,11 +6,9 @@ Our tech stack is **AWS -> Django REST -> Vue.js**. We use ec2 instance as our s
 
 The static development site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com). There's a boilerplate app. It fetches the API for politicians from the server.
 
-The API endpoint (master) is [here](http://www.ec2-18-144-155-31.us-west-1.compute.amazonaws.com). It should be on track with master branch. It will always be online and working.
+The development API endpoint is [here](http://ec2-54-151-48-129.us-west-1.compute.amazonaws.com). It should be on track with api_dev branch. It will nearly always be working. Upon launch there will be a production API endpoint on track with master branch that will always be working.
 
-The development API endpoint (api_dev) is [here](http://ec2-54-183-146-26.us-west-1.compute.amazonaws.com). It should be on track with api_dev branch.
-
-Keep master always functional and base work on dev branch off master. Make a pr from dev branches whenever it will affect other dev branch.
+Keep master always functional and base work on dev branch off api_dev or web_dev then make pr into api_dev or web_dev. Make pr into master once it's tested and other devs can fast-forward their dev branches.
 
 ## Design (Courtney)
 
@@ -57,18 +55,20 @@ yarn serve
 yarn build
 ```
 
-## Backend (Michael, Brian)
+## Backend (Michael, Brian, Jack)
 
 - Set up dependencies: python 3.7 virtualenv with requirements.txt
 - Go through [tech folder](https://drive.google.com/drive/u/1/folders/1mzIpEBgastJnrVOOt-JvNQSlSmSnBuAp)
   - Understand data models and relations on MVP slide deck
   - Expected API endpoints and example behavior in ./api_endpoints
-- To reset a db.sqlite3 from /forward_api (concatenating cause you'll be running this a lot):
+- To reset a db.sqlite3 from /forward_api (concatenating cause you'll be running this a lot) and create an admin user:
 ```
-rm db.sqlite3 && python manage.py makemigrations && python manage.py migrate && ./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney')"
+rm db.sqlite3 && python manage.py makemigrations && python manage.py migrate && ./manage.py shell -c "from django.contrib.auth.models import User; user=User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney'); user.is_staff=False; user.save()"
 python manage.py runserver
 ```
-Ping Michael for a script that adds a specifiable amount of Yang2020 policies, two approved politicians and optional # of aspiring politicians. For duration of development, api_dev is a backup of db on the server, so you can commit db.sqlite3 and pull on the server.
+For local debugging, that removs the db, re-migrates the models, then creates a superuser with limited permissions to interact with all views on the site. This superuser will be the one our mailing list uses to interact with our initial Beta, and its permissions can be changed easily. Only Michael (and at max a few of his trusted confidants) holds the username and password for an admin user with full permissions (can delete other users, delete policies, post policies, etc.) to the site.
+
+On the tech folder, there is a script that populates the site with all the scraped Yang2020 policies and a group of politician and non-politician users. For duration of development, api_dev is a backup of db on the server, so you can commit db.sqlite3 and pull on the server.
 
 ## AWS
 
@@ -133,3 +133,9 @@ Backend
 - [Serializer relations](https://www.django-rest-framework.org/api-guide/relations/)
 
 - [Server-side setup with Django](https://www.youtube.com/watch?v=u0oEIqQV_-E)
+
+- [Django CORS support](https://github.com/adamchainz/django-cors-headers#configuration)
+
+- [Route one request method to another using middleware](https://www.guguweb.com/2014/06/25/put-and-delete-http-requests-with-django-and-jquery/#:~:text=Django%20does%20not%20put%20data,with%20GET%20or%20POST%20data.) (outdated so use latest Django documentation)
+
+

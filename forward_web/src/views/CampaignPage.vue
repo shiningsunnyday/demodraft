@@ -1,6 +1,7 @@
 <template>
   <b-container>
     <CampaignRegistration v-if="!isCampaignLaunched" @handle-campaign-launch="handleCampaignLaunch"/>
+
     <CampaignDetails v-if="isCampaignLaunched" />
   </b-container>
 </template>

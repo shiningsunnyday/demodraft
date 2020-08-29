@@ -3,62 +3,6 @@ from rest_framework.views import APIView
 from forward_app.serializers import *
 from rest_framework import status
 from .meta import Meta
-from forward_app.utils.score_system import *
-from django.conf import settings
-
-
-class Signup(APIView, Meta):
-    def delete(self, request):
-        username, password = request.data["username"], request.data["password"]
-        user = User.objects.get(username=username, password=password)
-        user.delete()
-        return Response(status=status.HTTP_200_OK)
-
-    def post(self, request):
-        # return Response("Sorry. We are not accepting new user signups right now.", status=status.HTTP_204_NO_CONTENT)
-        sz = UserSerializer(data=request.data)
-        if sz.is_valid(raise_exception=True):
-            sz.save()
-            user = User.objects.get(**sz.data)
-            persona = Persona(user=user)
-            persona.stage = 1
-            persona.save()
-            return Response(sz.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-class Login(APIView, Meta):
-    def post(self, request):
-        username, password = request.data["username"], request.data["password"]
-        # if username not in settings.INTERNAL_USERNAMES or password not in settings.INTERNAL_PASSWORDS:
-        #     return Response("Please login with internal username and password.",
-        #                     status=status.HTTP_401_UNAUTHORIZED)
-        exists = User.objects.filter(username=username, password=password).exists()
-        if exists:
-            user = User.objects.get(username=username, password=password)
-            update_scores(pers=Persona.objects.all(), comments=Comment.objects.all())
-            sweep(Persona.objects.all())
-            sz = UserSerializer(user)
-            try:
-                persona = user.persona
-                pol = persona.politician
-                approved = pol.approved
-                data = sz.data
-                data['approved'] = approved
-                data['politician_id'] = pol.id
-                return Response(data, status=status.HTTP_202_ACCEPTED)
-            except AttributeError:
-                data = sz.data
-                data['is_mod'] = (persona.stage == 2)
-                return Response(data, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-
-class Users(APIView, Meta):
-    def get(self, request):
-        users = User.objects.all()
-        sz = UsernameSerializer(users, many=True)
-        return Response(sz.data, status=status.HTTP_200_OK)
 
 
 class Policies(APIView, Meta):
@@ -89,6 +33,8 @@ class Policies(APIView, Meta):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request):
+        if not request.user.is_staff:
+            return Response(status=status.HTTP_403_FORBIDDEN)
         if "policy_id" in set(request.data.keys()):
             policy = Policy.objects.get(id=int(request.data['policy_id']))
             for k in request.data.keys():
@@ -111,6 +57,8 @@ class Policies(APIView, Meta):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
+        if not request.user.is_staff:
+            return Response(status=status.HTTP_403_FORBIDDEN)
         id = request.data.get('id')
         policy = Policy.objects.get(id=id)
         policy.delete()
@@ -207,69 +155,3 @@ class ThreadV(APIView, Meta):
             return Response("You are not authorized to delete threads.", status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response("Please provide policy_id, username, and content.", status=status.HTTP_400_BAD_REQUEST)
-
-
-class CommentV(APIView, Meta):
-    def post(self, request):
-        if set(request.data.keys()) == {"thread_id", "username", "content"}:
-            sz = NextCommentSerializer(data=request.data)
-            if sz.is_valid(raise_exception=True):
-                thread = Thread.objects.get(id=request.data["thread_id"])
-                user = User.objects.get(username=request.data["username"])
-                comment = Comment.objects.get(id=thread.lead_comment_id)
-                next_comment_id = comment.next_comment_id
-                comments = []
-                while next_comment_id != comment.id:
-                    comments.append(comment)
-                    comment = Comment.objects.get(id=comment.next_comment_id)
-                    next_comment_id = comment.next_comment_id
-                new_comment = Comment.objects.create(user=user, thread=thread, content=request.data["content"])
-                comment.next_comment_id = new_comment.id
-                comment.save()
-                new_comment.next_comment_id = new_comment.id
-                new_comment.save()
-                comments.append(comment)
-                comments.append(new_comment)
-                sz = CommentSerializer(comments, many=True)
-                return Response(sz.data, status=status.HTTP_202_ACCEPTED)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        elif set(request.data.keys()) == {"username", "prev_comment_id"}:
-            user = User.objects.get(username=request.data["username"])
-            stage = user.persona.stage
-            if stage == 2:
-                comment = Comment.objects.get(id=int(request.data["prev_comment_id"]))
-                comment_to_del = Comment.objects.get(id=comment.next_comment_id)
-                if comment_to_del.id != comment_to_del.next_comment_id:
-                    next_comment = Comment.objects.get(id=comment_to_del.next_comment_id)
-                    comment.next_comment_id = next_comment.id
-                    comment_to_del.delete()
-                    comment.save()
-                else:
-                    comment_to_del.delete()
-                    comment.next_comment_id = comment.id
-                    comment.save()
-                return Response("You've deleted the comment.", status=status.HTTP_204_NO_CONTENT)
-            return Response("You are not authorized to delete comments.", status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response("Please provide thread_id, username, and content.", status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request):
-        if set(request.data.keys()) != {"comment_id"}:
-            return Response("Please provide comment_id.", status=status.HTTP_400_BAD_REQUEST)
-        comment = Comment.objects.get(id=request.data["comment_id"])
-        comment.likes += 1
-        comment.save()
-        sz = CommentSerializer(comment)
-        return Response(sz.data, status=status.HTTP_200_OK)
-
-    def put(self, request):
-        if set(request.data.keys()) != {"comment_id", "content"}:
-            return Response("Please provide comment_id, and updated content.", status=status.HTTP_400_BAD_REQUEST)
-        sz = UpdatedCommentSerializer(data=request.data)
-        if sz.is_valid(raise_exception=True):
-            comment = Comment.objects.get(id=request.data["comment_id"])
-            comment.content = request.data["content"]
-            comment.save()
-            sz = CommentSerializer(comment)
-            return Response(sz.data, status=status.HTTP_202_ACCEPTED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)

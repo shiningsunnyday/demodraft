@@ -129,6 +129,10 @@ export default {
     margin: 0;
   }
 
+  &__approved-block {
+    margin-bottom: 50px;
+  }
+
   &__title {
     font-size: 2rem;
     text-align: center;
