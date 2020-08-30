@@ -140,12 +140,20 @@ class CommentV(APIView, Meta):
             return Response("Please provide thread_id, username, and content.", status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request):
-        if set(request.data.keys()) != {"comment_id"}:
+        sz = None
+        if set(request.data.keys()) == {"comment_id"}:
+            comment = Comment.objects.get(id=request.data["comment_id"])
+            comment.likes += 1
+            comment.save()
+            sz = CommentSerializer(comment)
+        elif set(request.data.keys()) == {"username", "comment_id"}:
+            comment = Comment.objects.get(id=request.data["comment_id"])
+            if comment.user.username != request.data["username"]:
+                comment.likes += 1
+                comment.save()
+                sz = CommentSerializer(comment)
+        else:
             return Response("Please provide comment_id.", status=status.HTTP_400_BAD_REQUEST)
-        comment = Comment.objects.get(id=request.data["comment_id"])
-        comment.likes += 1
-        comment.save()
-        sz = CommentSerializer(comment)
         return Response(sz.data, status=status.HTTP_200_OK)
 
     def put(self, request):
