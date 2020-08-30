@@ -1,12 +1,8 @@
 <template>
   <div class="login">
     <h1 class="login__title">Login</h1>
-    <BForm class=login__form @submit.prevent="handleSubmit">
-      <BFormGroup
-        id="username-group"
-        label="Username:"
-        label-for="username"
-      >
+    <BForm class="login__form" @submit.prevent="handleSubmit">
+      <BFormGroup id="username-group" label="Username:" label-for="username">
         <BFormInput
           id="username"
           v-model="user.username"
@@ -15,7 +11,7 @@
         />
       </BFormGroup>
 
-      <BFormGroup id="password-group" label="Password" label-for="password">
+      <BFormGroup id="password-group" label="Password:" label-for="password">
         <BFormInput
           id="password"
           v-model="user.password"
@@ -24,8 +20,11 @@
         />
       </BFormGroup>
       <div class="login__footer">
-        <BButton type="submit" variant="primary">Submit</BButton>
-        <router-link to="/signup" class="login__link">
+        <b-button v-if="isLoading" disabled>
+          <b-spinner small></b-spinner>Submit
+        </b-button>
+        <BButton v-else type="submit" variant="primary">Submit</BButton>
+        <router-link :to="{ name: 'signup' }" class="login__link">
           Don't have an account? Sign up!
         </router-link>
       </div>
@@ -35,6 +34,8 @@
 
 <script>
 import { BButton, BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
+import LoadingSpinner from '@/components/_common/LoadingSpinner';
+
 export default {
   name: 'login-page',
   components: {
@@ -42,6 +43,7 @@ export default {
     'b-form': BForm,
     'b-form-group': BFormGroup,
     'b-form-input': BFormInput,
+    LoadingSpinner,
   },
   data() {
     return {
@@ -49,17 +51,26 @@ export default {
         username: '',
         email: '',
         password: '',
-        campaignPending: false
+        campaignPending: false,
       },
+      isLoading: false,
     };
   },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
       const { username, email, password, campaignPending } = this.user;
-      this.$store
-        .dispatch('login', { username, password, campaignPending })
-        .then(() => this.$router.push('/'))
-        .catch((err) => console.log(err));
+      this.isLoading = true;
+      try {
+        await this.$store.dispatch('login', {
+          username,
+          password,
+          campaignPending,
+        });
+        this.$router.push('/');
+      } catch (error) {
+        console.log(error);
+      }
+      this.isLoading = false;
     },
   },
 };
@@ -81,10 +92,18 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        margin-right: 5px;
+      }
+    }
   }
 
   &__link {
-    font-size: 12px;
+    font-size: 11px;
   }
 }
 </style>

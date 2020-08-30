@@ -1,45 +1,36 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand>
-      <router-link to="/about" class="navbar__link" v-if="!isLoggedIn">
-        About
-      </router-link>
-
-      <router-link to="/" class="navbar__link" v-else>
-        Home
-      </router-link>
+    <b-navbar-brand class="navbar-brand--mobile">
+      Demodraft
     </b-navbar-brand>
-
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-    <b-collapse id="nav-collapse" is-nav="">
+    <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <!-- <b-nav-item v-if="isLoggedIn">
-          <router-link to="/about" class="navbar__link">
-            About
-          </router-link>
-        </b-nav-item> -->
+        <b-navbar-brand>
+          Demodraft
+        </b-navbar-brand>
 
-        <b-nav-item v-if="isLoggedIn">
-          <router-link to="/politicians" class="navbar__link">
+        <div class="not-logout" v-if="isLoggedIn">
+          <b-nav-item :to="{ name: 'policies-page' }">
+            Policies
+          </b-nav-item>
+
+          <b-nav-item :to="{ name: 'politician-page' }">
             Politicians
-          </router-link>
-        </b-nav-item>
+          </b-nav-item>
 
-        <b-nav-item v-if="isLoggedIn">
-          <router-link to="/campaign" class="navbar__link">
+          <b-nav-item :to="{ name: 'about-page' }">
+            About
+          </b-nav-item>
+
+          <b-nav-item :to="{ name: 'campaign-page' }">
             <span>Campaign</span>
-          </router-link>
-        </b-nav-item>
+          </b-nav-item>
+        </div>
 
-        <b-nav-item v-if="isLoggedIn" @click="logout">
+        <b-nav-item class="logout" v-if="isLoggedIn" @click="logout">
           Logout
-        </b-nav-item>
-
-        <b-nav-item v-if="!isLoggedIn">
-          <router-link to="/login" class="navbar__link">
-            <span>Login</span>
-          </router-link>
         </b-nav-item>
       </b-navbar-nav>
     </b-collapse>
@@ -65,14 +56,87 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$collapsed-breakpoint: 991px;
+$uncollapsed-breakpoint: 992px;
+
+@mixin navbar-no-burger {
+  @media screen and (min-width: $uncollapsed-breakpoint) {
+    @content;
+  }
+}
+
+@mixin navbar-burger {
+  @media screen and (max-width: $collapsed-breakpoint) {
+    @content;
+  }
+}
+
 .navbar {
   margin-bottom: 2rem;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  &__link {
-    color: white;
+  padding: 12px 12px;
 
-    &:hover {
-      color: greenyellow;
+  @include navbar-no-burger {
+    height: 75px;
+    padding: 0 12px;
+  }
+
+  .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    @include navbar-no-burger {
+      flex-direction: row;
+      justify-content: space-between;
+      .not-logout {
+        display: flex;
+        height: 100%;
+      }
+    }
+
+    .nav-item {
+      display: flex;
+      width: 125px;
+      font-size: 1.2rem;
+      letter-spacing: 0.05rem;
+
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        color: white;
+      }
+
+      .router-link-exact-active {
+        border-bottom: 2px solid white;
+      }
+    }
+  }
+
+  .navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    font-weight: bold;
+
+    @include navbar-burger {
+      display: none;
+    }
+
+    &--mobile {
+      display: inline-block;
+      @include navbar-no-burger {
+        display: none;
+      }
+    }
+  }
+
+  .navbar-collapse {
+    @include navbar-no-burger {
+      height: 100%;
     }
   }
 }

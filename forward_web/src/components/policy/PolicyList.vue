@@ -1,10 +1,6 @@
 <template>
-  <div class="policy">
-    <div
-      class="policy__card-wrapper"
-      v-for="policy in filteredPolicies"
-      :key="policy.id"
-    >
+  <div class="policy-list-container">
+    <div v-for="policy in filteredPolicies" :key="policy.id">
       <PolicyCard :policy="policy"></PolicyCard>
     </div>
   </div>
@@ -32,30 +28,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.policy {
+.policy-list-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 
-  &__card-wrapper {
-    margin: 20px;
-  }
-
-  &__card {
-    width: 300px;
-    @media screen and (min-width: 768px) {
-      width: 455px;
-    }
-    //cursor: pointer;
-  }
-
   &__route {
     text-decoration: none;
     color: unset;
-  }
-
-  &__category {
-    margin-top: 1em;
   }
 }
 </style>

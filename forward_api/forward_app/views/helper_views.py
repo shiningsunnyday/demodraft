@@ -82,9 +82,11 @@ class PoliticianV(APIView, Meta):
                 pol = Politician.objects.get(persona=persona)
                 pol.office_id = pos['id']
                 pol.name = pos['name']
+                pol.save()
             else:
                 pol = Politician(persona=persona, office_id=pos['id'], name=pos['name'])
-            pol.save()
+                pol.save()
+                Constituency.objects.create(politician=pol)
             data = merge(UserSerializer(user).data, PoliticianSerializer(pol).data)
 
             email = EmailMessage(
@@ -103,7 +105,7 @@ class PoliticianV(APIView, Meta):
             return Response("Either username or password is wrong.", status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.get(username=request.data['username'])
         persona = user.persona
-        persona.stage = 2
+        persona.stage = 3
         pol = persona.politician
         if pol.approved:
             sz = PoliticianSerializer(pol)

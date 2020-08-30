@@ -43,6 +43,7 @@ export const store = new Vuex.Store({
       state.user = data.user;
     }
   },
+  // all actions are asynchronous
   actions: {
     /**
      * @param {Object} user - Holds username, password, launchStatusTest
@@ -64,7 +65,8 @@ export const store = new Vuex.Store({
         });
         
         if (response) {
-          const { username, email, password, approved, politician_id } = response.data;
+          console.log('status: ', response.status);
+          const { username, email, password, approved, politician_id, is_mod } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
           const authUser = {
@@ -72,9 +74,11 @@ export const store = new Vuex.Store({
             password: password, // security risk, will need to use session cookies/JWT
             email: email,
             approved: approved,
+            isMod: response.status === 204 ? false : is_mod,
             politician_id: politician_id,
             campaignPending: user.campaignPending,
           };
+          console.log('isMod: ', authUser.isMod);
           const stateData = { token: token, user: authUser };
           sessionStorage.setItem("token", token);
           // axios.defaults.headers.common["Authorization"] = token;

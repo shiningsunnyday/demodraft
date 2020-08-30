@@ -2,11 +2,22 @@
   <div class="comment-form">
     <b-form @submit.prevent="handleSave">
       <b-form-textarea
+        v-if="isReply"
         class="comment-form__text-area"
         id="textarea-no-auto-shrink"
-        placeholder="Comment on this policy"
         rows="3"
         max-rows="8"
+        placeholder="Reply to OP of the thread (reply to user in progress)"
+        no-auto-shrink
+        v-model="text"
+      ></b-form-textarea>
+      <b-form-textarea
+        v-else
+        class="comment-form__text-area"
+        id="textarea-no-auto-shrink"
+        rows="3"
+        max-rows="8"
+        placeholder="Comment on this policy"
         no-auto-shrink
         v-model="text"
       ></b-form-textarea>
@@ -26,6 +37,7 @@ export default {
     threadId: Number,
     updateComments: Function,
     isReply: Boolean,
+    replyTo: Object
   },
   data() {
     return {
@@ -35,6 +47,21 @@ export default {
   methods: {
     async handleSave() {
       if (this.isReply) {
+        const user = {
+          threadId: this.threadId,
+          content: this.text
+        };
+        
+        const replyToUser = {
+          id: this.replyTo.id,
+          username: this.replyTo.username,
+          content: this.replyTo.content,
+          threadId: this.threadId
+        };
+        
+        console.log('user: ', user);
+        console.log('reply to:', replyToUser);
+
         await ApiUtil.addNewReply({
           thread_id: this.threadId,
           username: this.$store.getters.username,
@@ -47,7 +74,7 @@ export default {
           content: this.text,
         });
       }
-      await this.updateComments();
+      this.updateComments();
       this.text = '';
     },
   },
