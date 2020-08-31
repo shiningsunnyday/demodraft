@@ -21,6 +21,9 @@ class Signup(APIView, Meta):
         if set(request.data.keys()) == {"username", "email", "password", "first_name", "last_name"}:
             sz = UserSerializer(data=request.data)
             if sz.is_valid(raise_exception=True):
+                email = request.data["email"]
+                if not request.user.is_staff and not search(email, "./forward_app/utils/contact_list.txt"):
+                    return Response(status=status.HTTP_403_FORBIDDEN)
                 sz.save()
                 user = User.objects.get(**sz.data)
                 persona = Persona(user=user)
