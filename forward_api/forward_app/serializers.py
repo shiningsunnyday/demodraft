@@ -7,8 +7,6 @@ from forward_app.utils.email_csv import search
 class UserSerializer(serializers.ModelSerializer):
     def validate_email(self, email):
         exists = User.objects.filter(email=email).exists()
-        if not search(email, "./forward_app/utils/contact_list.txt"):
-            raise serializers.ValidationError("Email not on approved list.")
         if exists:
             raise serializers.ValidationError("Email already exists.")
         return email
