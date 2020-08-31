@@ -13,10 +13,20 @@ const loadView = (view) => {
 const routes = [
   {
     path: '/',
+    name: 'about-page',
+    component: loadView('AboutPage'),
+    meta: {
+      requiresAuth: true,
+      keepAlive: true,
+    },
+  },
+  {
+    path: '/policies',
     name: 'policies-page',
     component: loadView('PoliciesPage'),
     meta: {
       requiresAuth: true,
+      keepAlive: true,
     },
   },
   {
@@ -37,11 +47,6 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-  },
-  {
-    path: '/about',
-    name: 'about-page',
-    component: loadView('AboutPage'),
   },
   {
     path: '/politicians',

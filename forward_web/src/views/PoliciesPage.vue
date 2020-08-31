@@ -18,7 +18,9 @@
       />
     </div>
 
-    <LoadingSpinner v-if="isLoading"></LoadingSpinner>
+    <LoadingSpinner v-if="isLoading">
+      "Overnight successes are generally years in the making. And most progress is made in isolation, far from the public eye." - Andrew Yang
+    </LoadingSpinner>
 
     <PolicyList 
       v-else 

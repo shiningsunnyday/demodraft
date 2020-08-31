@@ -1,6 +1,18 @@
 <template>
   <b-container>
-    <CampaignRegistration v-if="!isCampaignLaunched" @handle-campaign-launch="handleCampaignLaunch"/>
+    <CampaignProgressBar 
+      v-if="!isCampaignLaunched"
+      :currentStep="currentStep" 
+    />
+
+    <CampaignRegistration 
+      v-if="!isCampaignLaunched" 
+      @pushStepOne="pushStepOne"
+      @pushStepTwo="pushStepTwo"
+      @pushStepThree="pushStepThree"
+      @completeAllSteps="completeAllSteps"
+      :campaignProgress="campaignProgress"
+    />
 
     <CampaignDetails v-if="isCampaignLaunched" />
   </b-container>
@@ -9,6 +21,7 @@
 <script>
 import CampaignRegistration from '@/components/campaign/CampaignRegistration';
 import CampaignDetails from '@/components/campaign/CampaignDetails';
+import CampaignProgressBar from '@/components/campaign/CampaignProgressBar';
 import * as Config from '@/config.json';
 import { ApiUtil } from '../_utils/api-utils';
 
@@ -17,10 +30,12 @@ export default {
   components: {
     CampaignRegistration,
     CampaignDetails,
+    CampaignProgressBar
   },
   data() {
     return {
       isCampaignLaunched: false,
+      campaignProgress: 0,
     };
   },
   created() {
@@ -32,8 +47,22 @@ export default {
       this.isCampaignLaunched = true;
     }
   },
+  computed: {
+    currentStep() {
+      return this.campaignProgress;
+    }
+  },
   methods: {
-    handleCampaignLaunch(event) {
+    pushStepOne() {
+      this.campaignProgress = 0;
+    },
+    pushStepTwo() {
+      this.campaignProgress = 1;
+    },
+    pushStepThree() {
+      this.campaignProgress = 2;
+    },
+    completeAllSteps(event) {
       this.isCampaignLaunched = event;
     },
   },

@@ -67,7 +67,10 @@
       </BFormGroup>
 
       <div class="signup__footer">
-        <BButton type="submit" variant="primary">
+        <b-button v-if="submitted" disabled>
+          <b-spinner small></b-spinner>Submit
+        </b-button>
+        <BButton v-else type="submit" variant="primary">
           Submit
         </BButton>
         <router-link :to="{ name: 'login-page' }" class="signup__link">
@@ -121,7 +124,6 @@ export default {
         password: password,
         campaignPending: campaignPending,
       };
-      console.log(data);
 
       try {
         await this.$store.dispatch('register', data);
@@ -129,6 +131,7 @@ export default {
       } catch (error) {
         console.log('err', error);
       }
+      this.submitted = false;
     },
   },
 };
