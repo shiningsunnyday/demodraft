@@ -34,7 +34,6 @@
 
 <script>
 import { BButton, BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
-import LoadingSpinner from '@/components/_common/LoadingSpinner';
 
 export default {
   name: 'login-page',
@@ -43,7 +42,6 @@ export default {
     'b-form': BForm,
     'b-form-group': BFormGroup,
     'b-form-input': BFormInput,
-    LoadingSpinner,
   },
   data() {
     return {

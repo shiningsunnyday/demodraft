@@ -7,7 +7,7 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-navbar-brand>
+        <b-navbar-brand :to="{ name: 'about-page' }">
           Demodraft
         </b-navbar-brand>
 
@@ -18,10 +18,6 @@
 
           <b-nav-item :to="{ name: 'politician-page' }">
             Politicians
-          </b-nav-item>
-
-          <b-nav-item :to="{ name: 'about-page' }">
-            About
           </b-nav-item>
 
           <b-nav-item :to="{ name: 'campaign-page' }">

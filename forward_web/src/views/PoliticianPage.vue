@@ -39,7 +39,7 @@ export default {
   },
   async created() {
     this.politicians = await ApiUtil.getAllPoliticians();
-    this.filteredPoliticians = await this.politicians;
+    this.filteredPoliticians = this.politicians;
 
     // Populates a components filter list with filtering options that are linked to the incoming data
     let tempPoliticiansArr = [];

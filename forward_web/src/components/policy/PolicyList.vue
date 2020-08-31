@@ -2,38 +2,49 @@
   <div class="policy-list-container">
     <div v-if="isFiltering">
       <div class="policy-list__policies">
-        <PolicyCard 
-          v-for="policy in filteredPolicies" 
-          :key="policy.id" 
+        <PolicyCard
+          v-for="policy in filteredPolicies"
+          :key="policy.id"
           :policy="policy"
         >
         </PolicyCard>
       </div>
     </div>
     <div v-else class="policy-list__categories">
-      <div 
-        v-for="category of groupedCategories" 
+      <div
+        v-for="category of groupedCategories"
         :key="category.id"
         class="policy-list__policies-container"
       >
         <div class="policy-list__header">
-          <h3 class="policy-list__title">
-            {{ category.name.charAt(0).toUpperCase() + category.name.slice(1) }}
-          </h3>
-          <b-button 
+          <b-button
             @click="handleSeeMore(category.name)"
-            variant="link" 
-            class="policy-list__see-more"
+            class="policy-list__title"
+            variant="link"
           >
-            see more >>
+            <h3>
+              {{ category.name.charAt(0).toUpperCase() + category.name.slice(1) }}
+            </h3>
           </b-button>
         </div>
-        
-        <div class="policy-list__policies">
-          <PolicyCard 
-            v-for="n in 3" 
-            :key="category.policies[n].id" 
-            :policy="category.policies[n]"
+
+        <div 
+          v-if="category.policies.length >= 3"
+          class="policy-list__policies"
+        >
+          <PolicyCard
+            v-for="(n, index) in 3"
+            :key="category.policies[index].id"
+            :policy="category.policies[index]"
+          >
+          </PolicyCard>
+        </div>
+
+        <div v-else class="policy-list__policies">
+          <PolicyCard
+            v-for="policy in category.policies"
+            :key="policy.id"
+            :policy="policy"
           >
           </PolicyCard>
         </div>
@@ -62,16 +73,15 @@ export default {
     },
     filterPolicies: Function,
     selectedValues: Array,
-    isFiltering: Boolean
+    isFiltering: Boolean,
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     /**
      * returns an object
-     * { 
+     * {
      *  id: { name: policy.categoryName, policies: [...policy] }
      * }
      */
@@ -89,15 +99,15 @@ export default {
         }
       });
       return groups;
-    }
+    },
   },
   methods: {
     handleSeeMore(category) {
       this.selectedValues.push(category);
       this.filterPolicies();
-      window.scrollTo(0,0);
-    }
-  }
+      window.scrollTo(0, 0);
+    },
+  },
 };
 </script>
 
@@ -109,7 +119,6 @@ export default {
 }
 
 .policy-list {
-
   &__header {
     display: flex;
     justify-content: center;
@@ -121,14 +130,15 @@ export default {
   &__title {
     font-weight: bold;
   }
-  
-  &__categories{
+
+  &__categories {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
   }
 
-  &__policies-container{
+  &__policies-container {
     margin: 1.5rem 0;
   }
 

@@ -1,7 +1,5 @@
 <template>
   <div class="about">
-    <h1>About</h1>
-
     <h3>Vision</h3>
     <p>
       Demodraft is empowering a new generation of politicians who reflect the

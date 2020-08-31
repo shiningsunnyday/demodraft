@@ -46,11 +46,11 @@ export default {
       campaignPending,
     } = this.$store.getters.getUserInfo;
 
-    await this.$store.dispatch('login', {
-      username,
-      password,
-      campaignPending,
-    });
+    // await this.$store.dispatch('login', {
+    //   username,
+    //   password,
+    //   campaignPending,
+    // });
 
     const user = this.$store.getters.getUserInfo;
 

@@ -22,12 +22,6 @@
           Learn more
         </b-button>
       </div>
-
-      <div class="policy-card__flex-barrier">
-        <p class="policy-card__category-name">
-          {{ policy.categoryName }}
-        </p>
-      </div>
       <hr />
     </div>
     <div class="card-data-container">
@@ -42,6 +36,11 @@
         />
         <span class="likes-counter">{{ policy.likes }}</span>
       </b-button>
+      <div class="policy-card__flex-barrier">
+        <p class="policy-card__category-name">
+          {{ policy.categoryName }}
+        </p>
+      </div>
     </div>
   </BCard>
 </template>
@@ -179,6 +178,7 @@ export default {
     .card-data-container {
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
       padding: 0 15px;
       width: 100%;
 
@@ -204,12 +204,13 @@ export default {
   &__learn-more{
     display: inline-block;
     margin-bottom: 8px;
+    font-weight: bold;
   }
 
   &__category-name {
     display: inline-block;
-    background: #2c3e50;
-    color: white;
+    background: #eeeeee;
+    color: black;
     padding: 3px 10px;
     margin: 0;
     border-radius: 5px;
