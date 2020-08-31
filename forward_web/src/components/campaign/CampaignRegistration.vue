@@ -106,8 +106,8 @@ export default {
       if (data.scope) {
         try {
           this.isLaunching = true;
-          await simulateApiCall();
-          //const response = await ApiUtil.submitCampaign(data);
+          // await simulateApiCall();
+          const response = await ApiUtil.submitCampaign(data);
           const modalMessage = `Campaign successfully submited!`;
           await this.$bvModal.msgBoxOk(modalMessage, {
             title: 'Confirmation',
