@@ -98,11 +98,13 @@ class PoliticianV(APIView, Meta):
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
-        if set(request.data.keys()) != {"username", "password", "first", "last"}:
-            return Response("Please provide username, password, first name and last name.",
+        if not request.user.is_staff:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        if set(request.data.keys()) != {"username", "first", "last"}:
+            return Response("Please provide username, first name and last name.",
                             status=status.HTTP_400_BAD_REQUEST)
-        if not Address.user_exists(request.data['username'], password=request.data['password']):
-            return Response("Either username or password is wrong.", status=status.HTTP_400_BAD_REQUEST)
+        if not Address.user_exists(request.data['username']):
+            return Response("Username doesn't exist.", status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.get(username=request.data['username'])
         persona = user.persona
         persona.stage = 3
