@@ -1,5 +1,6 @@
 <template>
   <b-container>
+    <h1 v-if="!isCampaignLaunched">Register Campaign</h1>
     <CampaignProgressBar 
       v-if="!isCampaignLaunched"
       :currentStep="currentStep" 
@@ -71,7 +72,6 @@ export default {
 
 <style lang="scss" scoped>
 h1 {
-  color: red;
   text-align: center;
   margin-bottom: 3rem;
 }

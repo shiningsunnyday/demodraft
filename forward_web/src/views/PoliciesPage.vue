@@ -1,6 +1,6 @@
 <template>
   <div class="policies">
-    <h1 class="policies__title">Policies</h1>
+    <h1 class="policies__title">Browse Policies</h1>
 
     <div class="policies__filter-container">
       <p id="filter">Filter:</p>
