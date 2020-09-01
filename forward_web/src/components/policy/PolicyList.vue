@@ -1,5 +1,5 @@
 <template>
-  <div class="policy-list-container">
+  <div class="policy-list">
     <div v-if="isFiltering">
       <div class="policy-list__policies">
         <PolicyCard
@@ -23,15 +23,14 @@
             variant="link"
           >
             <h3>
-              {{ category.name.charAt(0).toUpperCase() + category.name.slice(1) }}
+              {{
+                category.name.charAt(0).toUpperCase() + category.name.slice(1)
+              }}
             </h3>
           </b-button>
         </div>
 
-        <div 
-          v-if="category.policies.length >= 3"
-          class="policy-list__policies"
-        >
+        <div v-if="category.policies.length >= 3" class="policy-list__policies">
           <PolicyCard
             v-for="(n, index) in 3"
             :key="category.policies[index].id"
@@ -112,12 +111,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.policy-list-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
 .policy-list {
   &__header {
     display: flex;
