@@ -101,7 +101,7 @@ export default {
         };
         this.$emit('pushStepTwo');
       } catch (error) {
-        alert(`Oops, we couldn't find positions for that address. Make sure it's in the correct format!`);
+        alert(`Oops, we couldn't find positions for that address!`);
       }
       this.isSearching = false;
     },

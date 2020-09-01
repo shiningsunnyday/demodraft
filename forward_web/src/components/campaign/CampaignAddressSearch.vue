@@ -1,15 +1,42 @@
 <template>
   <b-container>
-    <b-form class="campaign__address-form" @submit.prevent="handleSearch">
+    <b-form autocomplete="on" class="campaign__address-form" @submit.prevent="handleSearch">
       <b-form-group
-        id="address-group"
-        label="Address"
-        label-for="address"
-        description="(e.g. 1263 Pacific Ave. Kansas City, KS)"
+        id="street-group"
+        label="Street Address"
+        label-for="street"
+        description="(e.g. 1263 Pacific Ave)"
       >
         <b-form-input
-          id="address"
-          v-model="internalAddress"
+          id="street"
+          v-model="street"
+          autocomplete="street-address"
+          type="text"
+          required
+        />
+      </b-form-group>
+      <b-form-group
+        id="city-group"
+        label="City"
+        label-for="city"
+        description="(e.g. Kansas City)"
+      >
+        <b-form-input
+          id="city"
+          v-model="city"
+          type="text"
+          required
+        />
+      </b-form-group>
+      <b-form-group
+        id="state-group"
+        label="State"
+        label-for="state"
+        description="(e.g. KS or Kansas)"
+      >
+        <b-form-input
+          id="state"
+          v-model="state"
           type="text"
           required
         />
@@ -43,12 +70,15 @@ export default {
   },
   data() {
     return {
-      internalAddress: '',
+      street: '',
+      city: '',
+      state: '',
     };
   },
   methods: {
     handleSearch() {
-      this.$emit('handleSearch', this.internalAddress);
+      const data = `${this.street} ${this.city} ${this.state}`;
+      this.$emit('handleSearch', data);
     },
   },
 };
