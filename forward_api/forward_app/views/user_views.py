@@ -43,7 +43,7 @@ class Login(APIView, Meta):
         if exists:
             user = User.objects.get(username=username, password=password)
             update_scores(pers=Persona.objects.all(), comments=Comment.objects.all())
-            sweep(Persona.objects.all())
+            # sweep(Persona.objects.all())
             sz = UserSerializer(user)
             try:
                 persona = user.persona
