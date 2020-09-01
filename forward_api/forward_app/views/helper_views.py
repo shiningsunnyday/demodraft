@@ -72,6 +72,8 @@ class PoliticianV(APIView, Meta):
         if Address.user_exists(username):
             user = User.objects.get(username=username)
             persona = user.persona
+            if persona.stage == 2:
+                Response("You are a moderator.", status=status.HTTP_400_BAD_REQUEST)
             address = toAddress(persona)
             positions = fetchPositions(address, indices=True)
             if request.data['scope'] not in {"state", "local", "country"}:
