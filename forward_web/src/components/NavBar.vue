@@ -28,16 +28,15 @@
           </b-nav-item>
         </div>
 
-        <b-dropdown 
+        <b-nav-item-dropdown 
           v-if="isLoggedIn" 
-          :text="userName"
+          text="User"
           id="navbar__user" 
-          variant="dark"
           right
         >
           <b-dropdown-item :to="{ name: 'profile-page' }">Profile</b-dropdown-item>
           <b-dropdown-item  @click="handleLogout">Logout</b-dropdown-item>
-        </b-dropdown>
+        </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
