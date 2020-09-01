@@ -1,13 +1,16 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand class="navbar-brand--mobile">
+      <img src="../_assets/demo-egg.png" alt="logo">
       Demodraft
     </b-navbar-brand>
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+    <b-navbar-toggle v-if="isLoggedIn" target="nav-collapse" ></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-navbar-brand :to="{ name: 'about-page' }">
+          <img src="../_assets/demo-egg.png" alt="logo">
           Demodraft
         </b-navbar-brand>
 
