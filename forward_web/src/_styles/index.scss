@@ -1,4 +1,7 @@
 $text-color: blue;
+$tablet-breakpoint: 768px;
+$desktop-breakpoint: 1024px;
+$desktop-xl-breakpoint: 1450px;
 
 @mixin font-sizing {
   font-size: 1.1rem;
