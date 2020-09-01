@@ -10,6 +10,7 @@
         </PolicyCard>
       </div>
     </div>
+
     <div v-else class="policy-list__categories">
       <div
         v-for="category of groupedCategories"
@@ -111,10 +112,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/_styles';
+
+@mixin tablet-media-query {
+  @media screen and (min-width: $tablet-breakpoint) {
+    @content;
+  }
+}
+
 .policy-list {
   &__header {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     > * {
       margin: 0 4px;
     }
@@ -132,14 +141,18 @@ export default {
   }
 
   &__policies-container {
-    margin: 1.5rem 0;
+    margin: 1.5rem auto;
   }
 
   &__policies {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
+
+    @include tablet-media-query {
+      justify-content: center;
+    }
   }
 }
 </style>

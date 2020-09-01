@@ -2,9 +2,9 @@
   <BCard class="policy-card" no-body>
     <div class="policy-card__card-content">
       <div class="policy-card__card-title-wrapper">
-        <b-card-title>
+        <b-button @click="handleLearnMore" class="card-title" variant="link">
           {{ policy.name }}
-        </b-card-title>
+        </b-button>
       </div>
 
       <hr />
@@ -13,7 +13,7 @@
         <p>{{ policy.statement }}</p>
       </div>
 
-      <div class="policy-card__flex-barrier">
+      <!-- <div class="policy-card__flex-barrier">
         <b-button
           variant="link"
           @click="handleLearnMore"
@@ -21,7 +21,7 @@
         >
           Learn more
         </b-button>
-      </div>
+      </div> -->
 
       <hr />
     </div>
@@ -118,7 +118,7 @@ export default {
   width: 100%;
   height: 365px;
   margin: 15px 10px;
-  padding: 35px 15px;
+  padding: 55px 15px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
   @include tablet-media-query {
@@ -132,7 +132,6 @@ export default {
 
   @include desktop-xl-media-query {
     width: 450px;
-    margin: 20px 10px;
   }
 
   // keeps the policy statement 3 lines long and adds ellipses to the end
@@ -156,12 +155,13 @@ export default {
   &__card-title-wrapper {
     height: 60px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 
     .card-title {
       margin: 0;
-      text-align: left;
+      padding: 0;
+      text-align: center;
       font-size: 1.2rem;
       font-weight: bold;
     }
