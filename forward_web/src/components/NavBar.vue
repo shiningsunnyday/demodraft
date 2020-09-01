@@ -28,7 +28,7 @@
           </b-nav-item>
         </div>
 
-        <b-nav-item-dropdown class="navbar__user" v-if="isLoggedIn" text="User" right >
+        <b-nav-item-dropdown class="navbar__user" v-if="isLoggedIn" :text="userName" right >
           <b-dropdown-item :to="{ name: 'profile-page' }">Profile</b-dropdown-item>
           <b-dropdown-item  @click="handleLogout">Logout</b-dropdown-item>
         </b-nav-item-dropdown>
@@ -40,6 +40,11 @@
 <script>
 export default {
   name: 'nav-bar',
+  data() {
+    return {
+      userName: this.$store.getters.username
+    };
+  },
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;

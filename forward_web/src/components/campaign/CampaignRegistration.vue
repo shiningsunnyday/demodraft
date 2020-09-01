@@ -70,7 +70,8 @@ export default {
 
       if (this.campaignProgress === 1) {
         const descriptor = {
-          first: 'Here are the available offices we found that you can run your campaign in. Select a position you would like to launch your campaign for.',
+          first: 'Here are the available offices we found that you can run your campaign in.',
+          second: 'Select a position you would like to launch your campaign for.'
         };
         return descriptor;
       }
