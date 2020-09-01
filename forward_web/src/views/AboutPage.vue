@@ -1,26 +1,30 @@
 <template>
   <div class="about">
-    <h3>Vision</h3>
+    <h1>Community Guidelines</h1>
+
+    <h3>Maintain respect</h3>
     <p>
-      Demodraft is empowering a new generation of politicians who reflect the
-      communities they represent without influence from big money.
+      Demodraft recognizes that disagreement is normal, but we are here to
+      provide a safe place for discussion about policy, not about each other.
     </p>
 
-    <h3>Mission</h3>
+    <h3>Be accurate</h3>
     <p>
-      We are an incubator for normal people to “test the waters” before they
-      officially declare candidacy. After their ideas achieve traction, we serve
-      as a launchpad for their campaign run. We measure our success by the
-      number of underdog victories we drive and the number of office incumbents
-      we unseat.
+      Making factual claims solely from speculation and without evidence is
+      discouraged and will be under moderation.
     </p>
 
-    <h3>People</h3>
+    <h3>Keep comments relevant</h3>
     <p>
-      On our platform, users can discover, fund, and support other users before
-      they decide to run for office. They can let their ideas flourish through
-      forums, polls and content, so those ideas can bring true change to our
-      democracy.
+      When commenting on policies or politicians, please keep your contributions
+      on topic so as not to cause extra noise for other users.
+    </p>
+
+    <h3>Remember the Golden Rule</h3>
+    <p>
+      Most importantly, treat others as you would like to be treated --
+      regardless of our backgrounds and viewpoints, we are all human and deserve
+      respect, kindness, and consideration
     </p>
   </div>
 </template>
@@ -45,7 +49,7 @@ export default {
 
   h1 {
     font-weight: bold;
-    margin-bottom: 100px;
+    margin-bottom: 3rem;
   }
 
   h3 {

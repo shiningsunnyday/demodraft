@@ -4,7 +4,7 @@
     <b-container class="profile__container">
       <div class="profile__user-section">
         <h2 class="profile__header">{{ username }}</h2>
-        <p><span class="--highlight">{{ score }}</span> score</p>
+        <!-- <p><span class="--highlight">{{ score }}</span> score</p> -->
       </div>
       
       <div class="profile__badge-section">

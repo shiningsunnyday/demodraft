@@ -64,7 +64,7 @@ export default {
           password,
           campaignPending,
         });
-        this.$router.push('/');
+        this.$router.push('/policies');
       } catch (error) {
         console.log(error);
       }

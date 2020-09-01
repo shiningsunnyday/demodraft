@@ -1,9 +1,9 @@
 <template>
   <LoadingSpinner v-if="isLoading"></LoadingSpinner>
   <b-container v-else class="selected-politician">
-    <div class="selected-politician__follow-button-container">
+    <!-- <div class="selected-politician__follow-button-container">
       <b-button size="sm"> <BIconPersonPlus /> Follow </b-button>
-    </div>
+    </div> -->
 
     <div class="selected-politician__top">
       <h1>{{ politician.first }} {{ politician.last }}</h1>
