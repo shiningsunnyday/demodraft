@@ -28,10 +28,16 @@
           </b-nav-item>
         </div>
 
-        <b-nav-item-dropdown class="navbar__user" v-if="isLoggedIn" :text="userName" right >
+        <b-dropdown 
+          v-if="isLoggedIn" 
+          :text="userName"
+          id="navbar__user" 
+          variant="dark"
+          right
+        >
           <b-dropdown-item :to="{ name: 'profile-page' }">Profile</b-dropdown-item>
           <b-dropdown-item  @click="handleLogout">Logout</b-dropdown-item>
-        </b-nav-item-dropdown>
+        </b-dropdown>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -152,5 +158,6 @@ $uncollapsed-breakpoint: 992px;
       height: 100%;
     }
   }
+
 }
 </style>

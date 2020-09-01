@@ -41,8 +41,8 @@ export default {
     // will need to store approved politician to Vuex state
     // to get rid of unnecessary calls
     const {
-      username,
-      password,
+      // username,
+      // password,
       campaignPending,
     } = this.$store.getters.getUserInfo;
 

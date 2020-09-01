@@ -136,6 +136,7 @@ export const store = new Vuex.Store({
       } catch(error) {
         commit("auth_error");
         sessionStorage.removeItem("token");
+        sessionStorage.clear();
         alert(`Incorrect credentials. Try again?`);
         console.error(error.message);
       }
