@@ -1,7 +1,9 @@
 <template>
   <div>
     <b-container class="campaign-reg__description">
-      {{ description }}
+      <p>{{ description.first }}</p>
+      <p>{{ description.second }}</p>
+      <p>{{ description.third }}</p>
     </b-container>
     <hr />
     <div class="campaign-reg__steps">
@@ -58,16 +60,27 @@ export default {
   computed: {
     description() {
       if (this.campaignProgress === 0) {
-        return `Planning to run for office and ready to launch a campaign on Demodraft? Lets start by searching for representative positions at every level of government that represents your address.`;
+        const descriptor = {
+          first: 'Planning to run for office and ready to launch a campaign on Demodraft?',
+          second: 'First, input your address to see the positions at every level of government that represent your area.',
+          third: '* Disclaimer: This feature is for registering your campaign to appear on Demodraft. Demodraft does not officially register you with the Federal Election Commission.',
+        };
+        return descriptor;
       }
 
       if (this.campaignProgress === 1) {
-        return 'Here are the available offices we found that you can run your campaign in. Select a position you would like to launch your campaign for.';
+        const descriptor = {
+          first: 'Here are the available offices we found that you can run your campaign in. Select a position you would like to launch your campaign for.',
+        };
+        return descriptor;
       }
 
       const position = this.selectedPosition.name;
       if (position) {
-        return `Whenever you're ready, click the large blue button to launch your campaign for ${position}!`;
+        const descriptor = {
+          first: `Whenever you're ready, click the large blue button to launch your campaign for ${position}!`
+        };
+        return descriptor;
       }
     }
   },
@@ -106,9 +119,9 @@ export default {
       if (data.scope) {
         try {
           this.isLaunching = true;
-          // await simulateApiCall();
+          //await simulateApiCall();
           const response = await ApiUtil.submitCampaign(data);
-          const modalMessage = `Campaign successfully submited!`;
+          const modalMessage = `Thank you for submitting a request to launch your campaign! You will be notified when your application is accepted.`;
           await this.$bvModal.msgBoxOk(modalMessage, {
             title: 'Confirmation',
             size: 'sm',
@@ -134,10 +147,17 @@ export default {
 <style lang="scss" scoped>
 .campaign-reg {
   &__description {
-    max-width: 700px;
+    max-width: 800px;
     padding: 1em;
     text-align: center;
-    font-weight: bold;
+    :nth-child(1) {
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+    
+    :nth-child(3) {
+      font-style: italic;
+    }
   }
 
   &__steps {

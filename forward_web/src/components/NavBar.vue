@@ -126,6 +126,10 @@ $uncollapsed-breakpoint: 992px;
     letter-spacing: 1px;
     font-weight: bold;
 
+    img {
+      padding-bottom: 5px;
+    }
+
     @include navbar-burger {
       display: none;
     }
