@@ -108,13 +108,13 @@ export default {
     async likePolicy() {
       // will need database to keep track of likes
       if (!this.hasLiked) {
+        this.hasLiked = true;
         this.policy.likes++;
         try {
           await ApiUtil.putPolicyLike(this.policy.id);
         } catch (error) {
           alert(error.message);
         }
-        this.hasLiked = true;
       }
     },
   },
