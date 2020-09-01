@@ -29,7 +29,9 @@ ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:8080",
     "http://localhost:8081",
-    "http://humanityforward.s3-website-us-east-1.amazonaws.com"
+    "http://humanityforward.s3-website-us-east-1.amazonaws.com",
+    "http://demodraft.com.s3-website-us-west-1.amazonaws.com",
+    "http://demodraft.com"
 ]
 
 # Application definition
