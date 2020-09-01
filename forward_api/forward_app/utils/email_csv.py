@@ -26,9 +26,9 @@ def bsearch(a, x):
 def search(e, path):
     # return True
     with open(path, "r") as f:
-        emails = [e.strip('\n') for e in f.readlines()]
+        emails = [em.strip('\n') for em in f.readlines()]
     return bsearch(emails, e) > -1
 
 
 if __name__ == '__main__':
-    print(search("stevensm90@gmail.com", "contact_list.txt"))
+    print(search("michael", "mods_list.txt"))
