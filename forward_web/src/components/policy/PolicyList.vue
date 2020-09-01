@@ -18,17 +18,14 @@
         class="policy-list__policies-container"
       >
         <div class="policy-list__header">
+          <h3>
+            {{ category.name.charAt(0).toUpperCase() + category.name.slice(1)}}
+          </h3>
           <b-button
             @click="handleSeeMore(category.name)"
-            class="policy-list__title"
+            class="policy-list__see-more"
             variant="link"
-          >
-            <h3>
-              {{
-                category.name.charAt(0).toUpperCase() + category.name.slice(1)
-              }}
-            </h3>
-          </b-button>
+          >see more >></b-button>
         </div>
 
         <div v-if="category.policies.length >= 3" class="policy-list__policies">
@@ -123,13 +120,21 @@ export default {
 .policy-list {
   &__header {
     display: flex;
-    justify-content: flex-start;
-    > * {
-      margin: 0 4px;
+    flex-direction: column;
+
+    @include tablet-media-query {
+      flex-direction: row;
+      align-items: center;
+      padding-left: 10px;
+    }
+
+    h3 {
+      padding: 0;
+      margin: 0;
     }
   }
 
-  &__title {
+  &__see-more {
     font-weight: bold;
   }
 

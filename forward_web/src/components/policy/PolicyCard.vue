@@ -162,7 +162,7 @@ export default {
       margin: 0;
       padding: 0;
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: bold;
     }
   }
