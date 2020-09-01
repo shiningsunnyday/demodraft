@@ -95,6 +95,24 @@ export default {
 <style lang="scss" scoped>
 @import '@/_styles';
 
+@mixin tablet-media-query {
+  @media screen and (min-width: $tablet-breakpoint) {
+    @content;
+  }
+}
+
+@mixin desktop-media-query {
+  @media screen and (min-width: $desktop-breakpoint) {
+    @content;
+  }
+}
+
+@mixin desktop-xl-media-query {
+  @media screen and (min-width: $desktop-xl-breakpoint) {
+    @content;
+  }
+}
+
 .policy-card {
   max-width: 950px;
   width: 100%;
@@ -103,16 +121,16 @@ export default {
   padding: 35px 15px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
-  @media screen and (min-width: 768px) {
+  @include tablet-media-query {
     width: 225px;
   }
 
-  @media screen and (min-width: 1024px) {
+  @include desktop-media-query {
     width: 300px;
     margin: 20px 10px;
   }
 
-  @media screen and (min-width: 1450px) {
+  @include desktop-xl-media-query {
     width: 450px;
     margin: 20px 10px;
   }
@@ -138,12 +156,12 @@ export default {
   &__card-title-wrapper {
     height: 60px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 
     .card-title {
       margin: 0;
-      text-align: center;
+      text-align: left;
       font-size: 1.2rem;
       font-weight: bold;
     }
@@ -160,15 +178,15 @@ export default {
       margin: 0;
     }
 
-    @media screen and (min-width: 768px) {
+    @include tablet-media-query {
       width: 185px;
     }
 
-    @media screen and (min-width: 1024px) {
+    @include desktop-media-query {
       width: 250px;
     }
 
-    @media screen and (min-width: 1450px) {
+    @include desktop-xl-media-query {
       width: 400px;
       margin: 20px 10px;
     }
