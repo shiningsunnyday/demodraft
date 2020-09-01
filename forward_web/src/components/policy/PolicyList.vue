@@ -86,13 +86,34 @@ export default {
       const groups = {};
       this.filteredPolicies.forEach((policy) => {
         const id = policy.category;
-        if (!groups[id]) {
-          groups[id] = {
+        let key;
+        
+        // temp hard coded order 
+        switch(id) {
+        case 0: 
+          key = 3;
+          break;
+        case 1: 
+          key = 0;
+          break;
+        case 3: 
+          key = 4;
+          break;
+        case 7: 
+          key = 1;
+          break;
+        case 9: 
+          key = 2;
+          break;
+        }
+        
+        if (!groups[key]) {
+          groups[key] = {
             name: policy.categoryName,
             policies: [policy],
           };
         } else {
-          groups[id].policies.push(policy);
+          groups[key].policies.push(policy);
         }
       });
       return groups;
