@@ -33,7 +33,11 @@
       </div>
       <hr />
       <b-form @submit.prevent="handleUpdate" class="campaign-details__form">
-        <b-form-group label="Actblue" label-for="mycampaign-actblue">
+        <b-form-group 
+          label="Actblue" 
+          label-for="mycampaign-actblue"
+          description="Input your actblue donation link"
+        >
           <b-form-input
             id="mycampaign-actblue"
             label="Actblue"
@@ -42,15 +46,19 @@
             required
           />
         </b-form-group>
-        <b-form-group label="Fundraise Goal" label-for="mycampaign-fundraise">
-          <b-form-input
+        <b-form-group 
+          label="Fundraise Goal" 
+          label-for="mycampaign-fundraise"
+          description="To be FEC compliant, max goal is $5000"
+        >
+          <!-- <b-form-input
             id="mycampaign-fundraise-range"
             v-model="politician.fundraiseGoal"
             type="range"
             min="0"
             max="5000"
             required
-          />
+          /> -->
           <b-input-group prepend="$" append=".00">
             <b-form-input
               id="mycampaign-fundraise-input"
@@ -127,6 +135,10 @@ export default {
   p {
     padding: 0;
     margin: 0;
+  }
+
+  &__approved-block {
+    margin-bottom: 50px;
   }
 
   &__title {

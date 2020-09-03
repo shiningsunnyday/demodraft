@@ -1,7 +1,51 @@
 <template>
-  <div class="policy-list-container">
-    <div v-for="policy in filteredPolicies" :key="policy.id">
-      <PolicyCard :policy="policy"></PolicyCard>
+  <div class="policy-list">
+    <div v-if="isFiltering">
+      <div class="policy-list__policies">
+        <PolicyCard
+          v-for="policy in filteredPolicies"
+          :key="policy.id"
+          :policy="policy"
+        >
+        </PolicyCard>
+      </div>
+    </div>
+
+    <div v-else class="policy-list__categories">
+      <div
+        v-for="category of groupedCategories"
+        :key="category.id"
+        class="policy-list__policies-container"
+      >
+        <div class="policy-list__header">
+          <h3>
+            {{ category.name.charAt(0).toUpperCase() + category.name.slice(1)}}
+          </h3>
+          <b-button
+            @click="handleSeeMore(category.name)"
+            class="policy-list__see-more"
+            variant="link"
+          >see more >></b-button>
+        </div>
+
+        <div v-if="category.policies.length >= 3" class="policy-list__policies">
+          <PolicyCard
+            v-for="(n, index) in 3"
+            :key="category.policies[index].id"
+            :policy="category.policies[index]"
+          >
+          </PolicyCard>
+        </div>
+
+        <div v-else class="policy-list__policies">
+          <PolicyCard
+            v-for="policy in category.policies"
+            :key="policy.id"
+            :policy="policy"
+          >
+          </PolicyCard>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -10,6 +54,7 @@
 import { BCard, BButton } from 'bootstrap-vue';
 import PolicyCard from './PolicyCard';
 import { ApiUtil } from '@/_utils/api-utils';
+import * as Config from '@/config.json';
 
 export default {
   name: 'PolicyList',
@@ -23,19 +68,117 @@ export default {
       type: Array,
       required: true,
     },
+    filterPolicies: Function,
+    selectedValues: Array,
+    isFiltering: Boolean,
+  },
+  data() {
+    return {};
+  },
+  computed: {
+    /**
+     * returns an object
+     * {
+     *  id: { name: policy.categoryName, policies: [...policy] }
+     * }
+     */
+    groupedCategories() {
+      const groups = {};
+      this.filteredPolicies.forEach((policy) => {
+        const id = policy.category;
+        let key;
+        
+        // temp hard coded order 
+        switch(id) {
+        case 0: 
+          key = 3;
+          break;
+        case 1: 
+          key = 0;
+          break;
+        case 3: 
+          key = 4;
+          break;
+        case 7: 
+          key = 1;
+          break;
+        case 9: 
+          key = 2;
+          break;
+        }
+        
+        if (!groups[key]) {
+          groups[key] = {
+            name: policy.categoryName,
+            policies: [policy],
+          };
+        } else {
+          groups[key].policies.push(policy);
+        }
+      });
+      return groups;
+    },
+  },
+  methods: {
+    handleSeeMore(category) {
+      this.selectedValues.push(category);
+      this.filterPolicies();
+      window.scrollTo(0, 0);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.policy-list-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+@import '@/_styles';
 
-  &__route {
-    text-decoration: none;
-    color: unset;
+@mixin tablet-media-query {
+  @media screen and (min-width: $tablet-breakpoint) {
+    @content;
+  }
+}
+
+.policy-list {
+  &__header {
+    display: flex;
+    flex-direction: column;
+
+    @include tablet-media-query {
+      flex-direction: row;
+      align-items: center;
+      padding-left: 10px;
+    }
+
+    h3 {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  &__see-more {
+    font-weight: bold;
+  }
+
+  &__categories {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  &__policies-container {
+    margin: 1.5rem auto;
+  }
+
+  &__policies {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    @include tablet-media-query {
+      justify-content: center;
+    }
   }
 }
 </style>

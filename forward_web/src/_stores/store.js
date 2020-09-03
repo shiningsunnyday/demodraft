@@ -65,22 +65,23 @@ export const store = new Vuex.Store({
         });
         
         if (response) {
-          console.log('status: ', response.status);
-          const { username, email, password, approved, politician_id, is_mod } = response.data;
+          const { id, username, email, password, approved, first_name, last_name, politician_id, is_mod } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
           const authUser = {
+            id: id,
             username: username,
-            password: password, // security risk, will need to use session cookies/JWT
+            password: password,
             email: email,
+            first_name: first_name,
+            last_name: last_name,
             approved: approved,
             isMod: response.status === 204 ? false : is_mod,
             politician_id: politician_id,
             campaignPending: user.campaignPending,
           };
-          console.log('isMod: ', authUser.isMod);
           const stateData = { token: token, user: authUser };
-          sessionStorage.setItem("token", token);
+          // sessionStorage.setItem("token", token);
           // axios.defaults.headers.common["Authorization"] = token;
           commit("auth_success", stateData);
         }
@@ -93,13 +94,15 @@ export const store = new Vuex.Store({
       }
     },
     /**
-     * @param {Object} user - Holds username, email, password, campaignLaunchStatus
+     * @param {Object} user - Holds username, email, password, first_name, last_name, campaignLaunchStatus
      */
     async register({ commit }, user) {
       const userData = {
         username: user.username,
         email: user.email,
         password: user.password,
+        first_name: user.first_name,
+        last_name: user.last_name
       };
 
       try {
@@ -113,23 +116,27 @@ export const store = new Vuex.Store({
         });
 
         if (response) {
-          const { username, email, password } = response.data;
+          const { id, username, email, password, first_name, last_name } = response.data;
           // temp token
           const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64'); 
           const newUser = {
+            id: id,
             username: username,
             email: email,
-            password: password, // security risk, will need to use session cookies/JWT
+            password: password,
+            first_name: first_name,
+            last_name: last_name,
             campaignPending: user.campaignPending,
           };
           const stateData = { token: token, user: newUser };
-          sessionStorage.setItem("token", token);
+          // sessionStorage.setItem("token", token);
           // axios.defaults.headers.common["Authorization"] = token;
           commit("auth_success", stateData);
         }
       } catch(error) {
         commit("auth_error");
         sessionStorage.removeItem("token");
+        sessionStorage.clear();
         alert(`Incorrect credentials. Try again?`);
         console.error(error.message);
       }
@@ -162,7 +169,7 @@ export const store = new Vuex.Store({
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
     username: (state) => state.user.username,
-    password: (state) => state.user.password, // security risk, will need to use session cookies/JWT
+    password: (state) => state.user.password,
     getUserInfo: (state) => state.user,
   },
 });

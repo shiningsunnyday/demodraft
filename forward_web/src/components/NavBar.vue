@@ -1,13 +1,16 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand class="navbar-brand--mobile">
+      <img src="../_assets/demo-egg.png" alt="logo">
       Demodraft
     </b-navbar-brand>
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+    <b-navbar-toggle v-if="isLoggedIn" target="nav-collapse" ></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-navbar-brand>
+        <b-navbar-brand :to="{ name: 'about-page' }">
+          <img src="../_assets/demo-egg.png" alt="logo">
           Demodraft
         </b-navbar-brand>
 
@@ -20,18 +23,20 @@
             Politicians
           </b-nav-item>
 
-          <b-nav-item :to="{ name: 'about-page' }">
-            About
-          </b-nav-item>
-
           <b-nav-item :to="{ name: 'campaign-page' }">
             <span>Campaign</span>
           </b-nav-item>
         </div>
 
-        <b-nav-item class="logout" v-if="isLoggedIn" @click="logout">
-          Logout
-        </b-nav-item>
+        <b-nav-item-dropdown 
+          v-if="isLoggedIn" 
+          text="User"
+          id="navbar__user" 
+          right
+        >
+          <b-dropdown-item :to="{ name: 'profile-page' }">Profile</b-dropdown-item>
+          <b-dropdown-item  @click="handleLogout">Logout</b-dropdown-item>
+        </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -40,13 +45,18 @@
 <script>
 export default {
   name: 'nav-bar',
+  data() {
+    return {
+      userName: this.$store.getters.username
+    };
+  },
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
     },
   },
   methods: {
-    logout() {
+    handleLogout() {
       this.$store.dispatch('logout').then(() => {
         this.$router.push('/login');
       });
@@ -84,13 +94,14 @@ $uncollapsed-breakpoint: 992px;
   .navbar-nav {
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 100%;
     height: 100%;
 
     @include navbar-no-burger {
       flex-direction: row;
       justify-content: space-between;
+      align-items: center;
+
       .not-logout {
         display: flex;
         height: 100%;
@@ -106,9 +117,12 @@ $uncollapsed-breakpoint: 992px;
       a {
         display: flex;
         align-items: center;
-        justify-content: center;
         width: 100%;
         color: white;
+        
+        @include navbar-no-burger {
+          justify-content: center;
+        }
       }
 
       .router-link-exact-active {
@@ -121,6 +135,10 @@ $uncollapsed-breakpoint: 992px;
     font-size: 1.4rem;
     letter-spacing: 1px;
     font-weight: bold;
+
+    img {
+      padding-bottom: 5px;
+    }
 
     @include navbar-burger {
       display: none;
@@ -139,5 +157,6 @@ $uncollapsed-breakpoint: 992px;
       height: 100%;
     }
   }
+
 }
 </style>

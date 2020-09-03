@@ -1,11 +1,11 @@
 <template>
   <div :class="className">
     <p v-if="highlightUser" class="comments-wrapper__comment-header --highlight">
-      <span>{{ comment.username }}</span>
+      <span>{{ comment.first_name }} {{ comment.last_name }}</span>
       <span>{{ timePosted }}</span>
     </p>
     <p v-else class="comments-wrapper__comment-header">
-      <span>{{ comment.username }}</span>
+      <span>{{ comment.first_name }} {{ comment.last_name }}</span>
       <span>{{ timePosted }}</span>
     </p>
     <p class="comments-wrapper__content">{{ comment.content }}</p>
@@ -154,6 +154,10 @@ export default {
 <style lang="scss" scoped>
 .comments-wrapper {
   
+  &__content {
+    white-space: pre-wrap;
+  }
+
   &__comment-header {
     display: flex;
     justify-content: space-between;

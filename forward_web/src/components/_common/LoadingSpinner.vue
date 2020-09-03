@@ -1,18 +1,23 @@
 <template>
   <div class="center">
-    <div class="lds-spinner">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+    <div class="column">
+      <div class="lds-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="message">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -28,6 +33,17 @@ export default {
   display: flex;
   justify-content: center;
   transform: scale(0.5);
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 700px;
+  
+  .message {
+    margin-top: 2rem;
+    font-size: 2rem;
+  }
 }
 .lds-spinner {
   display: inline-block;

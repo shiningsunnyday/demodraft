@@ -1,5 +1,6 @@
 <template>
   <div class="politician-page">
+    <h1 class="politician-page__title">Browse Politicians</h1>
     <div class="politician-page__filter-container">
       <p id="filter">Filter:</p>
       <Multiselect
@@ -39,7 +40,7 @@ export default {
   },
   async created() {
     this.politicians = await ApiUtil.getAllPoliticians();
-    this.filteredPoliticians = await this.politicians;
+    this.filteredPoliticians = this.politicians;
 
     // Populates a components filter list with filtering options that are linked to the incoming data
     let tempPoliticiansArr = [];

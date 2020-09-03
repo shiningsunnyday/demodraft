@@ -21,6 +21,11 @@ export class ApiUtil {
     return policyCommentsPromise.data;
   }
 
+  static async getPoliticianComments(id) {
+    const polCommentsPromise = await axios.get(`/thread/?politician_id=${id}`);
+    return polCommentsPromise.data;
+  }
+
   static async getThreadFromComment(id) {
     const threadPromise = await axios.get(`/thread/?thread_id=${id}`);
     return {
@@ -195,5 +200,15 @@ export class ApiUtil {
       alert('Oops, something went wrong modifying a politician!');
       console.error(error);
     }
+  }
+
+  static async getUserScore(req) {
+    const payload = { 
+      user_id: req.user_id, 
+      username: req.username, 
+      password: req.password 
+    };
+    const userPromise = await axios.post(`/users/`, payload);
+    return userPromise.data.score;
   }
 }

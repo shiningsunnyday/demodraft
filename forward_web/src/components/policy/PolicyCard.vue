@@ -1,34 +1,32 @@
 <template>
-  <BCard class="policy-card-container">
-    <div class="card-content">
-      <div class="card-title-wrapper">
-        <b-card-title>
+  <BCard class="policy-card" no-body>
+    <div class="policy-card__card-content">
+      <div class="policy-card__card-title-wrapper">
+        <b-button @click="handleLearnMore" class="card-title" variant="link">
           {{ policy.name }}
-        </b-card-title>
+        </b-button>
       </div>
 
       <hr />
 
-      <div class="policy-statement line-clamp">
-        <p>
-          {{ policy.statement }}
-        </p>
+      <div class="policy-card__policy-statement line-clamp">
+        <p>{{ policy.statement }}</p>
       </div>
 
-      <b-button variant="link" @click="handleLearnMore">
-        Learn more
-      </b-button>
+      <!-- <div class="policy-card__flex-barrier">
+        <b-button
+          variant="link"
+          @click="handleLearnMore"
+          class="policy-card__learn-more"
+        >
+          Learn more
+        </b-button>
+      </div> -->
 
-      <b-card-text class="policy__category">
-        Category: {{ policy.category }}
-      </b-card-text>
+      <hr />
     </div>
 
-    <div class="card-data-container">
-      <div class="policy-icon card-data-btn">
-        <BIconCircleSquare style="width: 27px; height: 27px;" />
-      </div>
-
+    <div class="policy-card__data-container">
       <b-button
         class="like-btn-wrapper card-data-btn"
         variant="outline"
@@ -40,31 +38,23 @@
         />
         <span class="likes-counter">{{ policy.likes }}</span>
       </b-button>
-
-      <b-button class="modal-btn-wrapper" variant="outline">
-        <BIconThreeDots
-          class="modal-button"
-          style="width: 25px; height: 25px;"
-        />
-      </b-button>
+      <div class="policy-card__flex-barrier">
+        <p class="policy-card__category-name">
+          {{ policy.categoryName }}
+        </p>
+      </div>
     </div>
   </BCard>
 </template>
 
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
-import {
-  BIconCircleSquare,
-  BIconHandThumbsUp,
-  BIconThreeDots,
-} from 'bootstrap-vue';
+import { BIconHandThumbsUp } from 'bootstrap-vue';
 
 export default {
   name: 'PolicyCard',
   components: {
-    BIconCircleSquare,
     BIconHandThumbsUp,
-    BIconThreeDots,
   },
   props: {
     policy: Object,
@@ -89,13 +79,13 @@ export default {
     async handlePolicyLike() {
       // will need database to keep track of likes
       if (!this.hasLiked) {
+        this.hasLiked = true;
         this.policy.likes++;
         try {
           await ApiUtil.putPolicyLike(this.policy.id);
         } catch (error) {
           alert(error.message);
         }
-        this.hasLiked = true;
       }
     },
   },
@@ -105,125 +95,137 @@ export default {
 <style lang="scss" scoped>
 @import '@/_styles';
 
-.policy-card-container {
-  width: 500px;
+@mixin tablet-media-query {
+  @media screen and (min-width: $tablet-breakpoint) {
+    @content;
+  }
+}
+
+@mixin desktop-media-query {
+  @media screen and (min-width: $desktop-breakpoint) {
+    @content;
+  }
+}
+
+@mixin desktop-xl-media-query {
+  @media screen and (min-width: $desktop-xl-breakpoint) {
+    @content;
+  }
+}
+
+.policy-card {
+  max-width: 950px;
+  width: 100%;
   height: 365px;
-  margin: 20px;
+  margin: 15px 10px;
+  padding: 55px 15px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
-  // mobile
-  @media screen and (max-width: 768px) {
-    width: 300px;
-    margin: 20px 5px;
+  @include tablet-media-query {
+    width: 225px;
   }
 
-  .card-body {
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
+  @include desktop-media-query {
+    width: 300px;
+    margin: 20px 10px;
+  }
+
+  @include desktop-xl-media-query {
     width: 450px;
-    padding: 20px 0px 10px 0px;
+  }
 
-    // mobile
-    @media screen and (max-width: 768px) {
-      display: flex;
-      flex-direction: column;
-      width: 275px;
-    }
+  // keeps the policy statement 3 lines long and adds ellipses to the end
+  .line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
-    .card-content {
-      display: flex;
-      flex-direction: column;
-      padding: 10px 15px;
-
-      // mobile
-      @media screen and (max-width: 768px) {
-        padding: 10px 5px;
-      }
-
-      .card-title-wrapper {
-        height: 60px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        .card-title {
-          margin: 0;
-          text-align: center;
-          font-size: 1.2rem;
-          font-weight: bold;
-        }
-      }
-
-      .policy-statement {
-        width: 350px;
-        height: 75px;
-        margin: 0 auto;
-        text-align: center;
-        overflow: hidden;
-
-        // mobile
-        @media screen and (max-width: 768px) {
-          width: 245px;
-        }
-      }
-      .policy-statement p {
-        margin: 0;
-      }
-
-      // keeps the policy statement 3 lines long and adds ellipses to the end
-      .line-clamp {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-      }
-
-      hr {
-        // border: 0;
-        clear: both;
-        display: block;
-        width: 100%;
-        background-color: lightgray;
-        height: 1px;
-      }
-    }
-
-    .card-data-container {
-      display: flex;
-      flex-direction: row;
-      padding: 0 15px;
+  &__card-content {
+    hr {
+      clear: both;
+      display: block;
       width: 100%;
-      margin-top: auto;
+      background-color: lightgray;
+      height: 1px;
+    }
+  }
 
-      // mobile
-      @media screen and (max-width: 768px) {
-        padding: 0 5px;
+  &__card-title-wrapper {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .card-title {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+  }
+
+  &__policy-statement {
+    width: 245px;
+    height: 75px;
+    margin: 0 auto;
+    text-align: center;
+    overflow: hidden;
+
+    p {
+      margin: 0;
+    }
+
+    @include tablet-media-query {
+      width: 185px;
+    }
+
+    @include desktop-media-query {
+      width: 250px;
+    }
+
+    @include desktop-xl-media-query {
+      width: 400px;
+      margin: 20px 10px;
+    }
+  }
+
+  &__learn-more {
+    display: inline-block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  &__data-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 2px;
+    width: 100%;
+
+    .like-btn-wrapper {
+      padding: 0;
+      display: block;
+
+      .likes-counter {
+        margin-left: 3px;
       }
+    }
+  }
 
-      .like-btn-wrapper {
-        padding: 0;
-        display: block;
+  &__category-name {
+    display: inline-block;
+    background: #eeeeee;
+    color: black;
+    padding: 3px 10px;
+    margin: 0;
+    border-radius: 5px;
+    font-size: 12px;
 
-        .likes-counter {
-          margin-left: 3px;
-        }
-      }
-
-      .modal-btn-wrapper {
-        padding: 0;
-        display: block;
-        margin-left: auto;
-        margin-right: 0;
-
-        // mobile
-        @media screen and (max-width: 768px) {
-          display: none;
-        }
-      }
-
-      .card-data-btn {
-        margin-right: 20px;
-      }
+    @media screen and (min-width: 768px) {
+      font-size: 14px;
     }
   }
 }

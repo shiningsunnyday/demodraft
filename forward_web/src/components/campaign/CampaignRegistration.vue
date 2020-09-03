@@ -1,45 +1,40 @@
 <template>
   <div>
     <b-container class="campaign-reg__description">
-      Search for representative positions at every level of government that
-      represents your address. Then select a position you would like to launch
-      your campaign for.
+      <p>{{ description.first }}</p>
+      <p>{{ description.second }}</p>
+      <p>{{ description.third }}</p>
     </b-container>
-
-    <CampaignAddressSearch
-      @handleSearch="handleSearch"
-      :isSearching="isSearching"
-    />
-
     <hr />
+    <div class="campaign-reg__steps">
+      <CampaignAddressSearch
+        v-show="campaignProgress === 0"
+        @handleSearch="handleSearch"
+        :isSearching="isSearching"
+      />
 
-    <b-container>
-      <b-form @submit.prevent="handleSubmitCampaign">
-        <CampaignFormGroup
-          :positions="positions"
-          @update-selected-pos="updateSelectedPos"
-        />
+      <CampaignPositions
+        v-show="campaignProgress === 1"
+        @handleBack="$emit('pushStepOne')"
+        @handlePositionSelected="handlePositionSelected"
+        :positions="positions"
+      />
 
-        <b-button class="launch-button" v-if="isLaunching" disabled>
-          <b-spinner small type="grow"></b-spinner>
-          Launching...
-        </b-button>
-
-        <b-button
-          v-else-if="civicData.local"
-          class="launch-button"
-          type="submit"
-        >
-          Launch
-        </b-button>
-      </b-form>
-    </b-container>
+      <CampaignInformation 
+        v-show="campaignProgress === 2"
+        @handleBack="$emit('pushStepTwo')"
+        @handleSubmitCampaign="handleSubmitCampaign"
+        :data="selectedPosition"
+        :isLaunching="isLaunching"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import CampaignAddressSearch from './CampaignAddressSearch';
-import CampaignFormGroup from './CampaignFormGroup';
+import CampaignPositions from './CampaignPositions';
+import CampaignInformation from './CampaignInformation';
 import { ApiUtil } from '@/_utils/api-utils';
 import { simulateApiCall } from '@/_utils/common-utils.js';
 
@@ -47,16 +42,48 @@ export default {
   name: 'CampaignRegistration',
   components: {
     CampaignAddressSearch,
-    CampaignFormGroup,
+    CampaignPositions,
+    CampaignInformation
+  },
+  props: {
+    campaignProgress: Number,
   },
   data() {
     return {
       civicData: {},
       positions: {},
-      selectedPos: {},
+      selectedPosition: {},
       isLaunching: false,
       isSearching: false,
     };
+  },
+  computed: {
+    description() {
+      if (this.campaignProgress === 0) {
+        const descriptor = {
+          first: 'Ready to test the waters of a potential candidacy by launching a mock campaign on Demodraft?',
+          second: 'First, input your address to see the positions at every level of government that represent your area.',
+          third: '* Disclaimer: This feature is for registering your campaign to appear on Demodraft. Demodraft does not officially register you with the Federal Election Commission.',
+        };
+        return descriptor;
+      }
+
+      if (this.campaignProgress === 1) {
+        const descriptor = {
+          first: 'Here are the available offices we found that you can run your campaign in.',
+          second: 'Select a position you would like to launch your campaign for.'
+        };
+        return descriptor;
+      }
+
+      const position = this.selectedPosition.name;
+      if (position) {
+        const descriptor = {
+          first: `Whenever you're ready, click the large blue button to launch your campaign for ${position}!`
+        };
+        return descriptor;
+      }
+    }
   },
   methods: {
     async handleSearch(address) {
@@ -64,7 +91,7 @@ export default {
         this.isSearching = true;
         this.civicData = await ApiUtil.postAddress({
           username: this.$store.getters.username,
-          password: this.$store.getters.password, // security risk, will need to use session cookies/JWT
+          password: this.$store.getters.password,
           address: address,
         });
         this.positions = {
@@ -72,17 +99,22 @@ export default {
           state: this.civicData.state,
           country: this.civicData.country,
         };
+        this.$emit('pushStepTwo');
       } catch (error) {
-        alert(`Oops, we couldn't find positions for that address. Make sure it's in the correct format!`);
+        alert(`Oops, we couldn't find positions for that address!`);
       }
       this.isSearching = false;
+    },
+    handlePositionSelected(selectedPosition) {
+      this.selectedPosition = selectedPosition;
+      this.$emit('pushStepThree');
     },
     async handleSubmitCampaign() {
       const { username, campaignPending } = this.$store.getters.getUserInfo;
       const data = {
         username: username,
-        scope: this.selectedPos.scope,
-        index: this.selectedPos.index,
+        scope: this.selectedPosition.scope,
+        index: this.selectedPosition.index,
       };
 
       if (data.scope) {
@@ -90,7 +122,7 @@ export default {
           this.isLaunching = true;
           //await simulateApiCall();
           const response = await ApiUtil.submitCampaign(data);
-          const modalMessage = `Campaign successfully submited!`;
+          const modalMessage = `Thank you for submitting a request to launch your campaign! You will be notified when your application is accepted.`;
           await this.$bvModal.msgBoxOk(modalMessage, {
             title: 'Confirmation',
             size: 'sm',
@@ -105,15 +137,9 @@ export default {
           alert(`Oops, something went wrong.`);
         }
         this.isLaunching = false;
-        // change to campaign details view
-        this.$emit('handle-campaign-launch', true);
-        return;
+        return this.$emit('completeAllSteps', true);
       }
-
       return alert('Choose a position for your campaign!');
-    },
-    updateSelectedPos(event) {
-      this.selectedPos = event;
     },
   },
 };
@@ -122,11 +148,23 @@ export default {
 <style lang="scss" scoped>
 .campaign-reg {
   &__description {
-    max-width: 550px;
-    margin-bottom: 3rem;
+    max-width: 800px;
+    padding: 1em;
+    text-align: center;
+    :nth-child(1) {
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+    
+    :nth-child(3) {
+      font-style: italic;
+    }
   }
-}
-.launch-button {
-  margin-bottom: 5rem;
+
+  &__steps {
+    display: flex;
+    justify-content: center;
+    padding: 1em 0 2em 0;
+  }
 }
 </style>

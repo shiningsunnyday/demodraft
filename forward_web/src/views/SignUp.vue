@@ -25,6 +25,29 @@
         />
       </BFormGroup>
 
+      <BFormGroup
+        label="First name:"
+        label-for="first"
+      >
+        <BFormInput
+          v-model="user.first"
+          type="text"
+          required
+        />
+      </BFormGroup>
+
+      <BFormGroup
+        label="Last name:"
+        label-for="last"
+      >
+        <BFormInput
+          v-model="user.last"
+          type="text"
+          required
+        />
+      </BFormGroup>
+      
+
       <BFormGroup id="password-group" label="Password:" label-for="password">
         <BFormInput
           id="password"
@@ -44,7 +67,10 @@
       </BFormGroup>
 
       <div class="signup__footer">
-        <BButton type="submit" variant="primary">
+        <b-button v-if="submitted" disabled>
+          <b-spinner small></b-spinner>Submit
+        </b-button>
+        <BButton v-else type="submit" variant="primary">
           Submit
         </BButton>
         <router-link :to="{ name: 'login-page' }" class="signup__link">
@@ -71,6 +97,8 @@ export default {
       user: {
         username: '',
         email: '',
+        first: '',
+        last: '',
         password: '',
         confirmPassword: '',
         campaignPending: false,
@@ -81,7 +109,7 @@ export default {
   methods: {
     async handleSubmit() {
       this.submitted = true;
-      const { username, email, password, confirmPassword, campaignPending } = this.user;
+      const { username, email, first, last, password, confirmPassword, campaignPending } = this.user;
 
       if (password !== confirmPassword) {
         alert('Make sure your passwords match');
@@ -91,6 +119,8 @@ export default {
       let data = {
         username: username,
         email: email,
+        first_name: first,
+        last_name: last,
         password: password,
         campaignPending: campaignPending,
       };
@@ -101,6 +131,7 @@ export default {
       } catch (error) {
         console.log('err', error);
       }
+      this.submitted = false;
     },
   },
 };

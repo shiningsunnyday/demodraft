@@ -1,16 +1,16 @@
 <template>
   <LoadingSpinner v-if="isLoading"></LoadingSpinner>
   <b-container v-else class="selected-politician">
-    <div class="selected-politician__follow-button-container">
+    <!-- <div class="selected-politician__follow-button-container">
       <b-button size="sm"> <BIconPersonPlus /> Follow </b-button>
-    </div>
+    </div> -->
 
     <div class="selected-politician__top">
       <h1>{{ politician.first }} {{ politician.last }}</h1>
 
       <div class="selected-politician__img-wrapper">
         <img
-          src="https://i.picsum.photos/id/1025/4951/3301.jpg?hmac=_aGh5AtoOChip_iaMo8ZvvytfEojcgqbCH7dzaz-H8Y"
+          src="@/_assets/politician-placeholder.jpg"
         />
       </div>
 
@@ -51,6 +51,10 @@
         <p class="selected-politician__message">"{{ policy.message }}"</p>
       </div>
     </div>
+    <hr />
+    <div class="selected-politician__comments">
+      <CommentList2 :politicianId="politician.id"></CommentList2>
+    </div>
   </b-container>
 </template>
 
@@ -58,10 +62,12 @@
 import { ApiUtil } from '@/_utils/api-utils';
 import LoadingSpinner from '@/components/_common/LoadingSpinner';
 import { BIconPersonPlus } from 'bootstrap-vue';
+import CommentList2 from '@/components/comments/CommentList2';
 
 export default {
   name: 'SelectedPolitician',
   components: {
+    CommentList2,
     LoadingSpinner,
     BIconPersonPlus,
   },
@@ -147,6 +153,10 @@ export default {
     @media screen and (min-width: 768px) {
       width: 500px;
     }
+  }
+
+  &__comments{
+    width: 100%;
   }
 
   &__actblue-link {
