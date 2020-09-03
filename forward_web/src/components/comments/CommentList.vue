@@ -6,7 +6,7 @@
       :policyId="policyId" 
       :isReply="false"
     ></CommentForm>
-    <div v-if="isLoading">Loading...</div>
+    <LoadingSpinner v-if="isLoading"></LoadingSpinner>
     <div 
       class="comments-wrapper"
       v-else-if="!isLoading && comments.length" 
