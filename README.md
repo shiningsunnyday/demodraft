@@ -6,9 +6,11 @@ Our tech stack is **AWS -> Django REST -> Vue.js**. We use ec2 instance as our s
 
 The static development site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com). It's kept on track with web_dev.
 
-The development API endpoint is [here](http://ec2-54-151-48-129.us-west-1.compute.amazonaws.com). It keeps track of api_dev.
+The development API endpoint is [here](http://ec2-3-101-22-177.us-west-1.compute.amazonaws.com). It keeps track of api_dev.
 
-The production site is hosted [here](http://demodraft.com.s3-website-us-west-1.amazonaws.com/) and production API endpoint is hosted here. Both are kept on track with master. We used AWS Route 53 to purchase demodraft.com domain and configured it to route to the production site.
+The production site is hosted [here](http://demodraft.com.s3-website-us-west-1.amazonaws.com/). The production API endpoint is hosted [here](http://ec2-54-151-48-129.us-west-1.compute.amazonaws.com). Both are kept on track with master. 
+
+We used AWS Route 53 to purchase demodraft.com domain and configured it to route to the production site.
 
 Our landing page for mailing list signups and general information is [demodraft.org](demodraft.org).
 
