@@ -61,7 +61,7 @@ export default {
     description() {
       if (this.campaignProgress === 0) {
         const descriptor = {
-          first: 'Planning to run for office and ready to launch a campaign on Demodraft?',
+          first: 'Ready to test the waters of a potential candidacy by launching a mock campaign on Demodraft?',
           second: 'First, input your address to see the positions at every level of government that represent your area.',
           third: '* Disclaimer: This feature is for registering your campaign to appear on Demodraft. Demodraft does not officially register you with the Federal Election Commission.',
         };
