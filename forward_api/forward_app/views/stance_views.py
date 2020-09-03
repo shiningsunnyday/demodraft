@@ -8,6 +8,10 @@ from forward_app.serializers import *
 
 class StanceV(APIView, Meta):
     def post(self, request):
+        """
+        This creates a Stance object using the through= keyword argument.
+        https://docs.djangoproject.com/en/3.0/ref/models/fields/#django.db.models.ManyToManyField.through_fields
+        """
         if set(request.data.keys()) != {"policy_id", "politician_id", "content"}:
             return Response("Please provide policy_id, politician_id, and content.", status=status.HTTP_400_BAD_REQUEST)
         policy_id, politician_id = int(request.data['policy_id']), int(request.data['politician_id'])
@@ -28,13 +32,11 @@ class StanceV(APIView, Meta):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
-        if set(request.data.keys()) != {"stance_id", "content"}:
-            return Response("Please provide stance_id and content.", status=status.HTTP_400_BAD_REQUEST)
-        sz = StanceSerializer(data = request.data)
+        if set(request.data.keys()) != {"stance_id", "message"}:
+            return Response("Please provide stance_id and message.", status=status.HTTP_400_BAD_REQUEST)
+        stance = Stance.objects.get(id=int(request.data['stance_id']))
+        sz = StanceSerializer(stance, data=request.data, partial=True)  # pass partial=True if not updating all fields
         if sz.is_valid(raise_exception=True):
-            stance = Stance.objects.get(id=request.data['stance_id'])
-            stance.message = request.data['content']
-            stance.save()
-            sz = StanceSerializer(stance)
+            sz.save()
             return Response(sz.data, status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -16,11 +16,16 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'password', 'first_name', 'last_name']
 
 
-
 class PersonaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Persona
         fields = ['user', 'stage', 'score']
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Persona
+        fields = ['line1', 'city', 'state', 'zip']
 
 
 class UsernameSerializer(serializers.ModelSerializer):

@@ -84,12 +84,8 @@ WSGI_APPLICATION = 'forward_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'demodraft_db',
-        'USER': 'demodraft',
-        'PASSWORD': 'darkmoney',
-        'HOST': 'demo-draft-db.c2www9lkdk8a.us-east-2.rds.amazonaws.com',
-        'PORT': '5432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
