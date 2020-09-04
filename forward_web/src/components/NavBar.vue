@@ -4,8 +4,8 @@
       <img 
         src="../_assets/demo-egg.png" 
         alt="logo"
-        height="42"
-        width="30"
+        height="40"
+        width="25"
       >
       Demodraft
     </b-navbar-brand>
@@ -18,8 +18,8 @@
           <img 
             src="../_assets/demo-egg.png" 
             alt="logo"
-            height="42"
-            width="30"
+            height="40"
+            width="25"
           >
           Demodraft
         </b-navbar-brand>
