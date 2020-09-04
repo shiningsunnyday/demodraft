@@ -19,13 +19,14 @@
     </div>
 
     <LoadingSpinner v-if="isLoading">
-      "Overnight successes are generally years in the making. And most progress is made in isolation, far from the public eye." - Andrew Yang
+      "Overnight successes are generally years in the making. And most progress
+      is made in isolation, far from the public eye." - Andrew Yang
     </LoadingSpinner>
 
-    <PolicyList 
-      v-else 
-      :filteredPolicies="filteredPolicies" 
-      :isFiltering="isFiltering" 
+    <PolicyList
+      v-else
+      :filteredPolicies="filteredPolicies"
+      :isFiltering="isFiltering"
       :selectedValues="selectedValues"
       :filterPolicies="filterPolicies"
     />
@@ -36,7 +37,6 @@
 import PolicyList from '@/components/policy/PolicyList';
 import Multiselect from 'vue-multiselect';
 import { ApiUtil } from '@/_utils/api-utils';
-import LoadingSpinner from '@/components/_common/LoadingSpinner';
 import * as Config from '@/config.json';
 
 export default {
@@ -44,7 +44,6 @@ export default {
   components: {
     PolicyList,
     Multiselect,
-    LoadingSpinner,
   },
   data() {
     return {
@@ -60,12 +59,11 @@ export default {
     // move this to navbar.vue method
     try {
       this.policies = await ApiUtil.getPolicies();
-      
+
       // converts policy cateogry ids into actual category names on the frontend
       // e.g. category_id 1 = "economy", category_id 2 = "education", etc. etc.
-      this.policies.forEach(policy => {
+      this.policies.forEach((policy) => {
         policy.categoryName = Config.policy_categories[policy.category];
-        
       });
       this.filteredPolicies = this.policies;
 

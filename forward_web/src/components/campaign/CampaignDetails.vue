@@ -20,13 +20,11 @@
 import { ApiUtil } from '@/_utils/api-utils';
 import { simulateApiCall } from '@/_utils/common-utils';
 import CampaignApproved from './CampaignApproved';
-import LoadingSpinner from '@/components/_common/LoadingSpinner';
 
 export default {
   name: 'CampaignDetails',
   components: {
     CampaignApproved,
-    LoadingSpinner,
   },
   data() {
     return {
