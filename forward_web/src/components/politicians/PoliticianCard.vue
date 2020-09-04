@@ -1,12 +1,11 @@
 <template>
   <BCard
     :title="`${politician.first} ${politician.last}`"
-    img-src="https://i.picsum.photos/id/1062/5092/3395.jpg?hmac=o9m7qeU51uOLfXvepXcTrk2ZPiSBJEkiiOp-Qvxja-k"
-    img-alt="Image"
     style="max-width: 20rem;"
     img-top
     class="mb-2 politician-card"
   >
+    <b-card-img :src="require('../../_assets/politician-placeholder.jpg')" alt="Image of politician" />
     <b-card-text>
       <BIconBuilding class="politician-card__icon" :scale="1.5" />
       {{ politicianLocation }}
@@ -59,6 +58,10 @@ export default {
 <style lang="scss" scoped>
 .politician-card {
   margin: 20px;
+
+  .card-text {
+    margin-top: 1rem;
+  }
 
   &__icon {
     margin-right: 8px;

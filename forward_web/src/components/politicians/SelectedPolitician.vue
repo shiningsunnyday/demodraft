@@ -10,7 +10,7 @@
 
       <div class="selected-politician__img-wrapper">
         <img
-          src="https://i.picsum.photos/id/1025/4951/3301.jpg?hmac=_aGh5AtoOChip_iaMo8ZvvytfEojcgqbCH7dzaz-H8Y"
+          src="@/_assets/politician-placeholder.jpg"
         />
       </div>
 
