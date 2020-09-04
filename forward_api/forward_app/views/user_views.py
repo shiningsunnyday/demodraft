@@ -5,8 +5,6 @@ from rest_framework import status
 from .meta import *
 from forward_app.utils.score_system import *
 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
 
 class Signup(APIView, Meta):
 

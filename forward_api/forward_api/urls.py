@@ -1,6 +1,7 @@
 from django.urls import include, path
 from django.contrib import admin
 from rest_framework import routers
+from rest_framework.authtoken.views import obtain_auth_token
 from forward_app import views
 
 router = routers.DefaultRouter()
@@ -13,6 +14,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
+    path('api-token-auth/', obtain_auth_token, name="api-token-auth"),
     path('signup/', views.Signup.as_view(), name="signup"),
     path('login/', views.Login.as_view(), name="login"),
     path('users/', views.Users.as_view(), name="users"),

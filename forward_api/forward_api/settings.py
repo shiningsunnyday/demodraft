@@ -43,9 +43,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'forward_app',
-    'rest_framework'
+    'rest_framework',
+    'rest_framework.authtoken'
 ]
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.TokenAuthentication',
+#     ],
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,14 +88,21 @@ WSGI_APPLICATION = 'forward_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'demodraft_db',
+#         'USER': 'demodraft',
+#         'PASSWORD': 'darkmoney',
+#         'HOST': 'demo-draft-db.c2www9lkdk8a.us-east-2.rds.amazonaws.com',
+#         'PORT': '5432'
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'demodraft_db',
-        'USER': 'demodraft',
-        'PASSWORD': 'darkmoney',
-        'HOST': 'demo-draft-db.c2www9lkdk8a.us-east-2.rds.amazonaws.com',
-        'PORT': '5432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
