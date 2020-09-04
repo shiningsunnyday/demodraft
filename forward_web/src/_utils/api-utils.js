@@ -5,65 +5,136 @@ axios.defaults.auth = Config.API_AUTH;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export class ApiUtil {
-  
+  static async login(user) {
+    if (!user) {
+      return;
+    }
+
+    const payload = { username: user.username, password: user.password };
+    const loginPromise = axios.post('/login/', payload);
+    const login = await loginPromise;
+    const {
+      id,
+      username,
+      email,
+      password,
+      approved,
+      first_name,
+      last_name,
+      politician_id,
+      is_mod,
+    } = login.data;
+
+    return {
+      id: id,
+      username: username,
+      password: password,
+      email: email,
+      first_name: first_name,
+      last_name: last_name,
+      approved: approved,
+      isMod: login.status === 204 ? false : is_mod,
+      politician_id: politician_id,
+      campaignPending: user.campaignPending,
+    };
+  }
+
+  static async signUp(user) {
+    if (!user) {
+      return;
+    }
+
+    const payload = { 
+      username: user.username, 
+      email: user.email,
+      password: user.password,
+      first_name: user.first_name,
+      last_name: user.last_name,
+    };
+
+    const signUpPromise = axios.post('/login/', payload);
+    const signUp = await signUpPromise;
+
+    const {
+      id,
+      username,
+      email,
+      password,
+      first_name,
+      last_name,
+    } = signUp.data;
+
+    return {
+      id: id,
+      username: username,
+      password: password,
+      email: email,
+      first_name: first_name,
+      last_name: last_name,
+      campaignPending: user.campaignPending,
+    };
+  }
+
   static async getPolicies() {
-    const policiesPromise = await axios.get('/policies/');
-    return policiesPromise.data;
+    const policiesPromise = axios.get('/policies/');
+    const policies = await policiesPromise;
+    return policies.data;
   }
 
   static async getPolicy(id) {
-    const policyPromise = await axios.get(`/policy/?id=${id}`);
-    return policyPromise.data;
+    const policyPromise = axios.get(`/policy/?id=${id}`);
+    const policy = await policyPromise;
+    return policy.data;
   }
 
   static async getPolicyComments(id) {
-    const policyCommentsPromise = await axios.get(`/thread/?policy_id=${id}`);
-    return policyCommentsPromise.data;
+    const policyCommentsPromise = axios.get(`/thread/?policy_id=${id}`);
+    const policyComments = await policyCommentsPromise;
+    return policyComments.data;
   }
 
   static async getPoliticianComments(id) {
-    const polCommentsPromise = await axios.get(`/thread/?politician_id=${id}`);
-    return polCommentsPromise.data;
+    const politicianCommentsPromise = axios.get(`/thread/?politician_id=${id}`);
+    const politicianComments = await politicianCommentsPromise;
+    return politicianComments.data;
   }
 
   static async getThreadFromComment(id) {
-    const threadPromise = await axios.get(`/thread/?thread_id=${id}`);
+    const threadPromise = axios.get(`/thread/?thread_id=${id}`);
+    const thread = await threadPromise;
     return {
-      data: threadPromise.data,
-      replies: threadPromise.data.slice(1),
-      leadComment: threadPromise.data[0],
-      lastComment: threadPromise.data[threadPromise.data.length - 1]
+      data: thread.data,
+      replies: thread.data.slice(1),
+      leadComment: thread.data[0],
+      lastComment: thread.data[thread.data.length - 1]
     };
   }
 
   static async deleteThread(thread_id, username) {
     const payload = { thread_id: thread_id, username: username };
-    const deleteThreadPromise = await axios.post(`/thread/`, payload );
-    return deleteThreadPromise.data;
+    const deleteThreadPromise = axios.post(`/thread/`, payload );
+    const deleteThread = await deleteThreadPromise;
+    return deleteThread.data;
   }
 
   static async deleteComment(comment_id, username) {
     const payload = { prev_comment_id: comment_id, username: username };
-    const deleteCommentPromise = await axios.post(`/comment/`, payload );
-    return deleteCommentPromise.data;
+    const deleteCommentPromise = axios.post(`/comment/`, payload );
+    const deleteComments = await deleteCommentPromise;
+    return deleteComments.data;
   }
 
   static async putPolicyLike(id) {
-    const policyLikePromise = await axios.put(`/policy/`, { id: id });
-    return policyLikePromise.data.likes;
+    const policyLikePromise = axios.put(`/policy/`, { id: id });
+    const policyLike = await policyLikePromise;
+    return policyLike.data.likes;
   }
 
   static async commentLike(id) {
-    let response;
-    try {
-      response = await axios.patch(`${Config.API_URL}/comment/`, {
-        comment_id: id,
-      });
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data.likes;
+    const payload = { comment_id: id };
+    const commentLikePromise = axios.patch(`/comment/`, payload);
+    const commentLike = await commentLikePromise;
+    return commentLike.data.likes;
   }
 
   static async addNewThread(data) {
@@ -83,92 +154,45 @@ export class ApiUtil {
   }
 
   static async getAllPoliticians() {
-    let response;
-
-    try {
-      response = await axios.get(`${Config.API_URL}/politician/`);
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data;
+    const allPoliticiansPromise = axios.get(`/politician/`);
+    const allPoliticians = await allPoliticiansPromise;
+    return allPoliticians.data;
   }
 
   static async getSelectedPolitician(id) {
-    let response;
-
-    try {
-      response = await axios.get(
-        `${Config.API_URL}/politician/?politician_id=${id}`
-      );
-    } catch (error) {
-      console.error(error.message);
-    }
-
-    return response.data;
+    const selectedPoliticianPromise = axios.get(`/politician/?politician_id=${id}`);
+    const selectedPolitician = await selectedPoliticianPromise;
+    return selectedPolitician.data;
   }
 
-  /**
-   * Posts an address to backend on address search
-   * @param {Object} data - { username, password, address } 
-   */
   static async postAddress(data) {
-    const postAddressPromise = await axios.post(`/address/`, data);
-    return postAddressPromise.data;
+    const postAddressPromise = axios.post(`/address/`, data);
+    const postAddress = await postAddressPromise;
+    return postAddress.data;
   }
 
   static async submitCampaign(data) {
-    try {
-      return await axios({
-        method: 'post',
-        url: `${Config.API_URL}/politician/`,
-        data: data,
-        headers: { "content-type": "application/json" },
-        auth: Config.API_AUTH
-      });
-    } catch (error) {
-      console.error(error.message);
-    }
+    return await axios.post(`/politician/`, data);
   }
 
   static async putCampaign(data) {
-    const putCampaignPromise = await axios.put('/campaign/', data);
-    return putCampaignPromise.data;
+    const putCampaignPromise = axios.put('/campaign/', data);
+    const campaign = await putCampaignPromise;
+    return campaign.data;
   }
 
   static async getCampaign(politician_id) {
-    let response;
-
-    try {
-      response = await axios.get(`${Config.API_URL}/campaign/?politician_id=${politician_id}`);
-    } catch (error) {
-      console.error(error.message);
-    }
-    return response.data;
+    const getCampaignPromise = axios.get(`/campaign/?politician_id=${politician_id}`);
+    const campaign = await getCampaignPromise;
+    return campaign.data;
   }
 
   static async postStance(data) {
-    try {
-      return await axios({
-        method: 'post',
-        url: `${Config.API_URL}/stance/`,
-        data: data,
-        headers: { "content-type": "application/json" },
-        auth: Config.API_AUTH
-      });
-    } catch (error) {
-      console.error(error.message);
-    }
+    return await axios.post(`/stance/`, data);
   }
 
   static async getStance(data) {
-    return await axios({
-      method: 'get',
-      url: `${Config.API_URL}/stance/`,
-      params: { politician_id: data },
-      headers: { "content-type": "application/json" },
-      auth: Config.API_AUTH
-    });
+    return await axios.get(`/stance/?politician_id=${data}`);
   }
 
   static async getModifiedPolitician(req) {
@@ -181,9 +205,9 @@ export class ApiUtil {
 
     try {
       const politician = await ApiUtil.getSelectedPolitician(user.politician_id);
-      const stancePromise = await ApiUtil.getStance(user.politician_id);
+      const stance = await ApiUtil.getStance(user.politician_id);
       const campaign = await ApiUtil.getCampaign(user.politician_id);
-      const allPoliticianStances = stancePromise.data;
+      const allPoliticianStances = stance.data;
       return {
         id: politician.id,
         firstName: politician.first,
@@ -208,7 +232,8 @@ export class ApiUtil {
       username: req.username, 
       password: req.password 
     };
-    const userPromise = await axios.post(`/users/`, payload);
-    return userPromise.data.score;
+    const userScorePromise = axios.post(`/users/`, payload);
+    const userScore = await userScorePromise;
+    return userScore.data.score;
   }
 }
