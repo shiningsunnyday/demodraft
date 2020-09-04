@@ -7,18 +7,18 @@ from forward_app.serializers import *
 from django.core.mail import EmailMessage
 from django.conf import settings
 
-class Address(APIView, Meta):
 
+class Address(APIView, Meta):
     @staticmethod
     def user_exists(username, password=None):
-        filtered = User.objects.filter(username=username[0])
+        filtered = User.objects.filter(username=username)
         return filtered.exists()
 
     def get(self, request):
         if set(request.GET.keys()) != {"username"}:
             return Response("Please provide username.", status=status.HTTP_400_BAD_REQUEST)
         if Address.user_exists(username=request.GET["username"]):
-            user = User.objects.get(**request.GET)
+            user = User.objects.get(username=request.GET["username"])
             persona = user.persona
             sz = AddressSerializer(persona)
             return Response(sz.data, status=status.HTTP_200_OK)
@@ -27,7 +27,7 @@ class Address(APIView, Meta):
     def post(self, request):
         if set(request.data.keys()) != {"username", "password", "address"}:
             return Response("Please provide username and address.", status=status.HTTP_400_BAD_REQUEST)
-        user_creds = {"username": request.GET["username"], "password": request.GET["password"]}
+        user_creds = {"username": request.data["username"], "password": request.data["password"]}
         if Address.user_exists(**user_creds):
             user = User.objects.get(**user_creds)
             norm_address = normalizeAddress(request.data["address"])

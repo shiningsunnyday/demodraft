@@ -203,12 +203,11 @@ class CommentV(APIView, Meta):
         if not username or comment.user.username != username:
             comment.likes += 1
             comment.save()
-            return CommentSerializer(comment)
-        return CommentSerializer([])
+        return CommentSerializer(comment)
 
     def patch(self, request):
         sz = None
-        if set(request.data.keys()) in {{"comment_id"}, {"username", "comment_id"}}:
+        if set(request.data.keys()) in [{"comment_id"}, {"username", "comment_id"}]:
             # Python kwargs takes care of both cases
             sz = CommentV.like_comment(**request.data)
         else:

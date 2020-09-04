@@ -25,7 +25,7 @@ class PersonaSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Persona
-        fields = ['line1', 'city', 'state', 'zip']
+        fields = ['line1', 'city', 'state', 'zipcode']
 
 
 class UsernameSerializer(serializers.ModelSerializer):
