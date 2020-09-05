@@ -67,8 +67,9 @@
       </BFormGroup>
 
       <div class="signup__footer">
-        <b-button v-if="submitted" disabled>
-          <b-spinner small></b-spinner>Submit
+        <b-button v-if="submitted" disabled class="align">
+          <b-spinner small></b-spinner>
+          <span>Submit</span>
         </b-button>
         <BButton v-else type="submit" variant="primary">
           Submit
@@ -158,5 +159,9 @@ export default {
   &__link {
     font-size: 12px;
   }
+}
+.align {
+  display: flex;
+  align-items: center;
 }
 </style>

@@ -37,15 +37,17 @@
 
     <hr />
 
-    <CommentList :policyId="policy.id"></CommentList>
+    <Comments 
+      :commentFormId="policy.id"
+      :commentSection="'policy'" 
+    />
+    
   </b-container>
 </template>
 
 <script>
-import CommentList from '@/components/comments/CommentList';
-import CommentForm from '@/components/comments/CommentForm';
+import Comments from '@/components/comments/Comments';
 import PolicyEndorseButton from '@/components/policy/PolicyEndorseButton';
-import LoadingSpinner from '@/components/_common/LoadingSpinner';
 import { ApiUtil } from '@/_utils/api-utils';
 import { splitDescription } from '@/_utils/common-utils.js';
 import { BIconHandThumbsUp } from 'bootstrap-vue';
@@ -53,10 +55,8 @@ import { BIconHandThumbsUp } from 'bootstrap-vue';
 export default {
   name: 'selected-policy',
   components: {
-    CommentList,
-    CommentForm,
+    Comments,
     PolicyEndorseButton,
-    LoadingSpinner,
     BIconHandThumbsUp,
   },
   props: {

@@ -43,13 +43,12 @@
       >
         reply to thread
       </b-button>
-      <CommentForm
+      <CommentFormReply
         v-if="isRepyThread"
         :updateComments="updateRepliesView"
         :threadId="comment.thread_id"
         :replyTo="comment"
-        :isReply="true"
-      ></CommentForm>
+      />
       <!-- End replies to leading comment -->
     </div>
   </div>
@@ -58,14 +57,14 @@
 <script>
 import CommentCard from './CommentCard';
 import CommentCardPlaceholder from './CommentCardPlaceholder';
-import CommentForm from '@/components/comments/CommentForm';
+import CommentFormReply from '@/components/comments/CommentFormReply';
 import { ApiUtil } from '@/_utils/api-utils.js';
 
 export default {
   name: 'CommentThread',
   components: {
     CommentCard,
-    CommentForm,
+    CommentFormReply,
     CommentCardPlaceholder,
   },
   props: {
@@ -89,11 +88,15 @@ export default {
     };
   },
   async created() {
-    const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
-    this.cardProps.threadId = this.comment.thread_id;
-    this.cardProps.hasReplies = thread.replies.length > 0;
-    this.cardProps.isMod = this.$store.getters.getUserInfo.isMod;
-    this.replies = thread.replies;
+    try {
+      const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
+      this.cardProps.threadId = this.comment.thread_id;
+      this.cardProps.hasReplies = thread.replies.length > 0;
+      this.cardProps.isMod = this.$store.getters.getUserInfo.isMod;
+      this.replies = thread.replies;
+    } catch (error) {
+      alert(error);
+    }
     this.isLoading = false;
   },
   methods: {

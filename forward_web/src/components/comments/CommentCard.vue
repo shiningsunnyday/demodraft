@@ -42,27 +42,26 @@
         </b-button>
       </div>
     </div>
-    <CommentForm
+    <CommentFormReply
       v-if="isReplying"
       :updateComments="updateRepliesView"
       :threadId="prop.threadId"
       :replyTo="comment"
-      :isReply="true"
-    ></CommentForm>
+    ></CommentFormReply>
   </div>
 </template>
 
 <script>
 import { BIconHandThumbsUp } from 'bootstrap-vue';
 import { ApiUtil } from '@/_utils/api-utils.js';
-import CommentForm from '@/components/comments/CommentForm';
+import CommentFormReply from '@/components/comments/CommentFormReply';
 import moment from 'moment';
 
 export default {
   name: 'CommentCard',
   components: {
     BIconHandThumbsUp,
-    CommentForm,
+    CommentFormReply,
   },
   props: {
     comment: Object,

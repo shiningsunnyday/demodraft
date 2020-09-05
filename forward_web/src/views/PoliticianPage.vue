@@ -1,8 +1,10 @@
 <template>
   <div class="politician-page">
     <h1 class="politician-page__title">Browse Politicians</h1>
+
     <div class="politician-page__filter-container">
       <p id="filter">Filter:</p>
+
       <Multiselect
         v-model="selectedValues"
         @input="filterPoliticians"
@@ -78,9 +80,11 @@ export default {
   &__filter-container {
     display: flex;
     align-items: center;
+    justify-content: center;
     margin: 1rem 0;
     height: 50px;
-    
+    padding-right: 10px;
+
     #filter {
       padding: 0;
       margin: 0 1rem;
