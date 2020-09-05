@@ -45,7 +45,6 @@
 import CommentList from '@/components/comments/CommentList';
 import CommentForm from '@/components/comments/CommentForm';
 import PolicyEndorseButton from '@/components/policy/PolicyEndorseButton';
-import LoadingSpinner from '@/components/_common/LoadingSpinner';
 import { ApiUtil } from '@/_utils/api-utils';
 import { splitDescription } from '@/_utils/common-utils.js';
 import { BIconHandThumbsUp } from 'bootstrap-vue';
@@ -56,7 +55,6 @@ export default {
     CommentList,
     CommentForm,
     PolicyEndorseButton,
-    LoadingSpinner,
     BIconHandThumbsUp,
   },
   props: {

@@ -1,7 +1,12 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand class="navbar-brand--mobile">
-      <img src="../_assets/demo-egg.png" alt="logo">
+      <img 
+        src="../_assets/demo-egg.png" 
+        alt="logo"
+        height="40"
+        width="25"
+      >
       Demodraft
     </b-navbar-brand>
 
@@ -10,7 +15,12 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-navbar-brand :to="{ name: 'about-page' }">
-          <img src="../_assets/demo-egg.png" alt="logo">
+          <img 
+            src="../_assets/demo-egg.png" 
+            alt="logo"
+            height="40"
+            width="25"
+          >
           Demodraft
         </b-navbar-brand>
 
@@ -157,6 +167,5 @@ $uncollapsed-breakpoint: 992px;
       height: 100%;
     }
   }
-
 }
 </style>

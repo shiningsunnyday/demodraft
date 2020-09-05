@@ -2,11 +2,17 @@
 
 ## Summary
 
-Our tech stack is **AWS -> Django REST -> Vue.js**. We use ec2 instance as our server, s3 bucket for static site hosting, and (soon) RDS PostgresQL db engine.
+Our tech stack is **AWS -> Django REST -> Vue.js**. We use ec2 instance as our server, s3 bucket for static site hosting, and RDS PostgresQL for our db engine.
 
-The static development site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com). There's a boilerplate app. It fetches the API for politicians from the server.
+The static development site is hosted [here](http://humanityforward.s3-website-us-east-1.amazonaws.com). It's kept on track with web_dev.
 
-The development API endpoint is [here](http://ec2-54-151-48-129.us-west-1.compute.amazonaws.com). It should be on track with api_dev branch. It will nearly always be working. Upon launch there will be a production API endpoint on track with master branch that will always be working.
+The development API endpoint is [here](http://ec2-3-101-22-177.us-west-1.compute.amazonaws.com). It keeps track of api_dev.
+
+The production site is hosted [here](http://demodraft.com.s3-website-us-west-1.amazonaws.com/). The production API endpoint is hosted [here](http://ec2-54-151-48-129.us-west-1.compute.amazonaws.com). Both are kept on track with master. 
+
+We used AWS Route 53 to purchase demodraft.com domain and configured it to route to the production site.
+
+Our landing page for mailing list signups and general information is [demodraft.org](demodraft.org).
 
 Keep master always functional and base work on dev branch off api_dev or web_dev then make pr into api_dev or web_dev. Make pr into master once it's tested and other devs can fast-forward their dev branches.
 

@@ -3,8 +3,8 @@ import App from './App.vue';
 import router from './_router/router';
 import { store } from './_stores/store';
 import Axios from 'axios';
-
 import { BootstrapVue } from 'bootstrap-vue';
+import LoadingSpinner from '@/components/_common/LoadingSpinner';
 import './style.scss';
 
 // to access axios across all components
@@ -15,8 +15,11 @@ const token = localStorage.getItem('token');
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token;
 }
+
 Vue.config.productionTip = false;
+
 Vue.use(BootstrapVue);
+Vue.component('LoadingSpinner', LoadingSpinner);
 
 new Vue({
   router,

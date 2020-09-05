@@ -60,7 +60,6 @@
 
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
-import LoadingSpinner from '@/components/_common/LoadingSpinner';
 import { BIconPersonPlus } from 'bootstrap-vue';
 import CommentList2 from '@/components/comments/CommentList2';
 
@@ -68,7 +67,6 @@ export default {
   name: 'SelectedPolitician',
   components: {
     CommentList2,
-    LoadingSpinner,
     BIconPersonPlus,
   },
   data() {
