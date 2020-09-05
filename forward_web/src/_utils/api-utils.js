@@ -86,17 +86,16 @@ export class ApiUtil {
     const policy = await policyPromise;
     return policy.data;
   }
-
-  static async getPolicyComments(id) {
-    const policyCommentsPromise = axios.get(`/thread/?policy_id=${id}`);
-    const policyComments = await policyCommentsPromise;
-    return policyComments.data;
-  }
-
-  static async getPoliticianComments(id) {
-    const politicianCommentsPromise = axios.get(`/thread/?politician_id=${id}`);
-    const politicianComments = await politicianCommentsPromise;
-    return politicianComments.data;
+  static async getComments(id, section) {
+    try {
+      const commentsPromise = axios.get(`/thread/?${section}_id=${id}`);
+      const comments = await commentsPromise;
+      return comments.data;
+    } catch (error) {
+      alert(`Error ${error.response.status}: Something when wrong updating this ${section}'s comments`);
+      console.log(error);
+    }
+    
   }
 
   static async getThreadFromComment(id) {
@@ -139,17 +138,19 @@ export class ApiUtil {
 
   static async addNewThread(data) {
     try {
-      await axios.post(`${Config.API_URL}/thread/`, data);
+      await axios.post(`/thread/`, data);
     } catch (error) {
-      console.error(error.message);
+      alert('error on addNewThread');
+      console.log(error);
     }
   }
 
   static async addNewReply(data) {
     try {
-      await axios.post(`${Config.API_URL}/comment/`, data);
+      await axios.post(`/comment/`, data);
     } catch (error) {
-      console.error(error.message);
+      alert('error on addNewReply');
+      console.log(error);
     }
   }
 

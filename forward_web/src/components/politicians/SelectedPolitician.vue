@@ -53,7 +53,10 @@
     </div>
     <hr />
     <div class="selected-politician__comments">
-      <CommentList2 :politicianId="politician.id"></CommentList2>
+      <Comments 
+        :commentFormId="politician.id"
+        :commentSection="'politician'"
+      />
     </div>
   </b-container>
 </template>
@@ -61,12 +64,12 @@
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
 import { BIconPersonPlus } from 'bootstrap-vue';
-import CommentList2 from '@/components/comments/CommentList2';
+import Comments from '@/components/comments/Comments';
 
 export default {
   name: 'SelectedPolitician',
   components: {
-    CommentList2,
+    Comments,
     BIconPersonPlus,
   },
   data() {
@@ -155,6 +158,7 @@ export default {
 
   &__comments{
     width: 100%;
+    text-align: center;
   }
 
   &__actblue-link {
