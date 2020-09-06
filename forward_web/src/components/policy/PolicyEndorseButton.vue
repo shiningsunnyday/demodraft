@@ -1,8 +1,16 @@
 <template>
   <div>
     <div>
-      <b-button v-if="!politician.hasEndorsed" variant="primary" v-b-modal.modal-endorse>Endorse</b-button>
-      <b-button v-else variant="success" disabled>You've endorsed this policy!</b-button>
+      <b-button
+        v-if="!politician.hasEndorsed"
+        variant="primary"
+        v-b-modal.modal-endorse
+      >
+        Endorse
+      </b-button>
+      <b-button v-else variant="success" disabled>
+        You've endorsed this policy!
+      </b-button>
       <b-modal
         ref="modal-endorse"
         id="modal-endorse"
@@ -46,7 +54,7 @@ import { simulateApiCall } from '@/_utils/common-utils';
 export default {
   props: {
     policy: Object,
-    politician: Object
+    politician: Object,
   },
   data() {
     return {
@@ -65,10 +73,9 @@ export default {
       try {
         this.isSubmitting = true;
         await ApiUtil.postStance(stanceData);
-        const stanceResponse = await ApiUtil.getStance(this.politician.id);
-        const allPoliticianStances = stanceResponse.data;
-        const mostRecentStancePolicyId = allPoliticianStances[allPoliticianStances.length - 1].policy_id;
-        this.politician.hasEndorsed = (mostRecentStancePolicyId === this.policy.id);
+        const stances = await ApiUtil.getAllStances(this.politician.id);
+        this.$store.dispatch('updateEndorsed', stances);
+        this.politician.hasEndorsed = true;
       } catch (error) {
         alert('Oops, something went wrong.');
       }

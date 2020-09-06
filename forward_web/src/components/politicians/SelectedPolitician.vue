@@ -9,13 +9,11 @@
       <h1>{{ politician.first }} {{ politician.last }}</h1>
 
       <div class="selected-politician__img-wrapper">
-        <img
-          src="@/_assets/politician-placeholder.jpg"
-        />
+        <img src="@/_assets/politician-placeholder.jpg" />
       </div>
 
       <div class="selected-politician__description">
-        <p>Running for {{ politician.name }}</p>
+        <p>Running for {{ politician.position }}</p>
 
         <p v-if="politician.actblue" class="selected-politician__actblue-link">
           <a
@@ -53,10 +51,7 @@
     </div>
     <hr />
     <div class="selected-politician__comments">
-      <Comments 
-        :commentFormId="politician.id"
-        :commentSection="'politician'"
-      />
+      <Comments :commentFormId="politician.id" :commentSection="'politician'" />
     </div>
   </b-container>
 </template>
@@ -81,12 +76,17 @@ export default {
     };
   },
   async created() {
-    this.politician = await ApiUtil.getSelectedPolitician(
-      this.$route.params.id
-    );
-
-    const stanceResponse = await ApiUtil.getStance(this.politician.id);
-    this.stances = stanceResponse.data;
+    const user = this.$store.getters.getUserInfo;
+    const modifiedPolitician = this.$store.getters.getPolitician;
+    const politicianId = Number(this.$route.params.id);
+    if (user.approved && modifiedPolitician.id === politicianId) {
+      this.politician = modifiedPolitician;
+      this.stances = this.politician.endorsed;
+    } else {
+      this.politician = await ApiUtil.getSelectedPolitician(politicianId);
+      this.politician.position = this.politician.name;
+      this.stances = await ApiUtil.getAllStances(this.politician.id);
+    }
 
     if (this.stances.length > 0) {
       const policySet = new Set();
@@ -156,7 +156,7 @@ export default {
     }
   }
 
-  &__comments{
+  &__comments {
     width: 100%;
     text-align: center;
   }
