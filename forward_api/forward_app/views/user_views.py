@@ -17,38 +17,44 @@ class Signup(APIView, Meta):
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     def post(self, request):
-        # return Response("Sorry. We are not accepting new user signups right now.", status=status.HTTP_204_NO_CONTENT)
         if set(request.data.keys()) == {"username", "email", "password", "first_name", "last_name"}:
             sz = UserSerializer(data=request.data)
             if sz.is_valid(raise_exception=True):
-                # email = request.data["email"]
-                # if not request.user.is_staff and not search(email, "./forward_app/utils/contact_list.txt"):
-                #     return Response(status=status.HTTP_403_FORBIDDEN)
+                email = request.data["email"]
+                # A user is creatable only if request's user is a staff user or email is on approved contact list
+                if not request.user.is_staff and not search(email, "./forward_app/utils/contact_list.txt"):
+                    return Response(status=status.HTTP_403_FORBIDDEN)
                 sz.save()
                 user = User.objects.get(**sz.data)
                 persona = Persona(user=user)
-                persona.stage = 1
+                persona.stage = 1  # stage=1 is for new users
                 persona.save()
                 return Response(sz.data, status=status.HTTP_201_CREATED)
-        return Response("Please provide username, email, password, first name and last name.", status=status.HTTP_400_BAD_REQUEST)
+        return Response("Please provide username, email, password, first name and last name.",
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class Login(APIView, Meta):
     def post(self, request):
+        """
+        Returns user serialized by UserSerializer plus additional fields if it's politician
+        What's returned determine frontend behavior
+        """
         username, password = request.data["username"], request.data["password"]
-        # if username not in settings.INTERNAL_USERNAMES or password not in settings.INTERNAL_PASSWORDS:
-        #     return Response("Please login with internal username and password.",
-        #                     status=status.HTTP_401_UNAUTHORIZED)
         exists = User.objects.filter(username=username, password=password).exists()
         if exists:
             user = User.objects.get(username=username, password=password)
+            # Re-calculates moderator cutoff score whenever any user logs in
             update_scores(pers=Persona.objects.all(), comments=Comment.objects.all())
+            # Turning off sweep function for now re-assigns new mods
             # sweep(Persona.objects.all())
             sz = UserSerializer(user)
+            persona = user.persona
             try:
-                persona = user.persona
+                # catches exception when no user hasn't applied as politician yet, probably better way to write this
                 pol = persona.politician
                 approved = pol.approved
+                # need to make relevant serializer
                 data = sz.data
                 data['approved'] = approved
                 data['politician_id'] = pol.id
@@ -57,6 +63,7 @@ class Login(APIView, Meta):
                 data = sz.data
                 data['is_mod'] = (persona.stage == 2)
                 return Response(data, status=status.HTTP_200_OK)
+        # Helpful to differentiate this from 403 for staff-only views
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 

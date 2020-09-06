@@ -6,53 +6,33 @@ from .meta import Meta
 from forward_app.serializers import *
 from django.core.mail import EmailMessage
 from django.conf import settings
-from django.template.loader import render_to_string
-
-# from forward_api.Google import Create_Service
-# import base64
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.text import MIMEText
-
-# CLIENT_SECRET_FILE = 'client_secret.json'
-# API_NAME = 'gmail'
-# API_VERSION = 'v1'
-# SCOPES = ['https://mail.google.com']
-
-# service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES) 
 
 
 class Address(APIView, Meta):
-
     @staticmethod
     def user_exists(username, password=None):
         filtered = User.objects.filter(username=username)
-        if password:
-            filtered = filtered.filter(password=password)
         return filtered.exists()
 
     def get(self, request):
-        if set(request.data.keys()) != {"username", "password"}:
-            return Response("Please provide username and password.", status=status.HTTP_400_BAD_REQUEST)
-        username, password = request.data["username"], request.data["password"]
-        if Address.user_exists(username, password):
-            user = User.objects.get(username=username, password=password)
+        if set(request.GET.keys()) != {"username"}:
+            return Response("Please provide username.", status=status.HTTP_400_BAD_REQUEST)
+        if Address.user_exists(username=request.GET["username"]):
+            user = User.objects.get(username=request.GET["username"])
             persona = user.persona
-            address = {}
-            address['line1'] = persona.line1
-            address['city'] = persona.city
-            address['state'] = persona.state
-            address['zip'] = persona.zipcode
-            return Response(address, status=status.HTTP_200_OK)
+            sz = AddressSerializer(persona)
+            return Response(sz.data, status=status.HTTP_200_OK)
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
         if set(request.data.keys()) != {"username", "password", "address"}:
             return Response("Please provide username and address.", status=status.HTTP_400_BAD_REQUEST)
-        username, password = request.data["username"], request.data["password"]
-        if Address.user_exists(username, password):
-            user = User.objects.get(username=username, password=password)
+        user_creds = {"username": request.data["username"], "password": request.data["password"]}
+        if Address.user_exists(**user_creds):
+            user = User.objects.get(**user_creds)
             norm_address = normalizeAddress(request.data["address"])
             persona = user.persona
+            # Should serialize this soon
             persona.line1 = norm_address['line1']
             persona.city = norm_address['city']
             persona.state = norm_address['state']
@@ -87,17 +67,18 @@ class PoliticianV(APIView, Meta):
                 pol = Politician(persona=persona, office_id=pos['id'], name=pos['name'])
                 pol.save()
                 Constituency.objects.create(politician=pol)
-            data = merge(UserSerializer(user).data, PoliticianSerializer(pol).data)
-
-            email = EmailMessage(
-            'New Politician: ' + user.username + ' registered!', 'Email: '+user.email+ '\nPosition: '+pos['name'], settings.EMAIL_HOST_USER, ['demodraftapp@gmail.com']
-            )
+            user_info = UserSerializer(user)
+            pol_info = PoliticianSerializer(pol)
+            data = merge(user_info.data, pol_info.data)
+            email = EmailMessage('New Politician: ' + user.username + ' registered!', 'Email: ' + user.email
+                                 + '\nPosition: ' + pos['name'], settings.EMAIL_HOST_USER, ['demodraftapp@gmail.com'])
             email.fail_silently = False
             email.send()
             return Response(data, status=status.HTTP_200_OK)
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
+        # Staff-only view that approves a politician using the account's username and preferred first and last names.
         if not request.user.is_staff:
             return Response(status=status.HTTP_403_FORBIDDEN)
         if set(request.data.keys()) != {"username", "first", "last"}:
@@ -123,8 +104,10 @@ class PoliticianV(APIView, Meta):
         return Response(sz.data, status=status.HTTP_202_ACCEPTED)
 
     def get(self, request):
+        # Staff-only view that gets public info of politician for politician card
         if set(request.GET.keys()) == {"politician_id"}:
             pol = Politician.objects.get(id=int(request.GET['politician_id']))
+            # serializes campaign info available to public
             camp_sz = CampaignSerializer(pol.campaign)
             pol_sz = PoliticianSerializer(pol)
             data = merge(pol_sz.data, camp_sz.data)
@@ -141,14 +124,17 @@ class CampaignV(APIView, Meta):
     camp_attrs = {'actblue', 'fundraise_goal'}
 
     def get(self, request):
+        # Staff-only view that gets public and customizable info of politician under personal campaign
         if set(request.GET.keys()) != {"politician_id"}:
             return Response("Please provide politician id.", status=status.HTTP_400_BAD_REQUEST)
         pol = Politician.objects.get(id=int(request.GET['politician_id']))
         camp = pol.campaign
+        # serializes both campaign's public and customizable info
         sz = MyCampaignSerializer(camp)
         return Response(sz.data, status=status.HTTP_200_OK)
 
     def put(self, request):
+        # Updates customizable info for personal campaign
         if "politician_id" not in set(request.data):
             return Response("Please provide politician id.", status=status.HTTP_400_BAD_REQUEST)
         pol = Politician.objects.get(id=int(request.data['politician_id']))

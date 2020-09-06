@@ -26,11 +26,16 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-
 class PersonaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Persona
         fields = ['user', 'stage', 'score']
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Persona
+        fields = ['line1', 'city', 'state', 'zipcode']
 
 
 class UsernameSerializer(serializers.ModelSerializer):
