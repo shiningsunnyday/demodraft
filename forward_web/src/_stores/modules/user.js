@@ -1,77 +1,71 @@
-import { ApiUtil } from '@/_utils/api-utils.js';
+import * as types from '@/_stores/mutation-types';
+import { AuthUtil } from '@/_utils/auth-utils.js';
 
+const user = JSON.parse(sessionStorage.getItem('userState'));
 export const userStore = {
-  state: {
-    status: '',
-    token: sessionStorage.getItem('token') || '',
-    user: {},
-  },
+  state: user
+    ? {
+        status: {
+          loggedIn: true,
+        },
+        user,
+      }
+    : {
+        status: {
+          loggedIn: false,
+        },
+        user: {},
+      },
   mutations: {
-    auth_request(state) {
-      state.status = 'loading';
+    [types.AUTH_SUCCESS]: (state, user) => {
+      state.status.loggedIn = true;
+      state.user = user;
     },
-    auth_success(state, data) {
-      state.status = 'success';
-      state.user = data.user;
-      state.token = data.token;
+    [types.AUTH_ERROR]: (state) => {
+      state.status.loggedIn = false;
     },
-    auth_error(state) {
-      state.status = 'error';
+    [types.LOGOUT]: (state) => {
+      state.status.loggedIn = false;
+      state.user = {};
     },
-    logout(state) {
-      state.status = '';
-      state.token = '';
-    },
-    campaignPendingMutation(state) {
+    [types.SET_CAMPAIGN_PENDING]: (state) => {
       state.user.campaignPending = !state.user.campaignPending;
     },
   },
   actions: {
-    async login({ commit }, user) {
+    login: async ({ commit }, user) => {
       try {
-        commit('auth_request');
-        const authUser = await ApiUtil.login(user);
-        const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
-        const stateData = { token: token, user: authUser };
-        sessionStorage.setItem("token", token);
-        // axios.defaults.headers.common["Authorization"] = token;
-        commit('auth_success', stateData);
+        const authUser = await AuthUtil.login(user);
+        sessionStorage.setItem('userState', JSON.stringify(authUser));
+        commit(types.AUTH_SUCCESS, authUser);
       } catch (error) {
         commit('auth_error');
-        sessionStorage.clear();
-        sessionStorage.removeItem('token');
         alert(`Incorrect credentials. Try again?`);
         console.log(error.message);
       }
     },
-    async register({ commit }, user) {
+    register: async ({ commit }, user) => {
       try {
-        commit('auth_request');
-        const authUser = await ApiUtil.signUp(user);
-        const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
-        const stateData = { token: token, user: authUser };
-        sessionStorage.setItem("token", token);
-        // axios.defaults.headers.common["Authorization"] = token;
-        commit('auth_success', stateData);
+        const authUser = await AuthUtil.signUp(user);
+        sessionStorage.setItem('userState', JSON.stringify(authUser));
+        commit(types.AUTH_SUCCESS, authUser);
       } catch (error) {
         commit('auth_error');
-        sessionStorage.clear();
-        sessionStorage.removeItem('token');
         alert(`There was a problem registering your account.`);
         console.log(error.message);
       }
     },
-    logout({ commit }) {
-      commit('logout');
-      sessionStorage.clear();
-      // delete axios.defaults.headers.common["Authorization"];
+    logout: ({ commit }) => {
+      sessionStorage.removeItem('userState');
+      sessionStorage.removeItem('politicianState');
+      commit(types.LOGOUT);
     },
-    changeCampaignPending({ commit }) {
-      commit('campaignPendingMutation');
+    changeCampaignPending: ({ commit }) => {
+      commit(types.SET_CAMPAIGN_PENDING);
     },
   },
   getters: {
-    isLoggedIn: (state) => !!state.token,
+    isLoggedIn: (state) => state.status.loggedIn,
     authStatus: (state) => state.status,
     username: (state) => state.user.username,
     password: (state) => state.user.password,

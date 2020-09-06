@@ -1,80 +1,11 @@
 import axios from 'axios';
 import * as Config from '../config.json';
+
 axios.defaults.baseURL = Config.API_URL;
 axios.defaults.auth = Config.API_AUTH;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export class ApiUtil {
-  static async login(user) {
-    if (!user) {
-      return;
-    }
-
-    const payload = { username: user.username, password: user.password };
-    const loginPromise = axios.post('/login/', payload);
-    const login = await loginPromise;
-    const {
-      id,
-      username,
-      email,
-      password,
-      approved,
-      first_name,
-      last_name,
-      politician_id,
-      is_mod,
-    } = login.data;
-
-    return {
-      id: id,
-      username: username,
-      password: password,
-      email: email,
-      first_name: first_name,
-      last_name: last_name,
-      approved: approved,
-      isMod: login.status === 204 ? false : is_mod,
-      politician_id: politician_id,
-      campaignPending: user.campaignPending,
-    };
-  }
-
-  static async signUp(user) {
-    if (!user) {
-      return;
-    }
-
-    const payload = { 
-      username: user.username, 
-      email: user.email,
-      password: user.password,
-      first_name: user.first_name,
-      last_name: user.last_name,
-    };
-
-    const signUpPromise = axios.post('/login/', payload);
-    const signUp = await signUpPromise;
-
-    const {
-      id,
-      username,
-      email,
-      password,
-      first_name,
-      last_name,
-    } = signUp.data;
-
-    return {
-      id: id,
-      username: username,
-      password: password,
-      email: email,
-      first_name: first_name,
-      last_name: last_name,
-      campaignPending: user.campaignPending,
-    };
-  }
-
   static async getPolicies() {
     const policiesPromise = axios.get('/policies/');
     const policies = await policiesPromise;
@@ -192,8 +123,10 @@ export class ApiUtil {
     return await axios.post(`/stance/`, data);
   }
 
-  static async getStance(data) {
-    return await axios.get(`/stance/?politician_id=${data}`);
+  static async getAllStances(data) {
+    const getAllStancesPromise = axios.get(`/stance/?politician_id=${data}`);
+    const allStances = await getAllStancesPromise;
+    return allStances.data;
   }
 
   static async getModifiedPolitician(req) {
@@ -206,13 +139,12 @@ export class ApiUtil {
 
     try {
       const politician = await ApiUtil.getSelectedPolitician(user.politician_id);
-      const stance = await ApiUtil.getStance(user.politician_id);
+      const allPoliticianStances = await ApiUtil.getAllStances(user.politician_id);
       const campaign = await ApiUtil.getCampaign(user.politician_id);
-      const allPoliticianStances = stance.data;
       return {
         id: politician.id,
-        firstName: politician.first,
-        lastName: politician.last,
+        first: politician.first,
+        last: politician.last,
         state: politician.state,
         actblue: campaign.actblue,
         fundraiseGoal: campaign.fundraise_goal,

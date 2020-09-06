@@ -142,8 +142,12 @@ export default {
     async handleLike(id) {
       // prevent hard spamming likes for now
       if (!this.liked) {
-        this.likes = await ApiUtil.commentLike(id);
-        this.liked = true;
+        try {
+          this.likes = await ApiUtil.commentLike(id);
+          this.liked = true;
+        } catch (error) {
+          alert(error);
+        }
       }
     },
   },

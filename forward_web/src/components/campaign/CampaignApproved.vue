@@ -4,7 +4,7 @@
       <h2 class="campaign-details__title">My Campaign</h2>
       <div class="campaign-details__description-block">
         <p class=" campaign-details__politician-name campaign-details--bold">
-          {{ politician.firstName }} {{ politician.lastName }}
+          {{ politician.first }} {{ politician.last }}
         </p>
         <p class="campaign-details__position">
           Running for: {{ politician.position }}
@@ -108,14 +108,15 @@ export default {
     async handleUpdate() {
       try {
         this.isUpdated = false;
-        const user = this.$store.getters.getUserInfo;
         const updated = await ApiUtil.putCampaign({
           politician_id: this.politician.id,
           actblue: this.politician.actblue,
           fundraise_goal: this.politician.fundraiseGoal,
         });
-        this.politician.actblue = updated.actblue;
-        this.politician.fundraiseGoal = updated.fundraise_goal;
+        await this.$store.dispatch('updateCampaign', {
+          actblue: updated.actblue,
+          fundraiseGoal: updated.fundraise_goal,
+        });
         this.isSuccess = true;
         setTimeout(() => {
           this.isSuccess = false;

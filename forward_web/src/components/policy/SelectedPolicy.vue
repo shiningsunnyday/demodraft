@@ -90,8 +90,14 @@ export default {
 
     // test this on mounted()
     const user = this.$store.getters.getUserInfo;
+    const modifiedPolitician = this.$store.getters.getPolitician;
     if (user.approved) {
-      this.politician = await ApiUtil.getModifiedPolitician({ user });
+      if (modifiedPolitician.id) {
+        this.politician = modifiedPolitician;
+      } else {
+        await this.$store.dispatch('setPolitician', user);
+        this.politician = this.$store.getters.getPolitician;
+      }
       const endorsedPolicies = this.politician.endorsed;
 
       for (const endorsement of endorsedPolicies) {

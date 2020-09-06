@@ -37,18 +37,18 @@ export default {
       user: this.$store.getters.getUserInfo,
     };
   },
-  async created() {
-    // TODO - store score in vuex state during login
-    try {
-      this.score = await ApiUtil.getUserScore({ 
-        user_id: this.user.id, 
-        username: this.user.username,
-        password: this.user.password
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  },
+  // async created() {
+  //   // TODO - store score in vuex state during login
+  //   try {
+  //     this.score = await ApiUtil.getUserScore({ 
+  //       user_id: this.user.id, 
+  //       username: this.user.username,
+  //       password: this.user.password
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // },
   computed: {
     isPolitician() {
       return this.user.approved;
