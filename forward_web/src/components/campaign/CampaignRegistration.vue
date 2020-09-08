@@ -134,8 +134,8 @@ export default {
 
       this.isLaunching = true;
       try {
-        await simulateApiCall();
-        //await ApiUtil.submitCampaign(data);
+        //await simulateApiCall();
+        await ApiUtil.submitCampaign(data);
         await this.updatePendingCampaign();
         await this.displayConfirmationModal();
         return this.$emit('completeAllSteps', true);
