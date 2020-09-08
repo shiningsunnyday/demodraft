@@ -15,13 +15,13 @@
       :campaignProgress="campaignProgress"
     />
 
-    <CampaignDetails v-if="isCampaignLaunched" />
+    <CampaignApplied v-if="isCampaignLaunched" />
   </b-container>
 </template>
 
 <script>
 import CampaignRegistration from '@/components/campaign/CampaignRegistration';
-import CampaignDetails from '@/components/campaign/CampaignDetails';
+import CampaignApplied from '@/components/campaign/CampaignApplied';
 import CampaignProgressBar from '@/components/campaign/CampaignProgressBar';
 import * as Config from '@/config.json';
 import { ApiUtil } from '../_utils/api-utils';
@@ -30,7 +30,7 @@ export default {
   name: 'CampaignPage',
   components: {
     CampaignRegistration,
-    CampaignDetails,
+    CampaignApplied,
     CampaignProgressBar
   },
   data() {

@@ -109,6 +109,9 @@ export default {
         params: { id: this.politician.id },
       });
     },
+    /////
+    /// Campaign update methods
+    //
     async handleUpdateCampaign() {
       this.isUpdating = true;
       try {

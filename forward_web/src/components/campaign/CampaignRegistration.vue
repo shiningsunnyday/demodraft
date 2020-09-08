@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import CampaignAddressSearch from './CampaignAddressSearch';
-import CampaignPositions from './CampaignPositions';
-import CampaignInformation from './CampaignInformation';
+import CampaignAddressSearch from './registration/CampaignAddressSearch';
+import CampaignPositions from './registration/CampaignPositions';
+import CampaignInformation from './registration/CampaignInformation';
 import { ApiUtil } from '@/_utils/api-utils';
 import { simulateApiCall } from '@/_utils/common-utils.js';
 
@@ -134,8 +134,8 @@ export default {
 
       this.isLaunching = true;
       try {
-        //await simulateApiCall();
-        await ApiUtil.submitCampaign(data);
+        await simulateApiCall();
+        //await ApiUtil.submitCampaign(data);
         await this.updatePendingCampaign();
         await this.displayConfirmationModal();
         return this.$emit('completeAllSteps', true);
