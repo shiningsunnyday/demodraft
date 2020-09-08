@@ -54,6 +54,11 @@ export default {
       isLoading: false,
     };
   },
+  created() {
+    if (this.$store.getters.isLoggedIn) {
+      this.$router.push('/policies');
+    }
+  },
   methods: {
     async handleSubmit() {
       const { username, email, password, campaignPending } = this.user;

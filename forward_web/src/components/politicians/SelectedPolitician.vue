@@ -9,13 +9,11 @@
       <h1>{{ politician.first }} {{ politician.last }}</h1>
 
       <div class="selected-politician__img-wrapper">
-        <img
-          src="@/_assets/politician-placeholder.jpg"
-        />
+        <img src="@/_assets/politician-placeholder.jpg" />
       </div>
 
       <div class="selected-politician__description">
-        <p>Running for {{ politician.name }}</p>
+        <p>Running for {{ politician.position }}</p>
 
         <p v-if="politician.actblue" class="selected-politician__actblue-link">
           <a
@@ -53,7 +51,7 @@
     </div>
     <hr />
     <div class="selected-politician__comments">
-      <CommentList2 :politicianId="politician.id"></CommentList2>
+      <Comments :commentFormId="politician.id" :commentSection="'politician'" />
     </div>
   </b-container>
 </template>
@@ -61,12 +59,12 @@
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
 import { BIconPersonPlus } from 'bootstrap-vue';
-import CommentList2 from '@/components/comments/CommentList2';
+import Comments from '@/components/comments/Comments';
 
 export default {
   name: 'SelectedPolitician',
   components: {
-    CommentList2,
+    Comments,
     BIconPersonPlus,
   },
   data() {
@@ -78,12 +76,17 @@ export default {
     };
   },
   async created() {
-    this.politician = await ApiUtil.getSelectedPolitician(
-      this.$route.params.id
-    );
-
-    const stanceResponse = await ApiUtil.getStance(this.politician.id);
-    this.stances = stanceResponse.data;
+    const user = this.$store.getters.userState;
+    const modifiedPolitician = this.$store.getters.getPolitician;
+    const politicianId = Number(this.$route.params.id);
+    if (user.approved && modifiedPolitician.id === politicianId) {
+      this.politician = modifiedPolitician;
+      this.stances = this.politician.endorsed;
+    } else {
+      this.politician = await ApiUtil.getSelectedPolitician(politicianId);
+      this.politician.position = this.politician.name;
+      this.stances = await ApiUtil.getAllStances(this.politician.id);
+    }
 
     if (this.stances.length > 0) {
       const policySet = new Set();
@@ -153,8 +156,9 @@ export default {
     }
   }
 
-  &__comments{
+  &__comments {
     width: 100%;
+    text-align: center;
   }
 
   &__actblue-link {

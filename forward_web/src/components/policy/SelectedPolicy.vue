@@ -37,13 +37,16 @@
 
     <hr />
 
-    <CommentList :policyId="policy.id"></CommentList>
+    <Comments 
+      :commentFormId="policy.id"
+      :commentSection="'policy'" 
+    />
+    
   </b-container>
 </template>
 
 <script>
-import CommentList from '@/components/comments/CommentList';
-import CommentForm from '@/components/comments/CommentForm';
+import Comments from '@/components/comments/Comments';
 import PolicyEndorseButton from '@/components/policy/PolicyEndorseButton';
 import { ApiUtil } from '@/_utils/api-utils';
 import { splitDescription } from '@/_utils/common-utils.js';
@@ -52,8 +55,7 @@ import { BIconHandThumbsUp } from 'bootstrap-vue';
 export default {
   name: 'selected-policy',
   components: {
-    CommentList,
-    CommentForm,
+    Comments,
     PolicyEndorseButton,
     BIconHandThumbsUp,
   },
@@ -87,9 +89,15 @@ export default {
     this.description = splitDescription(this.policy.description);
 
     // test this on mounted()
-    const user = this.$store.getters.getUserInfo;
+    const user = this.$store.getters.userState;
+    const modifiedPolitician = this.$store.getters.getPolitician;
     if (user.approved) {
-      this.politician = await ApiUtil.getModifiedPolitician({ user });
+      if (modifiedPolitician.id) {
+        this.politician = modifiedPolitician;
+      } else {
+        await this.$store.dispatch('setPolitician', user);
+        this.politician = this.$store.getters.getPolitician;
+      }
       const endorsedPolicies = this.politician.endorsed;
 
       for (const endorsement of endorsedPolicies) {
