@@ -57,7 +57,7 @@ export const userStore = {
     },
     logout: ({ commit }) => {
       sessionStorage.removeItem('userState');
-      sessionStorage.removeItem('politicianState');
+      sessionStorage.removeItem('pol_store');
       commit(types.LOGOUT);
     },
     changeCampaignPending: ({ commit }) => {

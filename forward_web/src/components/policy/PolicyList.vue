@@ -21,7 +21,8 @@
           <h3>
             {{ category.name.charAt(0).toUpperCase() + category.name.slice(1)}}
           </h3>
-          <b-button
+          <b-button 
+            v-if="category.policies.length > 3"
             @click="handleSeeMore(category.name)"
             class="policy-list__see-more"
             variant="link"
@@ -86,34 +87,13 @@ export default {
       const groups = {};
       this.filteredPolicies.forEach((policy) => {
         const id = policy.category;
-        let key;
-        
-        // temp hard coded order 
-        switch(id) {
-        case 0: 
-          key = 3;
-          break;
-        case 1: 
-          key = 0;
-          break;
-        case 3: 
-          key = 4;
-          break;
-        case 7: 
-          key = 1;
-          break;
-        case 9: 
-          key = 2;
-          break;
-        }
-        
-        if (!groups[key]) {
-          groups[key] = {
+        if (!groups[id]) {
+          groups[id] = {
             name: policy.categoryName,
             policies: [policy],
           };
         } else {
-          groups[key].policies.push(policy);
+          groups[id].policies.push(policy);
         }
       });
       return groups;

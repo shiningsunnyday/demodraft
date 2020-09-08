@@ -21,7 +21,6 @@ export class AuthUtil {
     const {
       id,
       username,
-      email,
       password,
       approved,
       first_name,
@@ -34,7 +33,6 @@ export class AuthUtil {
       id: id,
       username: username,
       password: password,
-      email: email,
       first_name: first_name,
       last_name: last_name,
       approved: approved ? approved : undefined,
