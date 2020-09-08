@@ -40,7 +40,7 @@ export default {
       // username,
       // password,
       campaignPending,
-    } = this.$store.getters.getUserInfo;
+    } = this.$store.getters.userState;
 
     // re-logs in to update campaign status (don't know if want)
     // await this.$store.dispatch('login', {
@@ -49,7 +49,7 @@ export default {
     //   campaignPending,
     // });
 
-    const user = this.$store.getters.getUserInfo;
+    const user = this.$store.getters.userState;
     const modifiedPolitician = this.$store.getters.getPolitician;
 
     if (user.approved) {

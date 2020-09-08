@@ -40,7 +40,7 @@ export default {
     };
   },
   created() {
-    const currentUser = this.$store.getters.getUserInfo;
+    const currentUser = this.$store.getters.userState;
     if (
       typeof currentUser.approved !== 'undefined' ||
       currentUser.campaignPending

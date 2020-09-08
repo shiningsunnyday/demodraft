@@ -28,13 +28,23 @@
             {{ politician.actblue }}
           </a>
         </p>
-        <p><span class="campaign-details--bold">Goal: </span>${{ politician.fundraiseGoal }}</p>
-        <p><span class="campaign-details--bold">Funds Raised: </span>{{ politician.fundraised }}</p>
+        <p>
+          <span class="campaign-details--bold">Goal: </span>${{
+            politician.fundraiseGoal
+          }}
+        </p>
+        <p>
+          <span class="campaign-details--bold">Funds Raised: </span
+          >{{ politician.fundraised }}
+        </p>
       </div>
       <hr />
-      <b-form @submit.prevent="handleUpdateCampaign" class="campaign-details__form">
-        <b-form-group 
-          label="Actblue" 
+      <b-form
+        @submit.prevent="handleUpdateCampaign"
+        class="campaign-details__form"
+      >
+        <b-form-group
+          label="Actblue"
           label-for="mycampaign-actblue"
           description="Input your actblue donation link"
         >
@@ -46,19 +56,11 @@
             required
           />
         </b-form-group>
-        <b-form-group 
-          label="Fundraise Goal" 
+        <b-form-group
+          label="Fundraise Goal"
           label-for="mycampaign-fundraise"
           description="To be FEC compliant, max goal is $5000"
         >
-          <!-- <b-form-input
-            id="mycampaign-fundraise-range"
-            v-model="politician.fundraiseGoal"
-            type="range"
-            min="0"
-            max="5000"
-            required
-          /> -->
           <b-input-group prepend="$" append=".00">
             <b-form-input
               id="mycampaign-fundraise-input"
@@ -70,6 +72,8 @@
             />
           </b-input-group>
         </b-form-group>
+
+        <!-- Update Button Views -->
         <div v-if="!isSuccess">
           <b-button v-if="!isUpdating" type="submit">Update</b-button>
           <b-button v-else disabled>
@@ -135,7 +139,7 @@ export default {
       setTimeout(() => {
         this.isSuccess = false;
       }, 1000);
-    }
+    },
   },
 };
 </script>

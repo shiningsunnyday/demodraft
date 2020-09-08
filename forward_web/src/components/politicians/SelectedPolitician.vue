@@ -76,7 +76,7 @@ export default {
     };
   },
   async created() {
-    const user = this.$store.getters.getUserInfo;
+    const user = this.$store.getters.userState;
     const modifiedPolitician = this.$store.getters.getPolitician;
     const politicianId = Number(this.$route.params.id);
     if (user.approved && modifiedPolitician.id === politicianId) {

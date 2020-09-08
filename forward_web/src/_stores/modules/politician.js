@@ -24,11 +24,13 @@ export const politicianStore = {
     },
     updateCampaign: async ({ commit, getters }, req) => {
       commit(types.UPDATE_CAMPAIGN, req);
-      sessionStorage.setItem('pol_store', JSON.stringify(getters.getPolitician));
+      const updatedState = JSON.stringify(getters.getPolitician);
+      sessionStorage.setItem('pol_store', updatedState);
     },
     updateEndorsed: async ({ commit, getters }, req) => {
       commit(types.UPDATE_ENDORSED, req);
-      sessionStorage.setItem('pol_store', JSON.stringify(getters.getPolitician));
+      const updatedState = JSON.stringify(getters.getPolitician);
+      sessionStorage.setItem('pol_store', updatedState);
     }
   },
   getters: {

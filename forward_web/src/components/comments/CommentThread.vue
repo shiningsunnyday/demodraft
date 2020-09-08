@@ -92,7 +92,7 @@ export default {
       const thread = await ApiUtil.getThreadFromComment(this.comment.thread_id);
       this.cardProps.threadId = this.comment.thread_id;
       this.cardProps.hasReplies = thread.replies.length > 0;
-      this.cardProps.isMod = this.$store.getters.getUserInfo.isMod;
+      this.cardProps.isMod = this.$store.getters.userState.isMod;
       this.replies = thread.replies;
     } catch (error) {
       alert(error);
