@@ -48,3 +48,33 @@ class Campaign(models.Model):
 
     class Meta:
         ordering = ['created']
+
+class Plan(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    lead_step_id = models.IntegerField(default=0)
+    poltician = models.OneToOneField(
+        Politician, 
+        on_delete=models.CASCADE, 
+        default=None
+    )
+    country = models.CharField(max_length=100, default="")
+    state = models.CharField(max_length=100, default="")
+    city = models.CharField(max_length=100, default="")
+    county = models.CharField(max_length=100, default="")
+
+    class Meta:
+        ordering = ['created']
+
+
+class Step(models.model):
+    created = models.DateTimeField(auto_now_add=True)
+    plan = models.ForeignKey(
+        Plan, 
+        on_delete=models.CASCADE
+    )
+    next_step_id = models.IntegerField(default=0)
+    description = models.CharField(max_length=200, default="")
+
+    class Meta:
+        ordering = ['created']
+

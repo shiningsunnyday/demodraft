@@ -72,6 +72,7 @@ class ThreadV(APIView, Meta):
     def post(self, request):
         # Effectively switch statement for allowed sets of POST body keys, otherwise return 400
         if set(request.data.keys()) == {"policy_id", "username", "content"}:
+            # POST thread with associated policy_id
             sz = FirstCommentSerializer(data=request.data)
             if sz.is_valid(raise_exception=True):
                 policy = Policy.objects.get(id=request.data["policy_id"])
@@ -101,6 +102,7 @@ class ThreadV(APIView, Meta):
                 return Response("You've deleted the thread.", status=status.HTTP_204_NO_CONTENT)
             return Response("You are not authorized to delete threads.", status=status.HTTP_400_BAD_REQUEST)
         elif set(request.data.keys()) == {"politician_id", "username", "content"}:
+            # POST thread with associated politician_id
             sz = FirstPolCommentSerializer(data=request.data)
             if sz.is_valid(raise_exception=True):
                 pol = Politician.objects.get(id=request.data["politician_id"])
@@ -114,6 +116,7 @@ class ThreadV(APIView, Meta):
                 comment.save()
                 return Response(status=status.HTTP_202_ACCEPTED)
         else:
+            # return 400 error 
             return Response("Please provide policy_id, username, and content.", status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -177,6 +180,7 @@ class CommentV(APIView, Meta):
 
     def post(self, request):
         if set(request.data.keys()) == {"thread_id", "username", "content"}:
+            # POST comment to assoicated thread_id
             sz = NextCommentSerializer(data=request.data)
             if sz.is_valid(raise_exception=True):
                 comments = CommentV.append_to_thread(**request.data)
@@ -188,6 +192,7 @@ class CommentV(APIView, Meta):
             ret_400 = Response("You are not authorized to delete comments.", status=status.HTTP_400_BAD_REQUEST)
             return ret_204 if CommentV.delete_comment(**request.data) else ret_400
         else:
+            # return 400 error
             return Response("Please provide thread_id, username, and content.", status=status.HTTP_400_BAD_REQUEST)
 
     @staticmethod
@@ -219,6 +224,7 @@ class CommentV(APIView, Meta):
             return Response("Please provide comment_id, and updated content.", status=status.HTTP_400_BAD_REQUEST)
         sz = UpdatedCommentSerializer(data=request.data)
         if sz.is_valid(raise_exception=True):
+            # Update comment associated with valid comment_id
             comment = Comment.objects.get(id=request.data["comment_id"])
             comment.content = request.data["content"]
             comment.save()

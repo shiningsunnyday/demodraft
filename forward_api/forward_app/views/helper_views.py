@@ -15,6 +15,7 @@ class Address(APIView, Meta):
         return filtered.exists()
 
     def get(self, request):
+        # GET address based on username else return 400 error
         if set(request.GET.keys()) != {"username"}:
             return Response("Please provide username.", status=status.HTTP_400_BAD_REQUEST)
         if Address.user_exists(username=request.GET["username"]):
@@ -25,6 +26,7 @@ class Address(APIView, Meta):
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
+        # POST address for valid username and password
         if set(request.data.keys()) != {"username", "password", "address"}:
             return Response("Please provide username and address.", status=status.HTTP_400_BAD_REQUEST)
         user_creds = {"username": request.data["username"], "password": request.data["password"]}
@@ -45,6 +47,7 @@ class Address(APIView, Meta):
 
 class PoliticianV(APIView, Meta):
     def post(self, request):
+        # 
         if set(request.data.keys()) != {"username", "scope", "index"}:
             return Response("Please provide username, one of local/state/country and index.",
                             status=status.HTTP_400_BAD_REQUEST)
