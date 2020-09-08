@@ -28,13 +28,23 @@
             {{ politician.actblue }}
           </a>
         </p>
-        <p><span class="campaign-details--bold">Goal: </span>${{ politician.fundraiseGoal }}</p>
-        <p><span class="campaign-details--bold">Funds Raised: </span>{{ politician.fundraised }}</p>
+        <p>
+          <span class="campaign-details--bold">Goal: </span>${{
+            politician.fundraiseGoal
+          }}
+        </p>
+        <p>
+          <span class="campaign-details--bold">Funds Raised: </span
+          >{{ politician.fundraised }}
+        </p>
       </div>
       <hr />
-      <b-form @submit.prevent="handleUpdate" class="campaign-details__form">
-        <b-form-group 
-          label="Actblue" 
+      <b-form
+        @submit.prevent="handleUpdateCampaign"
+        class="campaign-details__form"
+      >
+        <b-form-group
+          label="Actblue"
           label-for="mycampaign-actblue"
           description="Input your actblue donation link"
         >
@@ -46,19 +56,11 @@
             required
           />
         </b-form-group>
-        <b-form-group 
-          label="Fundraise Goal" 
+        <b-form-group
+          label="Fundraise Goal"
           label-for="mycampaign-fundraise"
           description="To be FEC compliant, max goal is $5000"
         >
-          <!-- <b-form-input
-            id="mycampaign-fundraise-range"
-            v-model="politician.fundraiseGoal"
-            type="range"
-            min="0"
-            max="5000"
-            required
-          /> -->
           <b-input-group prepend="$" append=".00">
             <b-form-input
               id="mycampaign-fundraise-input"
@@ -70,8 +72,10 @@
             />
           </b-input-group>
         </b-form-group>
+
+        <!-- Update Button Views -->
         <div v-if="!isSuccess">
-          <b-button v-if="isUpdated" type="submit">Update</b-button>
+          <b-button v-if="!isUpdating" type="submit">Update</b-button>
           <b-button v-else disabled>
             <b-spinner small label="Spinning"></b-spinner>
             Updating...
@@ -94,7 +98,7 @@ export default {
   data() {
     return {
       isApproved: false,
-      isUpdated: true,
+      isUpdating: false,
       isSuccess: false,
     };
   },
@@ -105,27 +109,39 @@ export default {
         params: { id: this.politician.id },
       });
     },
-    async handleUpdate() {
+    /////
+    /// Campaign update methods
+    //
+    async handleUpdateCampaign() {
+      this.isUpdating = true;
       try {
-        this.isUpdated = false;
-        const updated = await ApiUtil.putCampaign({
-          politician_id: this.politician.id,
-          actblue: this.politician.actblue,
-          fundraise_goal: this.politician.fundraiseGoal,
-        });
-        await this.$store.dispatch('updateCampaign', {
-          actblue: updated.actblue,
-          fundraiseGoal: updated.fundraise_goal,
-        });
-        this.isSuccess = true;
-        setTimeout(() => {
-          this.isSuccess = false;
-        }, 1000);
+        const updatedCampaign = await this.updateCampaign();
+        await this.updatePoliticianStore(updatedCampaign);
+        this.handleSuccessDelay();
       } catch (error) {
         alert(error);
         console.error('error on updating campaign');
       }
-      this.isUpdated = true;
+      this.isUpdating = false;
+    },
+    updateCampaign() {
+      return ApiUtil.putCampaign({
+        politician_id: this.politician.id,
+        actblue: this.politician.actblue,
+        fundraise_goal: this.politician.fundraiseGoal,
+      });
+    },
+    updatePoliticianStore(updatedCampaign) {
+      this.$store.dispatch('updateCampaign', {
+        actblue: updatedCampaign.actblue,
+        fundraiseGoal: updatedCampaign.fundraise_goal,
+      });
+    },
+    handleSuccessDelay() {
+      this.isSuccess = true;
+      setTimeout(() => {
+        this.isSuccess = false;
+      }, 1000);
     },
   },
 };

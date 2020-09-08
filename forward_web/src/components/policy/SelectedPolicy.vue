@@ -89,7 +89,7 @@ export default {
     this.description = splitDescription(this.policy.description);
 
     // test this on mounted()
-    const user = this.$store.getters.getUserInfo;
+    const user = this.$store.getters.userState;
     const modifiedPolitician = this.$store.getters.getPolitician;
     if (user.approved) {
       if (modifiedPolitician.id) {

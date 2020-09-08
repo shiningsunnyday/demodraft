@@ -20,7 +20,7 @@
         :positions="positions"
       />
 
-      <CampaignInformation 
+      <CampaignInformation
         v-show="campaignProgress === 2"
         @handleBack="$emit('pushStepTwo')"
         @handleSubmitCampaign="handleSubmitCampaign"
@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import CampaignAddressSearch from './CampaignAddressSearch';
-import CampaignPositions from './CampaignPositions';
-import CampaignInformation from './CampaignInformation';
+import CampaignAddressSearch from './registration/CampaignAddressSearch';
+import CampaignPositions from './registration/CampaignPositions';
+import CampaignInformation from './registration/CampaignInformation';
 import { ApiUtil } from '@/_utils/api-utils';
 import { simulateApiCall } from '@/_utils/common-utils.js';
 
@@ -43,7 +43,7 @@ export default {
   components: {
     CampaignAddressSearch,
     CampaignPositions,
-    CampaignInformation
+    CampaignInformation,
   },
   props: {
     campaignProgress: Number,
@@ -61,17 +61,22 @@ export default {
     description() {
       if (this.campaignProgress === 0) {
         const descriptor = {
-          first: 'Ready to test the waters of a potential candidacy by launching a mock campaign on Demodraft?',
-          second: 'First, input your address to see the positions at every level of government that represent your area.',
-          third: '* Disclaimer: This feature is for registering your campaign to appear on Demodraft. Demodraft does not officially register you with the Federal Election Commission.',
+          first:
+            'Ready to test the waters of a potential candidacy by launching a mock campaign on Demodraft?',
+          second:
+            'First, input your address to see the positions at every level of government that represent your area.',
+          third:
+            '* Disclaimer: This feature is for registering your campaign to appear on Demodraft. Demodraft does not officially register you with the Federal Election Commission.',
         };
         return descriptor;
       }
 
       if (this.campaignProgress === 1) {
         const descriptor = {
-          first: 'Here are the available offices we found that you can run your campaign in.',
-          second: 'Select a position you would like to launch your campaign for.'
+          first:
+            'Here are the available offices we found that you can run your campaign in.',
+          second:
+            'Select a position you would like to launch your campaign for.',
         };
         return descriptor;
       }
@@ -79,68 +84,81 @@ export default {
       const position = this.selectedPosition.name;
       if (position) {
         const descriptor = {
-          first: `Whenever you're ready, click the large blue button to launch your campaign for ${position}!`
+          first: `Whenever you're ready, click the large blue button to launch your campaign for ${position}!`,
         };
         return descriptor;
       }
-    }
+    },
   },
   methods: {
+    /////
+    /// Step 1 Methods
+    //
     async handleSearch(address) {
       try {
         this.isSearching = true;
-        this.civicData = await ApiUtil.postAddress({
-          username: this.$store.getters.username,
-          password: this.$store.getters.password,
-          address: address,
-        });
-        this.positions = {
-          local: this.civicData.local,
-          state: this.civicData.state,
-          country: this.civicData.country,
-        };
+        this.civicData = await this.getCivicDataFromAddress(address);
+        this.positions = this.setPositionDisplayOrder(this.civicData);
         this.$emit('pushStepTwo');
       } catch (error) {
         alert(`Oops, we couldn't find positions for that address!`);
       }
       this.isSearching = false;
     },
+    getCivicDataFromAddress(address) {
+      return ApiUtil.postAddress({
+        username: this.$store.getters.username,
+        password: this.$store.getters.password,
+        address: address,
+      });
+    },
+    setPositionDisplayOrder({ local, state, country }) {
+      return { local, state, country };
+    },
+    /////
+    /// Step 2 Methods
+    //
     handlePositionSelected(selectedPosition) {
       this.selectedPosition = selectedPosition;
       this.$emit('pushStepThree');
     },
+    /////
+    /// Step 3 Methods
+    //
     async handleSubmitCampaign() {
-      const { username, campaignPending } = this.$store.getters.getUserInfo;
       const data = {
-        username: username,
+        username: this.$store.getters.username,
         scope: this.selectedPosition.scope,
         index: this.selectedPosition.index,
       };
 
-      if (data.scope) {
-        try {
-          this.isLaunching = true;
-          // await simulateApiCall();
-          const response = await ApiUtil.submitCampaign(data);
-          const modalMessage = `Thank you for submitting a request to launch your campaign! You will be notified when your application is accepted.`;
-          await this.$bvModal.msgBoxOk(modalMessage, {
-            title: 'Confirmation',
-            size: 'sm',
-            buttonSize: 'sm',
-            okVariant: 'success',
-            headerClass: 'p-2 border-bottom-0',
-            footerClass: 'p-2 border-top-0',
-            centered: true,
-          });
-          this.$store.dispatch('changeCampaignPending');
-        } catch (error) {
-          alert(`Oops, something went wrong.`);
-        }
-        this.isLaunching = false;
+      this.isLaunching = true;
+      try {
+        //await simulateApiCall();
+        await ApiUtil.submitCampaign(data);
+        await this.updatePendingCampaign();
+        await this.displayConfirmationModal();
         return this.$emit('completeAllSteps', true);
+      } catch (error) {
+        alert(`Oops, something went wrong launching your campaign.`);
       }
-      return alert('Choose a position for your campaign!');
+      this.isLaunching = false;
     },
+    displayConfirmationModal() {
+      const modalMessage = `Thank you for submitting a request to launch your campaign! You will be notified when your application is accepted.`;
+      return this.$bvModal.msgBoxOk(modalMessage, {
+        title: 'Confirmation',
+        size: 'sm',
+        buttonSize: 'sm',
+        okVariant: 'success',
+        headerClass: 'p-2 border-bottom-0',
+        footerClass: 'p-2 border-top-0',
+        centered: true,
+      });
+    },
+    updatePendingCampaign() {
+      this.$store.dispatch('changeCampaignPending');
+    }
   },
 };
 </script>
@@ -155,7 +173,7 @@ export default {
       font-weight: bold;
       font-size: 1.3rem;
     }
-    
+
     :nth-child(3) {
       font-style: italic;
     }

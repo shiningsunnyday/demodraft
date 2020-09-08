@@ -1,7 +1,7 @@
 import * as types from '@/_stores/mutation-types';
 import { ApiUtil } from '@/_utils/api-utils.js';
 
-const politician = JSON.parse(sessionStorage.getItem('politicianState'));
+const politician = JSON.parse(sessionStorage.getItem('pol_store'));
 export const politicianStore = {
   state: politician ? { politician } : { politician: {} },
   mutations: {
@@ -19,16 +19,18 @@ export const politicianStore = {
   actions: {
     setPolitician: async ({ commit }, user) => {
       const politician = await ApiUtil.getModifiedPolitician({ user });
-      sessionStorage.setItem('politicianState', JSON.stringify(politician));
+      sessionStorage.setItem('pol_store', JSON.stringify(politician));
       commit(types.SET_POLITICIAN, politician);
     },
     updateCampaign: async ({ commit, getters }, req) => {
       commit(types.UPDATE_CAMPAIGN, req);
-      sessionStorage.setItem('politicianState', JSON.stringify(getters.getPolitician));
+      const updatedState = JSON.stringify(getters.getPolitician);
+      sessionStorage.setItem('pol_store', updatedState);
     },
     updateEndorsed: async ({ commit, getters }, req) => {
       commit(types.UPDATE_ENDORSED, req);
-      sessionStorage.setItem('politicianState', JSON.stringify(getters.getPolitician));
+      const updatedState = JSON.stringify(getters.getPolitician);
+      sessionStorage.setItem('pol_store', updatedState);
     }
   },
   getters: {

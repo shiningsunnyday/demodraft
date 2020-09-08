@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       score: 0,
-      user: this.$store.getters.getUserInfo,
+      user: this.$store.getters.userState,
     };
   },
   // async created() {
