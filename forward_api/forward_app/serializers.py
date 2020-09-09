@@ -54,6 +54,19 @@ class PoliticianSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'state', 'username', 'first', 'last', 'approved']
 
 
+class PlanSerializer(serializers.ModelSerializer):
+    address = serializers.SerializerMethodField("get_address")
+
+    def get_address(self, plan):
+        i = Plan.SCOPES.index(plan.scope)
+        pers = plan.politician.persona
+        return ", ".join([pers.city, pers.state, "US"][i:])
+
+    class Meta:
+        model = Plan
+        fields = ['id', 'lead_step_id', 'politician_id', 'address', 'scope']
+
+
 class CampaignSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField("office_name")
     first = serializers.SerializerMethodField("get_first")

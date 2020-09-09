@@ -49,24 +49,25 @@ class Campaign(models.Model):
     class Meta:
         ordering = ['created']
 
+
 class Plan(models.Model):
+    SCOPES = ['local', 'state', 'country']
+
     created = models.DateTimeField(auto_now_add=True)
     lead_step_id = models.IntegerField(default=0)
-    poltician = models.OneToOneField(
+    politician = models.OneToOneField(
         Politician, 
         on_delete=models.CASCADE, 
         default=None
     )
-    country = models.CharField(max_length=100, default="")
-    state = models.CharField(max_length=100, default="")
-    city = models.CharField(max_length=100, default="")
-    county = models.CharField(max_length=100, default="")
+    # https://docs.djangoproject.com/en/3.1/ref/models/fields/#django.db.models.Field.choices
+    scope = models.CharField(max_length=7, choices=[(s, s) for s in SCOPES])
 
     class Meta:
         ordering = ['created']
 
 
-class Step(models.model):
+class Step(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     plan = models.ForeignKey(
         Plan, 
