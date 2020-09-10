@@ -56,6 +56,17 @@ class PoliticianSerializer(serializers.ModelSerializer):
 
 class PlanSerializer(serializers.ModelSerializer):
     address = serializers.SerializerMethodField("get_address")
+    steps = serializers.SerializerMethodField("get_steps")
+
+    def get_steps(self, plan):
+        step = Step.objects.get(id=plan.lead_step_id)
+        next_step_id = step.next_step_id
+        steps = []
+        while next_step_id != step.id
+            steps.append(step.description)
+            step = Step.objects.get(id=step.next_step_id)
+            next_step_id = step.next_step_id
+        return steps
 
     def get_address(self, plan):
         i = Plan.SCOPES.index(plan.scope)
@@ -64,8 +75,7 @@ class PlanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Plan
-        fields = ['id', 'lead_step_id', 'politician_id', 'address', 'scope']
-
+        fields = ['id', 'lead_step_id', 'politician_id', 'address', 'scope', 'steps']
 
 class CampaignSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField("office_name")
