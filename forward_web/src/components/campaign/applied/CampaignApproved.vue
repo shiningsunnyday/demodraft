@@ -38,26 +38,31 @@
           >{{ politician.fundraised }}
         </p>
       </div>
+
       <hr />
+
       <b-form
         @submit.prevent="handleUpdateCampaign"
         class="campaign-details__form"
       >
         <b-form-group
-          label="Actblue"
+          label="Actblue:"
           label-for="mycampaign-actblue"
-          description="Input your actblue donation link"
+          description="A 'secure.actblue.com' URL is required"
         >
           <b-form-input
             id="mycampaign-actblue"
             label="Actblue"
-            v-model="politician.actblue"
+            v-model="$v.politician.actblue.$model"
             type="text"
             required
           />
+          <p class="error" v-if="!$v.politician.actblue.required">
+            this field is required
+          </p>
         </b-form-group>
         <b-form-group
-          label="Fundraise Goal"
+          label="Fundraise Goal:"
           label-for="mycampaign-fundraise"
           description="To be FEC compliant, max goal is $5000"
         >
@@ -89,6 +94,7 @@
 
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
+import { required } from 'vuelidate/lib/validators';
 
 export default {
   name: 'CampaignApproved',
@@ -101,6 +107,13 @@ export default {
       isUpdating: false,
       isSuccess: false,
     };
+  },
+  validations: {
+    politician: {
+      actblue: {
+        required,
+      },
+    },
   },
   methods: {
     handlePoliticianPage() {
