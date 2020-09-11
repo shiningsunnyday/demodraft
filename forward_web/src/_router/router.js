@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import { store } from '@/_stores/store';
 
 import NotFound from '@/views/404';
+import PoliticianPlan from '@/components/politicians/PoliticianPlan';
 
 Vue.use(VueRouter);
 
@@ -55,6 +56,15 @@ const routes = [
     meta: {
       requiresAuth: true,
       keepAlive: true,
+    },
+  },
+  {
+    path: '/politicians-plan/:id',
+    name: 'politician-plan',
+    component: PoliticianPlan,
+    props: true,
+    meta: {
+      requiresAuth: true,
     },
   },
   {
