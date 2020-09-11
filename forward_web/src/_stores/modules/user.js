@@ -39,7 +39,7 @@ export const userStore = {
         sessionStorage.setItem('user_store', JSON.stringify(authUser));
         commit(types.AUTH_SUCCESS, authUser);
       } catch (error) {
-        commit('auth_error');
+        commit(types.AUTH_ERROR);
         alert(`Incorrect credentials. Try again?`);
       }
     },
@@ -49,7 +49,7 @@ export const userStore = {
         sessionStorage.setItem('user_store', JSON.stringify(authUser));
         commit(types.AUTH_SUCCESS, authUser);
       } catch (error) {
-        commit('auth_error');
+        commit(types.AUTH_ERROR);
         alert(`There was a problem registering your account.`);
       }
     },
