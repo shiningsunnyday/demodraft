@@ -28,7 +28,7 @@
     </div>
 
     <div class="selected-politician__bottom">
-      <h3>Endorsed</h3>
+      <h3>Policies I Endorse</h3>
 
       <LoadingSpinner v-if="isLoading"></LoadingSpinner>
 
@@ -46,7 +46,7 @@
           {{ policy.name }}
         </b-button>
 
-        <p class="selected-politician__message">"{{ policy.message }}"</p>
+        <p class="selected-politician__message">"{{ policy.message }}" - {{ politician.first }} {{ politician.last }}</p>
       </div>
     </div>
     <hr />
