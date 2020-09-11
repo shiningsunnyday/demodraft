@@ -17,7 +17,12 @@
       />
     </div>
 
-    <PoliticianList :filteredPoliticians="filteredPoliticians" />
+    <LoadingSpinner v-if="isLoading">
+      "Overnight successes are generally years in the making. And most progress
+      is made in isolation, far from the public eye." - Andrew Yang
+    </LoadingSpinner>
+
+    <PoliticianList v-else :filteredPoliticians="filteredPoliticians" />
   </div>
 </template>
 
@@ -38,6 +43,7 @@ export default {
       filteredPoliticians: [], // holds the politicians currently rendered to browser
       options: [], // holds all the values that populate the filter list
       selectedValues: null, // holds the selected filtering options the user selects
+      isLoading: true,
     };
   },
   async created() {
@@ -52,6 +58,7 @@ export default {
     });
     // remove duplicate filtering options that populate the filtering lists
     this.options = [...new Set(tempPoliticiansArr)];
+    this.isLoading = false;
   },
   methods: {
     filterPoliticians() {
