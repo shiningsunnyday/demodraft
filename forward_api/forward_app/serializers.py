@@ -72,11 +72,12 @@ class PlanSerializer(serializers.ModelSerializer):
             steps.append(step.description)
             step = Step.objects.get(id=step.next_step_id)
             next_step_id = step.next_step_id
+        steps.append(step.description)
         return steps
 
     def get_address(self, plan):
         i = Plan.SCOPES.index(plan.scope)
-        pers = plan.politician.persona
+        pers = plan.stance.politician.persona
         return ", ".join([pers.city, pers.state, "US"][i:])
 
     class Meta:
