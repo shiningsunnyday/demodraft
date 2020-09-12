@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container class="plan">
     <!-- plan -->
     <div v-if="hasPlan">
       <h1>
@@ -18,7 +18,6 @@
         </template>
       </b-table>
       <!-- /// -->
-
     </div>
     <!-- /// -->
 
@@ -44,7 +43,15 @@
     >
       <!-- modal form -->
       <b-form>
-        <b-form-textarea v-model="planText" ref="focusText" no-auto-shrink />
+        <b-form-textarea
+          v-model="planText"
+          ref="focusText"
+          no-auto-shrink
+          maxlength="120"
+        />
+        <p class="plan__small-text">
+          {{ charactersLeft }} characters left
+        </p>
       </b-form>
       <!-- /// -->
 
@@ -59,7 +66,6 @@
         </b-button>
       </template>
       <!-- /// -->
-
     </b-modal>
     <!-- /// -->
   </b-container>
@@ -93,6 +99,9 @@ export default {
     hasPlan() {
       return this.items.length >= 1;
     },
+    charactersLeft() {
+      return 120 - this.planText.length;
+    }
   },
   methods: {
     handleSubmit() {
@@ -125,6 +134,13 @@ export default {
   &__no-plan-container {
     display: inline-flex;
     flex-direction: column;
+  }
+
+  &__small-text {
+    font-size: 12px;
+    padding: 0;
+    margin: 8px 0 0 0;
+    text-align: right;
   }
 }
 </style>
