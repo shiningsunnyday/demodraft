@@ -48,17 +48,19 @@
         <b-form-group
           label="Actblue:"
           label-for="mycampaign-actblue"
-          description="A 'secure.actblue.com' URL is required"
         >
           <b-form-input
             id="mycampaign-actblue"
             label="Actblue"
             v-model="$v.politician.actblue.$model"
             type="text"
-            required
+            placeholder="Please enter an ActBlue donation campaign URL"
           />
           <p class="error" v-if="!$v.politician.actblue.required">
-            this field is required
+            This field is required
+          </p>
+          <p class="error" v-else-if="!$v.politician.actblue.isActBlueURL">
+            Only an ActBlue donation URL is allowed
           </p>
         </b-form-group>
         <b-form-group
@@ -80,7 +82,12 @@
 
         <!-- Update Button Views -->
         <div v-if="!isSuccess">
-          <b-button v-if="!isUpdating" type="submit">Update</b-button>
+          <div v-if="!$v.politician.actblue.isActBlueURL">
+            <b-button disabled>Update</b-button>
+            <p>Please enter valid URL</p>
+          </div>
+
+          <b-button v-else-if="!isUpdating" type="submit">Update</b-button>
           <b-button v-else disabled>
             <b-spinner small label="Spinning"></b-spinner>
             Updating...
@@ -106,12 +113,34 @@ export default {
       isApproved: false,
       isUpdating: false,
       isSuccess: false,
+      willPrepend: false,
     };
   },
   validations: {
     politician: {
       actblue: {
         required,
+        isActBlueURL(url) {
+          // Checks if the user entered an ActBlue URL for their campaign
+          if (url.toLowerCase().indexOf('https://') === 0) {
+            if (
+              this.politician.actblue.slice(8, 27) !== 'secure.actblue.com/'
+            ) {
+              return false;
+            }
+          } else {
+            if (
+              this.politician.actblue.slice(0, 19) !== 'secure.actblue.com/'
+            ) {
+              return false;
+            } else {
+              // if 'secure.actblue.com/' exists, prepend 'https://' to it
+              this.willPrepend = true;
+            }
+          }
+
+          return true;
+        },
       },
     },
   },
@@ -126,7 +155,14 @@ export default {
     /// Campaign update methods
     //
     async handleUpdateCampaign() {
+      // if 'secure.actblue.com/' exists, prepend 'https://' to it
+      if (this.willPrepend) {
+        this.politician.actblue = 'https://' + this.politician.actblue;
+        this.willPrepend = false;
+      }
+
       this.isUpdating = true;
+
       try {
         const updatedCampaign = await this.updateCampaign();
         await this.updatePoliticianStore(updatedCampaign);
@@ -135,6 +171,7 @@ export default {
         alert(error);
         console.error('error on updating campaign');
       }
+
       this.isUpdating = false;
     },
     updateCampaign() {
@@ -152,6 +189,7 @@ export default {
     },
     handleSuccessDelay() {
       this.isSuccess = true;
+
       setTimeout(() => {
         this.isSuccess = false;
       }, 1000);
@@ -210,6 +248,11 @@ export default {
 
   &--bold {
     font-weight: bold;
+  }
+
+  .error {
+    font-size: 1rem;
+    color: rgb(246, 68, 68);
   }
 }
 </style>
