@@ -81,11 +81,19 @@ class PolicyV(APIView, Meta):
         return Policies.by_id(id, detailed=True)
 
     def put(self, request):
-        id = request.data.get('id')
-        policy = Policy.objects.get(id=id)
-        pop = policy.popularity
-        pop.likes += 1
-        pop.save()
-        sz = PopularitySerializer(pop)
-        return Response(sz.data, status=status.HTTP_202_ACCEPTED)
+        if set(request.data.keys()) == {"id", "username"}:
+            policy = Policy.objects.get(id=int(request.data['id']))
+            user = User.objects.get(username=request.data['username'])
+            if not policy.users.filter(id=user.id).exists():
+                pop = policy.popularity
+                pop.likes += 1
+                pop.save()
+                policy.users.add(user)
+                sz = PopularitySerializer(pop)
+                return Response(sz.data, status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response("User already liked the policy.", status=status.HTTP_208_ALREADY_REPORTED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
 

@@ -50,7 +50,10 @@ class PersonaTest(TestCase):
 
 class ScoreTest(TestCase):
     def setUp(self):
-        pass
+        for i in range(3):
+            name = "user%d" % i
+            u = User.objects.create(username=name)
+            Persona.objects.create(user=u)
 
     def testSweep(self):
         pers = Persona.objects.all()
