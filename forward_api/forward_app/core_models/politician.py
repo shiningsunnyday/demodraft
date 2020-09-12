@@ -55,8 +55,8 @@ class Plan(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     lead_step_id = models.IntegerField(default=0)
-    politician = models.OneToOneField(
-        Politician, 
+    stance = models.OneToOneField(
+        Stance,
         on_delete=models.CASCADE, 
         default=None
     )
@@ -71,7 +71,8 @@ class Step(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     plan = models.ForeignKey(
         Plan, 
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=True
     )
     next_step_id = models.IntegerField(default=0)
     description = models.CharField(max_length=200, default="")
