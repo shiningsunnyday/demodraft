@@ -4,3 +4,4 @@ from .stance_views import *
 from .persona_views import *
 from .policy_views import *
 from .comment_views import *
+from .plan_views import *

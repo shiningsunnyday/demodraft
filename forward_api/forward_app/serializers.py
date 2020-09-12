@@ -81,7 +81,7 @@ class PlanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Plan
-        fields = ['id', 'lead_step_id', 'politician_id', 'address', 'scope', 'steps']
+        fields = ['id', 'lead_step_id', 'stance', 'address', 'scope', 'steps']
 
 class CampaignSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField("office_name")

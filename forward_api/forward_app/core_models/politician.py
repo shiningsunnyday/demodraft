@@ -55,8 +55,8 @@ class Plan(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     lead_step_id = models.IntegerField(default=0)
-    politician = models.OneToOneField(
-        Politician, 
+    stance = models.OneToOneField(
+        Stance,
         on_delete=models.CASCADE, 
         default=None
     )
