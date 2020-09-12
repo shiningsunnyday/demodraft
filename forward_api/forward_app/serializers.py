@@ -22,6 +22,12 @@ class PersonaSerializer(serializers.ModelSerializer):
         fields = ['user', 'stage', 'score']
 
 
+class FollowersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Persona
+        fields = ['num_followers']
+
+
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Persona
