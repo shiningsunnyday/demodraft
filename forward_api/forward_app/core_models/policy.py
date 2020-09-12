@@ -10,6 +10,8 @@ class Policy(models.Model):
     name = models.CharField(max_length=100, blank=True, default='')
     statement = models.CharField(max_length=500, blank=True, default='')
     description = models.TextField(blank=True, default='')
+    users = models.ManyToManyField(User)
+
     class Meta:
         ordering = ['created']
 

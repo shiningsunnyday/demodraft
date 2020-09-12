@@ -34,12 +34,20 @@ class PopularityTest(TestCase):
 
     def setUp(self):
         Policy.objects.create(category=1, name='Universal Health Care', statement='Healthcare for all', description='Medical services to all citizens')
+        User.objects.create(username="michael")
 
     def testPopularity(self):
         policy = Policy.objects.get(name='Universal Health Care')
         popularity = Popularity.objects.create(policy=policy, likes=200)
         self.assertEquals(popularity.likes, 200)
         self.assertEqual(popularity.policy, policy)
+
+    def testLike(self):
+        # makes sure user who liked can't like again
+        pol = Policy.objects.get(id=1)
+        user = User.objects.get(id=1)
+        pol.users.add(user)
+        self.assertEqual(True, pol.users.filter(id=user.id).exists())
 
 """
 Tests for all functionality with Comment object
