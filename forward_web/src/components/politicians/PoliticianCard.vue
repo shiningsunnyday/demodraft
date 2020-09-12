@@ -57,10 +57,11 @@ export default {
       });
     },
     handleViewPlan() {
+      const politicianId = this.politician.id.toString();
       this.$router.push({
         name: 'politician-plan',
         params: { 
-          id: this.politician.id,
+          id: politicianId,
           politician: this.politician,
           isPushed: true
         },

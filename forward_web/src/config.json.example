@@ -1,9 +1,9 @@
 {
   "API_AUTH": {
-    "username": "demodraft",
-    "password": "darkmoney"
+    "username": "replace me",
+    "password": "replace me"
   },
-  "API_URL": "http://ec2-3-101-22-177.us-west-1.compute.amazonaws.com",
+  "API_URL": "replace me",
   "policy_categories": {
     "0": "criminal-justice-reform",
     "1": "economy",
