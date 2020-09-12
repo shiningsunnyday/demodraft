@@ -1,5 +1,5 @@
 from django.test import TestCase
-from forward_app.core_models import Politician, Stance, Persona, Policy
+from forward_app.core_models import Politician, Stance, Persona, Policy, Plan, Step
 from django.contrib.auth.models import User
 from forward_app.utils.civic import normalizeAddress, toAddress
 
@@ -66,3 +66,45 @@ class StancesTest(TestCase):
         Stance.objects.create(politician=self.politician2, policy=self.policy2, message="Hell no too")
         policies = self.politician1.policies.all()
         self.assertEqual(policies[0].name, "Universal Basic Income")
+
+class PlanTest(TestCase):
+
+    def setUp(self):
+        user1 = User.objects.create_user(username="brian1")
+        user2 = User.objects.create_user(username="brian2")
+        persona1 = Persona.objects.create(user=user1)
+        persona2 = Persona.objects.create(user=user2)
+        self.politician1 = Politician.objects.create(persona=persona1)
+        self.politician2 = Politician.objects.create(persona=persona2)
+
+    def testPlan(self):
+        plan1 = Plan.objects.create(lead_step_id=0, politician=self.politician1, scope="state")
+        plan2 = Plan.objects.create(lead_step_id=0, politician=self.politician2, scope="local")
+        self.assertEquals(plan1.politician, self.politician1)
+        self.assertEquals(plan2.politician, self.politician2)
+        self.assertEqual(plan1.scope, "state")
+        self.assertEqual(plan1.lead_step_id,0)
+
+
+class StepTest(TestCase):
+
+    def setUp(self):
+        user1 = User.objects.create_user(username="brian1")
+        user2 = User.objects.create_user(username="brian2")
+        persona1 = Persona.objects.create(user=user1)
+        persona2 = Persona.objects.create(user=user2)
+        self.politician1 = Politician.objects.create(persona=persona1)
+        self.politician2 = Politician.objects.create(persona=persona2)
+
+    def testStep(self):
+        plan1 = Plan.objects.create(lead_step_id=3, politician=self.politician1, scope="state")
+        step3 = Step.objects.create(plan = plan1, description="Meet with supporters")
+        step2 = Step.objects.create(plan = plan1, next_step_id=step3.id, description="Ask for donations")
+        step1 = Step.objects.create(plan = plan1, next_step_id=step2.id, description="Organize speeches")
+        self.assertEquals(plan1.lead_step_id, step1.id)
+        self.assertEqual(step1.next_step_id, step2.id)
+        self.assertEqual(step2.next_step_id, step3.id)
+        self.assertEqual(step1.plan, plan1)
+
+
+

@@ -62,7 +62,7 @@ class PlanSerializer(serializers.ModelSerializer):
         step = Step.objects.get(id=plan.lead_step_id)
         next_step_id = step.next_step_id
         steps = []
-        while next_step_id != step.id
+        while next_step_id != step.id:
             steps.append(step.description)
             step = Step.objects.get(id=step.next_step_id)
             next_step_id = step.next_step_id
