@@ -1,26 +1,21 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand class="navbar-brand--mobile">
-      <img 
-        src="../_assets/demo-egg.png" 
-        alt="logo"
-        height="40"
-        width="25"
-      >
+      <img src="../_assets/demo-egg.png" alt="logo" height="40" width="25" />
       Demodraft
     </b-navbar-brand>
 
-    <b-navbar-toggle v-if="isLoggedIn" target="nav-collapse" ></b-navbar-toggle>
+    <b-navbar-toggle v-if="isLoggedIn" target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-navbar-brand :to="{ name: 'about-page' }">
-          <img 
-            src="../_assets/demo-egg.png" 
+          <img
+            src="../_assets/demo-egg.png"
             alt="logo"
             height="40"
             width="25"
-          >
+          />
           Demodraft
         </b-navbar-brand>
 
@@ -38,15 +33,20 @@
           </b-nav-item>
         </div>
 
-        <b-nav-item-dropdown 
-          v-if="isLoggedIn" 
-          text="User"
-          id="navbar__user" 
-          right
-        >
-          <b-dropdown-item :to="{ name: 'profile-page' }">Profile</b-dropdown-item>
-          <b-dropdown-item  @click="handleLogout">Logout</b-dropdown-item>
-        </b-nav-item-dropdown>
+        <div class="navbar__user-container">
+          <b-dropdown
+            v-if="isLoggedIn"
+            :text="userName"
+            id="navbar__user"
+            variant="dark"
+            right
+          >
+            <b-dropdown-item :to="{ name: 'profile-page' }">
+              Profile
+            </b-dropdown-item>
+            <b-dropdown-item @click="handleLogout">Logout</b-dropdown-item>
+          </b-dropdown>
+        </div>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -56,13 +56,14 @@
 export default {
   name: 'nav-bar',
   data() {
-    return {
-      userName: this.$store.getters.username
-    };
+    return {};
   },
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
+    },
+    userName() {
+      return this.$store.getters.username;
     },
   },
   methods: {
@@ -129,7 +130,7 @@ $uncollapsed-breakpoint: 992px;
         align-items: center;
         width: 100%;
         color: white;
-        
+
         @include navbar-no-burger {
           justify-content: center;
         }
@@ -165,6 +166,13 @@ $uncollapsed-breakpoint: 992px;
   .navbar-collapse {
     @include navbar-no-burger {
       height: 100%;
+    }
+  }
+
+  &__user-container {
+    width: 125px;
+    @media screen and (min-width: 992px) {
+      width: auto;
     }
   }
 }

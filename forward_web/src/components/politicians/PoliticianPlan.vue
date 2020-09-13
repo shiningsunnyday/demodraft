@@ -50,7 +50,7 @@
           maxlength="120"
         />
         <p class="plan__small-text">
-          {{ charactersLeft }} characters left
+          {{ charactersLeft }}/120
         </p>
       </b-form>
       <!-- /// -->
@@ -100,7 +100,7 @@ export default {
       return this.items.length >= 1;
     },
     charactersLeft() {
-      return 120 - this.planText.length;
+      return this.planText.length;
     }
   },
   methods: {
