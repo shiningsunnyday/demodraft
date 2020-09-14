@@ -1,6 +1,7 @@
 <template>
   <div class="campaign-details">
-    <b-container class="campaign-details__approved-block">
+    <LoadingSpinner v-if="isLoading" />
+    <b-container v-else class="campaign-details__approved-block">
       <h2 class="campaign-details__title">My Campaign</h2>
       <div class="campaign-details__description-block">
         <p class=" campaign-details__politician-name campaign-details--bold">
@@ -92,15 +93,33 @@ import { ApiUtil } from '@/_utils/api-utils';
 
 export default {
   name: 'CampaignApproved',
-  props: {
-    politician: Object,
-  },
   data() {
     return {
+      politician: {},
       isApproved: false,
       isUpdating: false,
       isSuccess: false,
+      isLoading: true,
     };
+  },
+  async created() {
+    const user = this.$store.getters.userState;
+    const modifiedPolitician = this.$store.getters.getPolitician;
+
+    // set politician state on first visit
+    if (!modifiedPolitician.id) {
+      await this.$store.dispatch('setPolitician', user);
+      this.politician = this.$store.getters.getPolitician;
+    } else {
+      // use politician state on subsequent visits
+      this.politician = modifiedPolitician;
+    }
+
+    if (user.campaignPending) {
+      await this.$store.dispatch('changeCampaignPending');
+    }
+
+    this.isLoading = false;
   },
   methods: {
     handlePoliticianPage() {
