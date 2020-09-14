@@ -85,6 +85,8 @@ export default {
       if (position) {
         const descriptor = {
           first: `Whenever you're ready, click the large blue button to launch your campaign for ${position}!`,
+          second:
+            `After launching, you'll be notified through email within 12-24 hours when your application is accepted.`,
         };
         return descriptor;
       }
@@ -145,7 +147,7 @@ export default {
       this.isLaunching = false;
     },
     displayConfirmationModal() {
-      const modalMessage = `Thank you for submitting a request to launch your campaign! You will be notified when your application is accepted.`;
+      const modalMessage = `You've successfully submitted a request to launch your campaign!`;
       return this.$bvModal.msgBoxOk(modalMessage, {
         title: 'Confirmation',
         size: 'sm',
