@@ -25,7 +25,7 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            {{ politician.actblue }}
+            {{ actBlueLink }}
           </a>
         </p>
         <p>
@@ -55,6 +55,7 @@
             v-model="$v.politician.actblue.$model"
             type="text"
             placeholder="Please enter an ActBlue donation campaign URL"
+            autocomplete="off"
           />
           <p class="error" v-if="!$v.politician.actblue.required">
             This field is required
@@ -84,10 +85,9 @@
         <div v-if="!isSuccess">
           <div v-if="!$v.politician.actblue.isActBlueURL">
             <b-button disabled>Update</b-button>
-            <p>Please enter valid URL</p>
           </div>
 
-          <b-button v-else-if="!isUpdating" type="submit">Update</b-button>
+          <b-button v-else-if="!isUpdating" variant="primary" type="submit">Update</b-button>
           <b-button v-else disabled>
             <b-spinner small label="Spinning"></b-spinner>
             Updating...
@@ -110,6 +110,7 @@ export default {
   },
   data() {
     return {
+      actBlueLink: this.politician.actblue,
       isApproved: false,
       isUpdating: false,
       isSuccess: false,
@@ -122,14 +123,17 @@ export default {
         required,
         isActBlueURL(url) {
           // Checks if the user entered an ActBlue URL for their campaign
+          // First it check for the existence of'https://' at the start of the string
           if (url.toLowerCase().indexOf('https://') === 0) {
             if (
+              // If 'secure.actblue.com/' doesn't exist, return false
               this.politician.actblue.slice(8, 27) !== 'secure.actblue.com/'
             ) {
               return false;
             }
           } else {
             if (
+              // If the first 18 characters aren't 'secure.actblue.com/', return false
               this.politician.actblue.slice(0, 19) !== 'secure.actblue.com/'
             ) {
               return false;
@@ -167,6 +171,7 @@ export default {
         const updatedCampaign = await this.updateCampaign();
         await this.updatePoliticianStore(updatedCampaign);
         this.handleSuccessDelay();
+        this.actBlueLink = this.politician.actblue;
       } catch (error) {
         alert(error);
         console.error('error on updating campaign');
