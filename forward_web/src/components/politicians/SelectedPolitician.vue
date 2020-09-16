@@ -86,6 +86,7 @@ export default {
     const user = this.$store.getters.userState;
     const modifiedPolitician = this.$store.getters.getPolitician;
     const politicianId = Number(this.$route.params.id);
+
     if (user.approved && modifiedPolitician.id === politicianId) {
       this.politician = modifiedPolitician;
       this.stances = this.politician.endorsed;

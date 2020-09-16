@@ -2,6 +2,7 @@ import * as types from '@/_stores/mutation-types';
 import { AuthUtil } from '@/_utils/auth-utils.js';
 
 const user = JSON.parse(sessionStorage.getItem('user_store'));
+
 export const userStore = {
   state: user
     ? {

@@ -5,6 +5,7 @@ import { store } from './_stores/store';
 import Axios from 'axios';
 import { BootstrapVue } from 'bootstrap-vue';
 import LoadingSpinner from '@/components/_common/LoadingSpinner';
+import Vuelidate from 'vuelidate';
 import './style.scss';
 
 // to access axios across all components
@@ -20,6 +21,7 @@ Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
 Vue.component('LoadingSpinner', LoadingSpinner);
+Vue.use(Vuelidate);
 
 new Vue({
   router,

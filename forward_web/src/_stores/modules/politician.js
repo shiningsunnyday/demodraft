@@ -2,6 +2,7 @@ import * as types from '@/_stores/mutation-types';
 import { ApiUtil } from '@/_utils/api-utils.js';
 
 const politician = JSON.parse(sessionStorage.getItem('pol_store'));
+
 export const politicianStore = {
   state: politician ? { politician } : { politician: {} },
   mutations: {

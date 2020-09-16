@@ -42,7 +42,7 @@ export default {
         await this.$store.dispatch('changeCampaignPending');
       }
     }
-    
+
     this.isLoading = false;
   },
   computed: {
