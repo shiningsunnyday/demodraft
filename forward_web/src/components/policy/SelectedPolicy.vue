@@ -76,6 +76,7 @@ export default {
     window.scrollTo(0,0);
     
     try {
+      // isPushed = true when a user clicks 'Learn More' on PolicyCard
       if (this.isPushed) {
         this.policy = this.pushedPolicy;
       } else {
@@ -88,7 +89,7 @@ export default {
 
     this.description = splitDescription(this.policy.description);
 
-    // test this on mounted()
+    // TODO - refactor and move part of this into computed
     const user = this.$store.getters.userState;
     const modifiedPolitician = this.$store.getters.getPolitician;
     if (user.approved) {
@@ -112,7 +113,7 @@ export default {
   },
   methods: {
     async likePolicy() {
-      // will need database to keep track of likes
+      // TODO - will need database to keep track of likes
       if (!this.hasLiked) {
         this.hasLiked = true;
         this.policy.likes++;

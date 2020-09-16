@@ -9,10 +9,10 @@
         :comment="leadComment"
         :prop="cardProps"
         :isLeadComment="true"
-        @handleViewReplies="handleViewReplies"
-        @updateRepliesView="updateRepliesView"
-        @deleteThread="handleDeleteThread"
-        @deleteComment="handleDeleteComment"
+        @handle-view-replies="handleViewReplies"
+        @update-replies-view="updateRepliesView"
+        @delete-thread="handleDeleteThread"
+        @delete-comment="handleDeleteComment"
         class="comments-wrapper__lead-comment"
       ></CommentCard>
       <!-- End leading comment -->
@@ -29,10 +29,10 @@
           :comment="reply"
           :index="index"
           :prop="cardProps"
-          @handleViewReplies="handleViewReplies"
-          @updateRepliesView="updateRepliesView"
-          @deleteThread="handleDeleteThread"
-          @deleteComment="handleDeleteComment"
+          @handle-view-replies="handleViewReplies"
+          @update-replies-view="updateRepliesView"
+          @delete-thread="handleDeleteThread"
+          @delete-comment="handleDeleteComment"
           :className="`reply-wrapper__comment`"
         ></CommentCard>
       </div>
@@ -57,7 +57,7 @@
 <script>
 import CommentCard from './CommentCard';
 import CommentCardPlaceholder from './CommentCardPlaceholder';
-import CommentFormReply from '@/components/comments/CommentFormReply';
+import CommentFormReply from '@/components/comments/forms/CommentFormReply';
 import { ApiUtil } from '@/_utils/api-utils.js';
 
 export default {

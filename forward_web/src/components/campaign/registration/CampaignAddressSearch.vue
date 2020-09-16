@@ -78,7 +78,7 @@ export default {
   methods: {
     handleSearch() {
       const data = `${this.street} ${this.city} ${this.state}`;
-      this.$emit('handleSearch', data);
+      this.$emit('handle-search', data);
     },
   },
 };

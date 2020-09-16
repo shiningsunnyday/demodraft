@@ -24,7 +24,7 @@
       </b-form-radio-group>
     </b-form-group>
     <div class="positions__button-group">
-      <b-button @click="$emit('handleBack')">
+      <b-button @click="$emit('handle-back')">
         Back
       </b-button>
       <b-button
@@ -60,7 +60,7 @@ export default {
   methods: {
     handleNext() {
       const data = this.selectedPosition;
-      this.$emit('handlePositionSelected', data);
+      this.$emit('handle-position-selected', data);
     },
   },
 };

@@ -108,14 +108,14 @@
 
     <div v-else class="campaign-info__button-group">
       <b-button
-        @click="$emit('handleSubmitCampaign')"
+        @click="$emit('handle-submit-campaign')"
         size="lg"
         variant="primary"
         class="campaign-info__launch-campaign"
       >
         Launch Campaign Now!
       </b-button>
-      <b-button @click="$emit('handleBack')">
+      <b-button @click="$emit('handle-back')">
         Take me back!
       </b-button>
     </div>

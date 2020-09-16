@@ -93,13 +93,13 @@ export default {
     if (modifiedPolitician.id === politicianId) {
       this.politician = modifiedPolitician;
       this.stances = this.politician.endorsed;
-    } else if (user.approved) {
+    } else {
       // fetch politician for regular users
       this.politician = await ApiUtil.getSelectedPolitician(politicianId);
       this.stances = await ApiUtil.getAllStances(this.politician.id);
       this.politician.position = this.politician.name;
     }
-
+    
     this.isLoading = false;
   },
   computed: {
