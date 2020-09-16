@@ -9,21 +9,21 @@
     <div class="campaign-reg__steps">
       <CampaignAddressSearch
         v-show="campaignProgress === 0"
-        @handleSearch="handleSearch"
+        @handle-search="handleSearch"
         :isSearching="isSearching"
       />
 
       <CampaignPositions
         v-show="campaignProgress === 1"
-        @handleBack="$emit('pushStepOne')"
-        @handlePositionSelected="handlePositionSelected"
+        @handle-back="$emit('push-step-one')"
+        @handle-position-selected="handlePositionSelected"
         :positions="positions"
       />
 
       <CampaignInformation
         v-show="campaignProgress === 2"
-        @handleBack="$emit('pushStepTwo')"
-        @handleSubmitCampaign="handleSubmitCampaign"
+        @handle-back="$emit('push-step-two')"
+        @handle-submit-campaign="handleSubmitCampaign"
         :data="selectedPosition"
         :isLaunching="isLaunching"
       />
@@ -85,6 +85,8 @@ export default {
       if (position) {
         const descriptor = {
           first: `Whenever you're ready, click the large blue button to launch your campaign for ${position}!`,
+          second:
+            `After launching, you'll be notified through email within 12-24 hours when your application is accepted.`,
         };
         return descriptor;
       }
@@ -99,7 +101,7 @@ export default {
         this.isSearching = true;
         this.civicData = await this.getCivicDataFromAddress(address);
         this.positions = this.setPositionDisplayOrder(this.civicData);
-        this.$emit('pushStepTwo');
+        this.$emit('push-step-two');
       } catch (error) {
         alert(`Oops, we couldn't find positions for that address!`);
       }
@@ -120,7 +122,7 @@ export default {
     //
     handlePositionSelected(selectedPosition) {
       this.selectedPosition = selectedPosition;
-      this.$emit('pushStepThree');
+      this.$emit('push-step-three');
     },
     /////
     /// Step 3 Methods
@@ -138,14 +140,14 @@ export default {
         await ApiUtil.submitCampaign(data);
         await this.updatePendingCampaign();
         await this.displayConfirmationModal();
-        return this.$emit('completeAllSteps', true);
+        return this.$emit('complete-all-steps', true);
       } catch (error) {
         alert(`Oops, something went wrong launching your campaign.`);
       }
       this.isLaunching = false;
     },
     displayConfirmationModal() {
-      const modalMessage = `Thank you for submitting a request to launch your campaign! You will be notified when your application is accepted.`;
+      const modalMessage = `You've successfully submitted a request to launch your campaign!`;
       return this.$bvModal.msgBoxOk(modalMessage, {
         title: 'Confirmation',
         size: 'sm',

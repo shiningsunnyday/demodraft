@@ -54,7 +54,7 @@
 <script>
 import { BIconHandThumbsUp } from 'bootstrap-vue';
 import { ApiUtil } from '@/_utils/api-utils.js';
-import CommentFormReply from '@/components/comments/CommentFormReply';
+import CommentFormReply from '@/components/comments/forms/CommentFormReply';
 import moment from 'moment';
 
 export default {
@@ -119,17 +119,17 @@ export default {
   },
   methods: {
     handleViewReplies() {
-      this.$emit('handleViewReplies', this.prop.threadId);
+      this.$emit('handle-view-replies', this.prop.threadId);
     },
     toggleReplyClick() {
       this.isReplying = !this.isReplying;
     },
     async updateRepliesView() {
-      this.$emit('updateRepliesView');
+      this.$emit('update-replies-view');
       this.isReplying = !this.isReplying;
     },
     deleteThread() {
-      this.$emit('deleteThread', this.prop.threadId);
+      this.$emit('delete-thread', this.prop.threadId);
     },
     deleteComment() {
       const data = {
@@ -137,7 +137,7 @@ export default {
         comment: this.comment,
       };
 
-      this.$emit('deleteComment', data);
+      this.$emit('delete-comment', data);
     },
     async handleLike(id) {
       // prevent hard spamming likes for now

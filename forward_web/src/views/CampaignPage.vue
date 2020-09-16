@@ -8,10 +8,10 @@
 
     <CampaignRegistration 
       v-if="!isCampaignLaunched" 
-      @pushStepOne="pushStepOne"
-      @pushStepTwo="pushStepTwo"
-      @pushStepThree="pushStepThree"
-      @completeAllSteps="completeAllSteps"
+      @push-step-one="pushStepOne"
+      @push-step-two="pushStepTwo"
+      @push-step-three="pushStepThree"
+      @complete-all-steps="completeAllSteps"
       :campaignProgress="campaignProgress"
     />
 

@@ -1,9 +1,9 @@
 <template>
   <div class="campaign-progress">
-    <span :class="inputAdress">Input Address</span>
+    <span :class="inputAdress">Find Position</span>
     <span :class="choosePosition">Choose Position</span>
     <!-- TODO change 'Launch Campaign' to 'Your information' when
-    backend is able to receive use data -->
+    backend is able to receive & use data -->
     <span :class="yourInformation">Launch Campaign</span>
   </div>
 </template>

@@ -38,7 +38,7 @@
           <b-button v-else variant="primary" @click="handleSubmit">
             Submit
           </b-button>
-          <b-button variant="danger" @click="handleCancel">
+          <b-button variant="danger" @click="hideEndorseModal">
             Cancel
           </b-button>
         </template>
@@ -64,28 +64,32 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      const stanceData = {
+      this.isSubmitting = true;
+      try {
+        await this.addNewStance();
+        await this.updatePoliticianEndorsements();
+        this.politician.hasEndorsed = true;
+      } catch (error) {
+        alert('Oops, something went wrong submitting your stance.');
+      }
+      this.isSubmitting = false;
+      this.hideEndorseModal();
+    },
+    addNewStance() {
+      const newStance = {
         policy_id: this.policy.id,
         politician_id: this.politician.id,
         content: this.stanceText,
       };
-
-      try {
-        this.isSubmitting = true;
-        await ApiUtil.postStance(stanceData);
-        const stances = await ApiUtil.getAllStances(this.politician.id);
-        this.$store.dispatch('updateEndorsed', stances);
-        this.politician.hasEndorsed = true;
-      } catch (error) {
-        alert('Oops, something went wrong.');
-      }
-      this.isSubmitting = false;
-      this.stanceText = '';
-      this.$refs['modal-endorse'].hide();
+      return ApiUtil.postStance(newStance);
     },
-    handleCancel() {
-      this.stanceText = '';
+    async updatePoliticianEndorsements() {
+      const stances = await ApiUtil.getAllStances(this.politician.id);
+      await this.$store.dispatch('updateEndorsed', stances);
+    },
+    hideEndorseModal() {
       this.$refs['modal-endorse'].hide();
+      this.stanceText = '';
     },
     focusTextarea() {
       this.$refs.focusText.focus();

@@ -3,7 +3,7 @@ export const simulateApiCall = async () => {
   return await delay(500);
 };
 
-// temporary splitting descriptions into had arbitrary num of paragraphs
+// temporary splitting descriptions into hard arbitrary num of paragraphs
 export const splitDescription = (description) => {
   const toSplit = description;
   let prevPointer = 0;

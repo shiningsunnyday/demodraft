@@ -21,13 +21,12 @@
       />
     </div>
   </div>
-  </div>
 </template>
 
 <script>
 import { ApiUtil } from "@/_utils/api-utils.js";
 import CommentThread from './CommentThread';
-import CommentFormLead from "@/components/comments/CommentFormLead";
+import CommentFormLead from "@/components/comments/forms/CommentFormLead";
 
 export default {
   name: "Comments",

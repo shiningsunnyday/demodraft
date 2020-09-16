@@ -3,8 +3,13 @@
     <h4>
       Thank you for submitting a request to launch your campaign!
     </h4>
-    <!-- <br /> -->
-    <h4>You will be notified when your application is accepted.</h4>
+    <h4>
+      You will be notified through email within 12-24 hours when your
+      application is accepted.
+    </h4>
+    <h4>
+      In the meantime, feel free to browse policies, politicians, and join the coversation!
+    </h4>
   </div>
 </template>
 
@@ -25,6 +30,9 @@ export default {
 
     h4 {
       margin-bottom: 20px;
+      @media screen and (max-width: 1024px) {
+        font-size: 18px;
+      }
     }
   }
 }
