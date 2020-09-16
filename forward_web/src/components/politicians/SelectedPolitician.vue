@@ -1,9 +1,16 @@
 <template>
   <LoadingSpinner v-if="isLoading"></LoadingSpinner>
   <b-container v-else class="selected-politician">
-    <!-- <div class="selected-politician__follow-button-container">
-      <b-button size="sm"> <BIconPersonPlus /> Follow </b-button>
-    </div> -->
+
+    <div class="selected-politician__button-container">
+      <div class="selected-politician__back-button-container"> 
+        <b-button size="sm" @click="handleBackButton"> Back to Politicians </b-button>
+      </div>
+
+      <div class="selected-politician__follow-button-container"> 
+        <b-button size="sm" disabled> <BIconPersonPlus /> Follow </b-button>
+      </div>
+    </div>
 
     <div class="selected-politician__top">
       <h1>{{ politician.first }} {{ politician.last }}</h1>
@@ -112,6 +119,12 @@ export default {
         params: { id: policyId },
       });
     },
+    handleBackButton(){
+      //Go back to politicians page
+      this.$router.push({
+        name: 'politician-page',
+      });
+    }
   },
 };
 </script>
@@ -134,12 +147,22 @@ export default {
     }
   }
 
+  &__button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
   &__follow-button-container {
     display: flex;
     justify-content: flex-end;
 
     @media screen and (min-width: 768px) {
-      width: 75%;
+      //commented out width: 75%; because
+      //makes button fat at specific view port
+      //width: 75%; 
     }
   }
 
