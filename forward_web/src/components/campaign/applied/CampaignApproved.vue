@@ -26,7 +26,7 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            {{ politician.actblue }}
+            {{ actBlueLink }}
           </a>
         </p>
         <p>
@@ -39,26 +39,34 @@
           >{{ politician.fundraised }}
         </p>
       </div>
+
       <hr />
+
       <b-form
         @submit.prevent="handleUpdateCampaign"
         class="campaign-details__form"
       >
         <b-form-group
-          label="Actblue"
+          label="Actblue:"
           label-for="mycampaign-actblue"
-          description="Input your actblue donation link"
         >
           <b-form-input
             id="mycampaign-actblue"
             label="Actblue"
-            v-model="politician.actblue"
+            v-model="$v.politician.actblue.$model"
             type="text"
-            required
+            placeholder="Please enter an ActBlue donation campaign URL"
+            autocomplete="off"
           />
+          <p class="error" v-if="!$v.politician.actblue.required">
+            This field is required
+          </p>
+          <p class="error" v-else-if="!$v.politician.actblue.isActBlueURL">
+            Only an ActBlue donation URL is allowed
+          </p>
         </b-form-group>
         <b-form-group
-          label="Fundraise Goal"
+          label="Fundraise Goal:"
           label-for="mycampaign-fundraise"
           description="To be FEC compliant, max goal is $5000"
         >
@@ -76,7 +84,11 @@
 
         <!-- Update Button Views -->
         <div v-if="!isSuccess">
-          <b-button v-if="!isUpdating" type="submit">Update</b-button>
+          <div v-if="!$v.politician.actblue.isActBlueURL">
+            <b-button disabled>Update</b-button>
+          </div>
+
+          <b-button v-else-if="!isUpdating" variant="primary" type="submit">Update</b-button>
           <b-button v-else disabled>
             <b-spinner small label="Spinning"></b-spinner>
             Updating...
@@ -90,15 +102,18 @@
 
 <script>
 import { ApiUtil } from '@/_utils/api-utils';
+import { required } from 'vuelidate/lib/validators';
 
 export default {
   name: 'CampaignApproved',
   data() {
     return {
+      actBlueLink: '',
       politician: {},
       isApproved: false,
       isUpdating: false,
       isSuccess: false,
+      willPrepend: false,
       isLoading: true,
     };
   },
@@ -118,8 +133,39 @@ export default {
     if (user.campaignPending) {
       await this.$store.dispatch('changeCampaignPending');
     }
-
+    this.actBlueLink = this.politician.actblue;
     this.isLoading = false;
+  },
+  validations: {
+    politician: {
+      actblue: {
+        required,
+        isActBlueURL(url) {
+          // Checks if the user entered an ActBlue URL for their campaign
+          // First it check for the existence of'https://' at the start of the string
+          if (url.toLowerCase().indexOf('https://') === 0) {
+            if (
+              // If 'secure.actblue.com/' doesn't exist, return false
+              this.politician.actblue.slice(8, 27) !== 'secure.actblue.com/'
+            ) {
+              return false;
+            }
+          } else {
+            if (
+              // If the first 18 characters aren't 'secure.actblue.com/', return false
+              this.politician.actblue.slice(0, 19) !== 'secure.actblue.com/'
+            ) {
+              return false;
+            } else {
+              // if 'secure.actblue.com/' exists, prepend 'https://' to it
+              this.willPrepend = true;
+            }
+          }
+
+          return true;
+        },
+      },
+    },
   },
   methods: {
     handlePoliticianPage() {
@@ -132,15 +178,24 @@ export default {
     /// Campaign update methods
     //
     async handleUpdateCampaign() {
+      // if 'secure.actblue.com/' exists, prepend 'https://' to it
+      if (this.willPrepend) {
+        this.politician.actblue = 'https://' + this.politician.actblue;
+        this.willPrepend = false;
+      }
+
       this.isUpdating = true;
+
       try {
         const updatedCampaign = await this.updateCampaign();
         await this.updatePoliticianStore(updatedCampaign);
         this.handleSuccessDelay();
+        this.actBlueLink = this.politician.actblue;
       } catch (error) {
         alert(error);
         console.error('error on updating campaign');
       }
+
       this.isUpdating = false;
     },
     updateCampaign() {
@@ -158,6 +213,7 @@ export default {
     },
     handleSuccessDelay() {
       this.isSuccess = true;
+
       setTimeout(() => {
         this.isSuccess = false;
       }, 1000);
@@ -216,6 +272,11 @@ export default {
 
   &--bold {
     font-weight: bold;
+  }
+
+  .error {
+    font-size: 1rem;
+    color: rgb(246, 68, 68);
   }
 }
 </style>
