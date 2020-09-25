@@ -69,12 +69,29 @@ yarn build
   - Expected API endpoints and example behavior in ./api_endpoints
 - To reset a db.sqlite3 from /forward_api (concatenating cause you'll be running this a lot) and create an admin user:
 ```
-rm db.sqlite3 && python manage.py makemigrations && python manage.py migrate && ./manage.py shell -c "from django.contrib.auth.models import User; user=User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney'); user.is_staff=False; user.save()"
+rm db.sqlite3
+```
+```
+python manage.py makemigrations
+```
+```
+python manage.py migrate
+```
+```
+./manage.py shell -c "from django.contrib.auth.models import User; user=User.objects.create_superuser('demodraft', 'demodraftapp@gmail.com', 'darkmoney'); user.is_staff=False; user.save(); User.objects.create_superuser('demolead', '', 'YC7Gbh*?R6hYthhkqv9p')"
+```
+```
 python manage.py runserver
 ```
-For local debugging, that removs the db, re-migrates the models, then creates a superuser with limited permissions to interact with all views on the site. This superuser will be the one our mailing list uses to interact with our initial Beta, and its permissions can be changed easily. Only Michael (and at max a few of his trusted confidants) holds the username and password for an admin user with full permissions (can delete other users, delete policies, post policies, etc.) to the site.
 
-On the tech folder, there is a script that populates the site with all the scraped Yang2020 policies and a group of politician and non-politician users. For duration of development, api_dev is a backup of db on the server, so you can commit db.sqlite3 and pull on the server.
+For local debugging, that 1) removes the db, 2) re-migrates the models, 3) creates a superuser with limited permissions to interact with all views on the site, 4) creates a staff superuser that can access admin console and interact with all views on the site, and 5) runs server again.
+
+On the tech folder, there're a few helpful scripts to populate db.sqlite3 locally:
+
+```Populate DB.ipynb/populate_db.py``` populates the site with all the scraped Yang2020 policies and a group of politician and non-politician users. For duration of development, api_dev is a backup of db on the server, so you can commit db.sqlite3 and pull on the server.
+
+```Yang Policies.ipynb/yang_policies.py``` populates the site with a customizable list of policies based on prioritized categories.
+
 
 ## AWS
 
