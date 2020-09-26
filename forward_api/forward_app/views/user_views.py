@@ -45,7 +45,7 @@ class Login(APIView, Meta):
         if exists:
             user = User.objects.get(username=username, password=password)
             # Re-calculates moderator cutoff score whenever any user logs in
-            update_scores(pers=Persona.objects.all(), comments=Comment.objects.all())
+            # update_scores(pers=Persona.objects.all(), comments=Comment.objects.all())
             # Turning off sweep function for now re-assigns new mods
             # sweep(Persona.objects.all())
             sz = UserSerializer(user)
