@@ -15,7 +15,7 @@
         id="email-group"
         label="Email address:"
         label-for="email"
-        description="We'll never share your email with anyone else."
+        description="Please use the same email you subscribed to us on demodraft.org"
       >
         <BFormInput
           id="email"

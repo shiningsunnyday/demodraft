@@ -77,15 +77,15 @@ export default {
       });
     },
     async handlePolicyLike() {
-      // will need database to keep track of likes
-      if (!this.hasLiked) {
-        this.hasLiked = true;
+      try {
+        const username = this.$store.getters.userState;
+        await ApiUtil.putPolicyLike({
+          id: this.policy.id,
+          username: username,
+        });
         this.policy.likes++;
-        try {
-          await ApiUtil.putPolicyLike(this.policy.id);
-        } catch (error) {
-          alert(error.message);
-        }
+      } catch (error) {
+        alert(error.response.status);
       }
     },
   },

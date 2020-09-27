@@ -17,6 +17,11 @@
       />
     </div>
 
+    <div class="politician-page__area-buttons">
+      <b-button disabled>Random</b-button>
+      <b-button disabled>Ranked</b-button>
+    </div>
+
     <LoadingSpinner v-if="isLoading">
       "Overnight successes are generally years in the making. And most progress
       is made in isolation, far from the public eye." - Andrew Yang
@@ -99,6 +104,13 @@ export default {
 
     .multiselect {
       width: 500px;
+    }
+  }
+
+  &__area-buttons {
+    display: inline-flex;
+    > * {
+      margin: 0 4px;
     }
   }
 }

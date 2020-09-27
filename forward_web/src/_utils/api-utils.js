@@ -54,8 +54,17 @@ export class ApiUtil {
     return deleteComments.data;
   }
 
-  static async putPolicyLike(id) {
-    const policyLikePromise = axios.put(`/policy/`, { id: id });
+  static async putPolicyLike(req) {
+    const { id, username} = req;
+    if (!id || !username) {
+      return;
+    }
+    
+    const policyLikePromise = axios.put(`/policy/`, { 
+      id: id,
+      username: username
+    });
+
     const policyLike = await policyLikePromise;
     return policyLike.data.likes;
   }

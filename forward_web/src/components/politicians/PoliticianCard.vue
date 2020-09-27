@@ -18,9 +18,6 @@
       <b-button variant="link" @click="handleLearnMore">
         Learn More
       </b-button>
-      <b-button variant="link" @click="handleViewPlan">
-        View Plan
-      </b-button>
     </div>
   </b-card>
 </template>

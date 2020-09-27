@@ -26,12 +26,7 @@
           <span>{{ policy.likes }}</span>
         </b-button>
 
-        <PolicyEndorseButton
-          v-if="politician.approved"
-          :politician="politician"
-          :policy="policy"
-        >
-        </PolicyEndorseButton>
+        <PolicyEndorseButton :policy="policy" />
       </div>
     </div>
 
@@ -66,7 +61,6 @@ export default {
   data() {
     return {
       policy: {},
-      politician: {},
       hasLiked: false,
       isLoading: true,
       description: '',
@@ -74,9 +68,8 @@ export default {
   },
   async created() {
     window.scrollTo(0,0);
-    
     try {
-      // isPushed = true when a user clicks 'Learn More' on PolicyCard
+      // isPushed = true when a user clicks on PolicyCard
       if (this.isPushed) {
         this.policy = this.pushedPolicy;
       } else {
@@ -86,42 +79,20 @@ export default {
       alert(`Error ${error.response.status}: On fetching policy`);
       console.log(error);
     }
-
     this.description = splitDescription(this.policy.description);
-
-    // TODO - refactor and move part of this into computed
-    const user = this.$store.getters.userState;
-    const modifiedPolitician = this.$store.getters.getPolitician;
-    if (user.approved) {
-      if (modifiedPolitician.id) {
-        this.politician = modifiedPolitician;
-      } else {
-        await this.$store.dispatch('setPolitician', user);
-        this.politician = this.$store.getters.getPolitician;
-      }
-      const endorsedPolicies = this.politician.endorsed;
-
-      for (const endorsement of endorsedPolicies) {
-        if (endorsement.policy_id === this.policy.id) {
-          this.politician.hasEndorsed = true;
-          break;
-        }
-      }
-    }
-    
     this.isLoading = false;
   },
   methods: {
     async likePolicy() {
-      // TODO - will need database to keep track of likes
-      if (!this.hasLiked) {
-        this.hasLiked = true;
+      try {
+        const username = this.$store.getters.userState;
+        await ApiUtil.putPolicyLike({
+          id: this.policy.id,
+          username: username
+        });
         this.policy.likes++;
-        try {
-          await ApiUtil.putPolicyLike(this.policy.id);
-        } catch (error) {
-          alert(error.message);
-        }
+      } catch (error) {
+        alert(error.response.status);
       }
     },
   },
