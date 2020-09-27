@@ -92,7 +92,7 @@ export default {
         });
         this.policy.likes++;
       } catch (error) {
-        alert(error.response.status);
+        console.log(error.response.status);
       }
     },
   },
