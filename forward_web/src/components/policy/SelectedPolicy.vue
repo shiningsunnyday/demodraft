@@ -92,9 +92,7 @@ export default {
         });
         this.policy.likes++;
       } catch (error) {
-        if (error.response.status !== 500) {
-          alert(error);
-        }
+        alert(error.response.status);
       }
     },
   },

@@ -1,5 +1,6 @@
 <template>
-  <div v-if="isPolitician">
+  <b-button v-if="isLoading" disabled>Loading...</b-button>
+  <div v-else-if="isPolitician">
     <b-button
       v-if="!politician.hasEndorsed"
       variant="primary"
@@ -58,7 +59,8 @@ export default {
       stanceText: '',
       isSubmitting: false,
       politician: {},
-      isPolitician: false
+      isPolitician: false,
+      isLoading: true,
     };
   },
   async created() {
@@ -80,11 +82,13 @@ export default {
       for (const endorsed of endorsedPolicies) {
         if (endorsed.policy_id === this.policy.id) {
           this.politician.hasEndorsed = true;
+          this.isLoading = false;
           return;
         }
       }
       this.politician.hasEndorsed = false;
     }
+    this.isLoading = false;
   },
   methods: {
     async handleSubmit() {
