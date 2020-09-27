@@ -78,12 +78,14 @@ export default {
     },
     async handlePolicyLike() {
       try {
-        const username = this.$store.getters.userState;
-        await ApiUtil.putPolicyLike({
+        const username = this.$store.getters.username;
+        const response = await ApiUtil.putPolicyLike({
           id: this.policy.id,
-          username: username,
+          username: username
         });
-        this.policy.likes++;
+        if (response) {
+          this.policy.likes++;
+        }
       } catch (error) {
         console.log(error.response.status);
       }
