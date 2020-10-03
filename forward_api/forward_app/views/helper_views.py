@@ -6,6 +6,7 @@ from .meta import Meta
 from forward_app.serializers import *
 from django.core.mail import EmailMessage
 from django.conf import settings
+import requests
 
 
 class Address(APIView, Meta):
@@ -47,7 +48,12 @@ class Address(APIView, Meta):
 
 class AreaV(APIView, Meta):
     def get(self, request):
-        return Response(str(request.META), status=status.HTTP_200_OK)
+        ip = request.META['HTTP_X_REAL_IP']
+        req = requests.get('http://api.ipstack.com/%s?access_key=2f41e0aaff2bf4c5b9bf0aea8809989d' % ip)
+        code = req.json()['region_code']
+        state_pols = Politician.objects.filter(persona__state=code)
+        sz = PoliticianSerializer(state_pols, many=True)
+        return Response(sz.data, status=status.HTTP_200_OK)
 
 
 class PoliticianV(APIView, Meta):
