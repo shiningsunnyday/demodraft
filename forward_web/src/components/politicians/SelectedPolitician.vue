@@ -85,7 +85,6 @@ export default {
     };
   },
   async created() {
-    const user = this.$store.getters.userState;
     const modifiedPolitician = this.$store.getters.getPolitician;
     const politicianId = Number(this.$route.params.id);
 
@@ -99,7 +98,6 @@ export default {
       this.stances = await ApiUtil.getAllStances(this.politician.id);
       this.politician.position = this.politician.name;
     }
-    
     this.isLoading = false;
   },
   computed: {
@@ -108,7 +106,7 @@ export default {
         const policySet = new Set();
         const endorsed = [];
         for (let stance of this.stances) {
-          if (!policySet.has(stance.polict_id)) {
+          if (!policySet.has(stance.policy_id)) {
             policySet.add(stance.policy_id);
             endorsed.push({
               name: stance.policy_name,

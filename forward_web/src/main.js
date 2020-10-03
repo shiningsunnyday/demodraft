@@ -7,6 +7,7 @@ import { BootstrapVue } from 'bootstrap-vue';
 import LoadingSpinner from '@/components/_common/LoadingSpinner';
 import Vuelidate from 'vuelidate';
 import './style.scss';
+import 'nprogress/nprogress.css';
 
 // to access axios across all components
 // can use this.$http to directly call axios

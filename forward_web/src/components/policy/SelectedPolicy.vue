@@ -44,6 +44,7 @@
 import Comments from '@/components/comments/Comments';
 import PolicyEndorseButton from '@/components/policy/PolicyEndorseButton';
 import { ApiUtil } from '@/_utils/api-utils';
+import { PolicyService } from '@/services/PolicyService';
 import { splitDescription } from '@/_utils/common-utils.js';
 import { BIconHandThumbsUp } from 'bootstrap-vue';
 
@@ -73,11 +74,11 @@ export default {
       if (this.isPushed) {
         this.policy = this.pushedPolicy;
       } else {
-        this.policy = await ApiUtil.getPolicy(this.$route.params.id);
+        const policyId = this.$route.params.id;
+        this.policy = await PolicyService.getPolicy(policyId);
       }
     } catch (error) {
       alert(`Error ${error.response.status}: On fetching policy`);
-      console.log(error);
     }
     this.description = splitDescription(this.policy.description);
     this.isLoading = false;
@@ -86,7 +87,7 @@ export default {
     async likePolicy() {
       try {
         const username = this.$store.getters.username;
-        const response = await ApiUtil.putPolicyLike({
+        const response = await PolicyService.likePolicy({
           id: this.policy.id,
           username: username
         });

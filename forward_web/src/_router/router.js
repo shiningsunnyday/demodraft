@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { store } from '@/_stores/store';
+import NProgress from 'nprogress';
 
 import NotFound from '@/views/404';
 import PoliticianPlan from '@/components/politicians/PoliticianPlan';
@@ -100,8 +101,9 @@ const router = new VueRouter({
   mode: 'history', // this removes hashtag from url
 });
 
-// handling unauthorized access cases
 router.beforeEach((to, from, next) => {
+  NProgress.start();
+  // handling unauthorized access cases
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isLoggedIn) {
       return next();
@@ -110,6 +112,10 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+});
+
+router.afterEach(() => {
+  NProgress.done();
 });
 
 export default router;
