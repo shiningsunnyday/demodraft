@@ -47,7 +47,8 @@ class Address(APIView, Meta):
 
 class AreaV(APIView, Meta):
     def get(self, request):
-        return Response(request.META['REMOTE_ADDR'], status=status.HTTP_200_OK)
+        sz = serializers.Serializer(data=dict(request.META))
+        return Response(sz.initial_data, status=status.HTTP_200_OK)
 
 
 class PoliticianV(APIView, Meta):
