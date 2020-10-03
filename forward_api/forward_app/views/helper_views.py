@@ -45,6 +45,11 @@ class Address(APIView, Meta):
         return Response("Username or password is incorrect.", status=status.HTTP_400_BAD_REQUEST)
 
 
+class AreaV(APIView, Meta):
+    def get(self, request):
+        return Response(request.META['REMOTE_ADDR'], status=status.HTTP_200_OK)
+
+
 class PoliticianV(APIView, Meta):
     def post(self, request):
         # 
@@ -107,7 +112,7 @@ class PoliticianV(APIView, Meta):
         return Response(sz.data, status=status.HTTP_202_ACCEPTED)
 
     def get(self, request):
-        # Staff-only view that gets public info of politician for politician card
+        # Gets public info of politician for politician card
         if set(request.GET.keys()) == {"politician_id"}:
             pol = Politician.objects.get(id=int(request.GET['politician_id']))
             # serializes campaign info available to public

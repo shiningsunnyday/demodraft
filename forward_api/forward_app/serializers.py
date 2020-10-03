@@ -279,6 +279,7 @@ class NextCommentSerializer(serializers.ModelSerializer):
 class StanceSerializer(serializers.ModelSerializer):
     policy_id = serializers.SerializerMethodField("get_policy_id")
     policy_name = serializers.SerializerMethodField("get_policy_name")
+    has_plan = serializers.SerializerMethodField("get_plan_bool")
 
     def get_policy_id(self, stance):
         return stance.policy.id
@@ -286,9 +287,16 @@ class StanceSerializer(serializers.ModelSerializer):
     def get_policy_name(self, stance):
         return stance.policy.name
 
+    def get_plan_bool(self, stance):
+        try:
+            plan = stance.plan
+            return True
+        except AttributeError:
+            return False
+
     class Meta:
         model = Stance
-        fields = ['id', 'policy_id', 'policy_name', 'message', 'date']
+        fields = ['id', 'policy_id', 'policy_name', 'message', 'date', 'has_plan']
 
 
 # class AllThreads(serializers.ModelSerializer):

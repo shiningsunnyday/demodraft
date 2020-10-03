@@ -22,6 +22,7 @@ urlpatterns = [
     path('comment/', views.CommentV.as_view(), name="comment"),
     path('address/', views.Address.as_view(), name="address"),
     path('politician/', views.PoliticianV.as_view(), name="politician"),
+    path('area/', views.AreaV.as_view(), name="area"),
     path('campaign/', views.CampaignV.as_view(), name="campaign"),
     path('stance/', views.StanceV.as_view(), name="stance"),
     path('persona/', views.PersonaV.as_view(), name="persona"),
