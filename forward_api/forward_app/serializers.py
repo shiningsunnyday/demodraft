@@ -48,16 +48,20 @@ class UsernameSerializer(serializers.ModelSerializer):
 class PoliticianSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField("get_username")
     state = serializers.SerializerMethodField("get_loc")
+    num_followers = serializers.SerializerMethodField("get_num_followers")
 
     def get_username(self, pol):
         return pol.persona.user.username
 
     def get_loc(self, pol):
         return pol.persona.state
+
+    def get_num_followers(self, pol):
+        return pol.persona.num_followers
     
     class Meta:
         model = Politician
-        fields = ['id', 'name', 'state', 'username', 'first', 'last', 'approved']
+        fields = ['id', 'name', 'state', 'username', 'first', 'last', 'approved', 'num_followers']
 
 
 class PlanSerializer(serializers.ModelSerializer):
