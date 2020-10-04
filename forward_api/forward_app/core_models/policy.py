@@ -13,8 +13,6 @@ class Policy(models.Model):
     class Meta:
         ordering = ['created']
 
-
-
 class Popularity(models.Model):
     policy = models.OneToOneField(
         Policy,

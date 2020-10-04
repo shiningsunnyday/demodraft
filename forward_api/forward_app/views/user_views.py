@@ -32,13 +32,14 @@ class Signup(APIView, Meta):
                 persona = Persona(user=user)
                 persona.stage = 1  # stage=1 is for new users
                 persona.save()
-                return Response(sz.data, status=status.HTTP_201_CREATED)
+                token = Token.objects.get(user=user).key
+                return Response(token, status=status.HTTP_201_CREATED)
         return Response("Please provide username, email, password, first name and last name.",
                         status=status.HTTP_400_BAD_REQUEST)
 
 
 class Login(APIView, Meta):
-    permission_classes = (AllowAny,)
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         """
@@ -77,7 +78,7 @@ class Login(APIView, Meta):
 
 
 class Users(APIView, Meta):
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         # Staff-only method to get list of all registered users.

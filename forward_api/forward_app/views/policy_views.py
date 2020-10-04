@@ -5,6 +5,7 @@ from rest_framework import status
 from .meta import Meta
 
 
+
 class Policies(APIView, Meta):
     policy_attrs = {"category", "name", "statement", "description"}
 

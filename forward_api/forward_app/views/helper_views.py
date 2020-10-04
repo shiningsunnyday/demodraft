@@ -15,6 +15,7 @@ class Address(APIView, Meta):
         return filtered.exists()
 
     def get(self, request):
+        print(request.GET.keys())
         if set(request.GET.keys()) != {"username"}:
             return Response("Please provide username.", status=status.HTTP_400_BAD_REQUEST)
         if Address.user_exists(username=request.GET["username"]):
