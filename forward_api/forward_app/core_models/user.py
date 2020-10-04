@@ -21,4 +21,20 @@ class Persona(models.Model):
     class Meta:
         ordering = ['created']
 
+# class Following(models.Model):
+#     user_id = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE,
+#         null=False
+#     )
+#     persona_id = models.ForeignKey(
+#         Persona,
+#         on_delete=models.CASCADE,
+#         null=False
+#     )
+
+class Following(models.Model):
+    user_id = models.IntegerField(default=0)
+    persona_id = models.IntegerField(default=0)
+
 

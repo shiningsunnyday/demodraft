@@ -27,6 +27,7 @@ urlpatterns = [
     path('persona/', views.PersonaV.as_view(), name="persona"),
     path('plan/', views.PlanV.as_view(), name="plan"),
     path('followings/',views.Followings.as_view(), name="followings"),
+    path('polFollowings/', views.polFollowings.as_view(), name="polFollowings"),
 
     # path('threads/', views.Threads.as_view(), name="threads"),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))

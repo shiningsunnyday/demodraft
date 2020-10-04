@@ -16,19 +16,23 @@ class PersonaV(APIView, Meta):
     def put(self, request):
         # including this under PersonaV because it's the pers's fields being altered
         if set(request.data.keys()) == {"politician_id", "username", "isFollowing"}:
+            try:
+                pol = Politician.objects.get(id=int(request.data["politician_id"]))
+                user = User.objects.get(username=request.data["username"])
+            except:
+                return Response("A non-existent username or politician id was used", status=status.HTTP_400_BAD_REQUEST)
+
             isFollowing = request.data["isFollowing"]
-            pol = Politician.objects.get(id=int(request.data["politician_id"]))
-            user = User.objects.get(username=request.data["username"])
             pers = pol.persona
             us = pers.user
             if not pers.users.filter(id=user.id).exists():
-                if request.data["isFollowing"] is true:
+                if isFollowing is True:
                     pers.users.add(user)
                     pers.num_followers += 1
                 else:
                     return Response("Not following " + us.first_name+" "+ us.last_name, status=status.HTTP_400_BAD_REQUEST)
             else:
-                if request.data["isFollowing"] is false:
+                if isFollowing is False:
                     pers.users.remove(user)
                     pers.num_followers -= 1
                 else:
@@ -43,23 +47,69 @@ class Followings(APIView, Meta):
 
     def get(self, request):
         
-        per = None
+
+        followings = Following.objects.raw('SELECT * FROM forward_app_persona_users')
         users = []
+        #get followers for politician
+        if set(request.data.keys()) == {"politician_id"}:
 
-        if set(request.data.keys()) == {"username"}:
-            per = User.objects.get(id=data["username"]).persona
+            try:
+                user = Politician.objects.get(id=request.data["politician_id"]).persona.user
+            except:
+                return Response("Politician does not exist", status=status.HTTP_400_BAD_REQUEST)
 
-        elif set(request.data.keys()) == {"politician_id"}:
-            per = Politician.objects.get(id=request.data["politician_id"]).persona
-            for p in per.users:
-                users.append[Persona.objects.get(id=p.persona_id).user]
-
-        elif request.user.is_authenticated():
-            per = request.user.persona
-
+            for f in followings:
+                if f.user_id == user.id:
+                    users.append(Persona.objects.get(id=f.persona_id).user)
+                    print(f.user_id)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
 
+            per = None
+            #get following for specific user
+            if set(request.data.keys()) == {"username"}:
+                try:
+                    per = User.objects.get(username=request.data["username"]).persona
+                except:
+                    return Response("User with username " + request.data["username"] + " does not exist", status=status.HTTP_400_BAD_REQUEST)
+
+            #get following for logged in user
+            elif request.user.is_authenticated():
+                per = request.user.persona
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            for f in followings:
+                if f.persona_id == per.id:
+                    users.append(User.objects.get(id=f.user_id))
 
         sz = UsernameSerializer(users, many=True)
-        return Response(sz, status=status.HTTP_200_OK)
+        return Response(sz.data, status=status.HTTP_200_OK)
+
+class polFollowings(APIView, Meta):
+
+    def get(self, request):
+
+        if set(request.data.keys()) == {"politician_id"}:
+
+            try:
+                user = Politician.objects.get(id=request.data["politician_id"]).persona.user
+            except:
+                return Response("Politician does not exist", status=status.HTTP_400_BAD_REQUEST)
+
+            politicians = Politician.objects.raw('SELECT id FROM forward_app_politician WHERE approved IS 1 AND id IS NOT '+str(request.data["politician_id"]))
+            pol_user_ids = []
+            users = []
+
+            for p in politicians:
+                pol_user_ids.append(p.persona.id)
+            print(pol_user_ids)
+
+            followings = Following.objects.raw('SELECT * FROM forward_app_persona_users')
+
+            for f in followings:
+                if f.user_id == user.id:
+                    if f.persona_id in pol_user_ids:
+                        users.append(Persona.objects.get(id=f.persona_id).user)
+
+        sz = UsernameSerializer(users, many=True)
+        return Response(sz.data, status=status.HTTP_200_OK)
