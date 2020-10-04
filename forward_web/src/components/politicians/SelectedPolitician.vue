@@ -54,8 +54,24 @@
           {{ policy.name }}
         </b-button>
 
+        <div class="selected-politician__plan-button-container">
+          <b-button 
+            v-if="policy.hasPlan"
+            @click="handleViewPlan(policy.id, policy)"
+          >
+            View Plan
+          </b-button>
+          <b-button
+            v-else-if="isCurrentPolitician"
+            @click="handleAddPlan(policy.id, policy)"
+          >
+            Add Plan
+          </b-button>
+        </div>
+
         <p class="selected-politician__message">
-          "{{ policy.message }}" - {{ politician.first }} {{ politician.last }}
+          "{{ policy.message }}" - {{ politician.first }}
+          {{ politician.last }}
         </p>
       </div>
     </div>
@@ -67,7 +83,7 @@
 </template>
 
 <script>
-import { ApiUtil } from '@/_utils/api-utils';
+import { PoliticianService } from '@/services';
 import { BIconPersonPlus } from 'bootstrap-vue';
 import Comments from '@/components/comments/Comments';
 
@@ -94,8 +110,8 @@ export default {
       this.stances = this.politician.endorsed;
     } else {
       // fetch politician for regular users
-      this.politician = await ApiUtil.getSelectedPolitician(politicianId);
-      this.stances = await ApiUtil.getAllStances(this.politician.id);
+      this.politician = await PoliticianService.getPolitician(politicianId);
+      this.stances = await PoliticianService.getAllStances(this.politician.id);
       this.politician.position = this.politician.name;
     }
     this.isLoading = false;
@@ -112,11 +128,16 @@ export default {
               name: stance.policy_name,
               message: stance.message,
               id: stance.policy_id,
+              hasPlan: stance.has_plan,
             });
           }
         }
         return endorsed;
       }
+    },
+    isCurrentPolitician() {
+      const user = this.$store.getters.userState;
+      return this.politician.id === user.politician_id;
     },
   },
   methods: {
@@ -130,6 +151,28 @@ export default {
       //Go back to politicians page
       this.$router.push({
         name: 'politician-page',
+      });
+    },
+    handleAddPlan(policyId, policy) {
+      this.$router.push({
+        name: 'politician-plan',
+        params: {
+          politicianId: this.politician.id,
+          policyId: policyId,
+          pushedPolitician: this.politician,
+          pushedPolicy: policy,
+        },
+      });
+    },
+    handleViewPlan(policyId, policy) {
+      this.$router.push({
+        name: 'politician-plan',
+        params: {
+          politicianId: this.politician.id,
+          policyId: policyId,
+          pushedPolitician: this.politician,
+          pushedPolicy: policy,
+        },
       });
     },
   },
@@ -171,6 +214,10 @@ export default {
       //makes button fat at specific view port
       //width: 75%;
     }
+  }
+
+  &__plan-button-container {
+    margin-bottom: 8px;
   }
 
   &__top {

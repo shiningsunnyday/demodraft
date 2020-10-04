@@ -44,7 +44,7 @@
 import Comments from '@/components/comments/Comments';
 import PolicyEndorseButton from '@/components/policy/PolicyEndorseButton';
 import { ApiUtil } from '@/_utils/api-utils';
-import { PolicyService } from '@/services/PolicyService';
+import { PolicyService } from '@/services';
 import { splitDescription } from '@/_utils/common-utils.js';
 import { BIconHandThumbsUp } from 'bootstrap-vue';
 

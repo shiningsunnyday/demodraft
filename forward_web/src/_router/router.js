@@ -5,6 +5,7 @@ import NProgress from 'nprogress';
 
 import NotFound from '@/views/404';
 import PoliticianPlan from '@/components/politicians/PoliticianPlan';
+import SelectedPolitician from '@/components/politicians/SelectedPolitician';
 
 Vue.use(VueRouter);
 
@@ -60,7 +61,7 @@ const routes = [
     },
   },
   {
-    path: '/politicians-plan/:id',
+    path: '/politicians/:politicianId/plan/:policyId',
     name: 'politician-plan',
     component: PoliticianPlan,
     props: true,
@@ -71,7 +72,7 @@ const routes = [
   {
     path: '/politicians/:id',
     name: 'selected-politician',
-    component: () => import(/* webpackChunkName: "selected-politician" */ `../components/politicians/SelectedPolitician.vue`),
+    component: SelectedPolitician,
     props: true,
     meta: {
       requiresAuth: true,
