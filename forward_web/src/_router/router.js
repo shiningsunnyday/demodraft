@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { store } from '@/_stores/store';
+import NProgress from 'nprogress';
 
 import NotFound from '@/views/404';
 import PoliticianPlan from '@/components/politicians/PoliticianPlan';
+import SelectedPolitician from '@/components/politicians/SelectedPolitician';
 
 Vue.use(VueRouter);
 
@@ -59,7 +61,7 @@ const routes = [
     },
   },
   {
-    path: '/politicians-plan/:id',
+    path: '/politicians/:politicianId/plan/:policyId',
     name: 'politician-plan',
     component: PoliticianPlan,
     props: true,
@@ -70,7 +72,7 @@ const routes = [
   {
     path: '/politicians/:id',
     name: 'selected-politician',
-    component: () => import(/* webpackChunkName: "selected-politician" */ `../components/politicians/SelectedPolitician.vue`),
+    component: SelectedPolitician,
     props: true,
     meta: {
       requiresAuth: true,
@@ -100,8 +102,9 @@ const router = new VueRouter({
   mode: 'history', // this removes hashtag from url
 });
 
-// handling unauthorized access cases
 router.beforeEach((to, from, next) => {
+  NProgress.start();
+  // handling unauthorized access cases
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isLoggedIn) {
       return next();
@@ -110,6 +113,10 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+});
+
+router.afterEach(() => {
+  NProgress.done();
 });
 
 export default router;

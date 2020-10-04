@@ -17,6 +17,7 @@ export class ApiUtil {
     const policy = await policyPromise;
     return policy.data;
   }
+  
   static async getComments(id, section) {
     try {
       const commentsPromise = axios.get(`/thread/?${section}_id=${id}`);

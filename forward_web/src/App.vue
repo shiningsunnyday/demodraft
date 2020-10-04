@@ -2,9 +2,16 @@
   <div id="app">
     <NavBar />
     <keep-alive>
-      <router-view v-if="$route.meta.keepAlive" :key="$route.fullPath" />
+      <router-view 
+        v-if="$route.meta.keepAlive" 
+        :key="$route.fullPath" 
+      />
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive" :key="$route.fullPath" />
+
+    <router-view 
+      v-if="!$route.meta.keepAlive" 
+      :key="$route.fullPath"
+    ></router-view>
   </div>
 </template>
 
