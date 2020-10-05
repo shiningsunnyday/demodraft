@@ -24,12 +24,10 @@
           <b-button v-if="isSaving" disabled>
             Saving...
           </b-button>
-          <b-button
-            v-else-if="items.length >= 2"
-            @click="savePlan">
+          <b-button v-else-if="items.length < 2" disabled>
             Save
           </b-button>
-          <b-button v-else disabled>
+          <b-button v-else @click="savePlan">
             Save
           </b-button>
         </div>

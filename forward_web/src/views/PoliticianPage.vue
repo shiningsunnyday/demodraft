@@ -13,15 +13,23 @@
         :preserve-search="true"
         select-label="Click to select"
         deselect-label="Click to deselect"
-        placeholder="Filter by Location"
+        placeholder="Filter by State"
       />
     </div>
+    
+    <div class="politician-page__area-container">
+      <div class="politician-page__area-buttons">
+        <p>Within your state: </p>
+        <b-button @click="handlePoliticianArea(true)">Random</b-button>
+        <b-button @click="handlePoliticianArea(false)">Ranked</b-button>
+      </div>
 
-    <div class="politician-page__area-buttons">
-      <b-button disabled>Random</b-button>
-      <b-button disabled>Ranked</b-button>
+      <div class="politician-page__area-buttons">
+        <p>Country wide: </p>
+        <b-button @click="handleAllPoliticians()">View All Politicians</b-button>
+      </div>
     </div>
-
+    
     <LoadingSpinner v-if="isLoading">
       "Overnight successes are generally years in the making. And most progress
       is made in isolation, far from the public eye." - Andrew Yang
@@ -34,7 +42,7 @@
 <script>
 import Multiselect from 'vue-multiselect';
 import PoliticianList from '@/components/politicians/PoliticianList';
-import { ApiUtil } from '@/_utils/api-utils';
+import { PoliticianService } from '@/services';
 
 export default {
   name: 'PoliticianPage',
@@ -52,7 +60,7 @@ export default {
     };
   },
   async created() {
-    this.politicians = await ApiUtil.getAllPoliticians();
+    this.politicians = await PoliticianService.getAllPoliticians();
     this.filteredPoliticians = this.politicians;
 
     // Populates a components filter list with filtering options that are linked to the incoming data
@@ -81,6 +89,24 @@ export default {
         this.filteredPoliticians = filteredResults;
       }
     },
+    async handlePoliticianArea(isRandom) {
+      try {
+        const response = await PoliticianService.getPoliticianArea(isRandom);
+        this.politicians = response.data;
+        this.filteredPoliticians = this.politicians;
+      } catch (error) {
+        alert(error);
+      }
+    },
+    async handleAllPoliticians() {
+      try {
+        this.politicians = await PoliticianService.getAllPoliticians();
+        this.filteredPoliticians = this.politicians;  
+      } catch (error) {
+        alert(error);
+      }
+      
+    }
   },
 };
 </script>
@@ -107,10 +133,26 @@ export default {
     }
   }
 
+  &__area-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: start;
+  }
+  
   &__area-buttons {
     display: inline-flex;
+    flex-direction: column;
+    width: 300px;
+
     > * {
-      margin: 0 4px;
+      margin: 4px 4px;
+    }
+
+    @media screen and (min-width: 777px) {
+      flex-direction: row;
+      align-items: center;
+      width: 350px;
     }
   }
 }

@@ -72,4 +72,12 @@ export class PoliticianService {
       }
     });
    }
+
+   static async getPoliticianArea(isRandom) {
+    return await axios.get(`/area/`, {
+      params: {
+        random: isRandom,
+      }
+    });
+   }
 }
