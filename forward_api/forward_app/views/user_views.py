@@ -9,8 +9,6 @@ from django.contrib.auth import authenticate
 
 
 class Signup(APIView, Meta):
-    permission_classes = (AllowAny,)
-
     def delete(self, request):
         if request.user.is_staff:
             username, password = request.data["username"], request.data["password"]
@@ -39,8 +37,6 @@ class Signup(APIView, Meta):
 
 
 class Login(APIView, Meta):
-    permission_classes = [IsAuthenticated]
-
     def post(self, request):
         """
         Returns user serialized by UserSerializer plus additional fields if it's politician
@@ -78,8 +74,6 @@ class Login(APIView, Meta):
 
 
 class Users(APIView, Meta):
-    permission_classes = [IsAuthenticated]
-
     def get(self, request):
         # Staff-only method to get list of all registered users.
         if request.user.is_staff:
