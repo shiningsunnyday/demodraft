@@ -1,6 +1,7 @@
 <template>
   <div class="signup">
     <h1 class="signup__title">Sign Up</h1>
+    <p class="signup__note">Must already be subscribed to <a href="https://www.demodraft.org/">demodraft.org</a> to gain access</p>
     <BForm class="signup__form" @submit.prevent="handleSubmit">
       <BFormGroup id="username-group" label="Username:" label-for="username">
         <BFormInput
@@ -141,6 +142,10 @@ export default {
 <style lang="scss" scoped>
 .signup {
   &__title {
+    text-align: center;
+  }
+
+  &__note {
     text-align: center;
     margin-bottom: 2rem;
   }
