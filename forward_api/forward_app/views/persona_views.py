@@ -20,23 +20,23 @@ class PersonaV(APIView, Meta):
                 pol = Politician.objects.get(id=int(request.data["politician_id"]))
                 user = User.objects.get(username=request.data["username"])
             except:
-                return Response("A non-existent username or politician id was used", status=status.HTTP_400_BAD_REQUEST)
+                return Response("A non-existent username or politician id was used", status=status.HTTP_404_NOT_FOUND)
 
             isFollowing = request.data["isFollowing"]
             pers = pol.persona
             us = pers.user
             if not pers.users.filter(id=user.id).exists():
-                if isFollowing is True:
+                if isFollowing:
                     pers.users.add(user)
                     pers.num_followers += 1
                 else:
-                    return Response("Not following " + us.first_name+" "+ us.last_name, status=status.HTTP_400_BAD_REQUEST)
+                    return Response("Not following " + us.first_name+" "+ us.last_name, status=status.HTTP_403_FORBIDDEN)
             else:
-                if isFollowing is False:
+                if not isFollowing:
                     pers.users.remove(user)
                     pers.num_followers -= 1
                 else:
-                    return Response("Already following " + us.first_name+" "+ us.last_name, status=status.HTTP_400_BAD_REQUEST)
+                    return Response("Already following " + us.first_name+" "+ us.last_name, status=status.HTTP_403_FORBIDDEN)
             pers.save()
             sz = FollowersSerializer(pers)
             return Response(sz.data, status=status.HTTP_200_OK)
@@ -46,17 +46,17 @@ class PersonaV(APIView, Meta):
 class Followings(APIView, Meta):
 
     def get(self, request):
-        
 
         followings = Following.objects.raw('SELECT * FROM forward_app_persona_users')
         users = []
+
         #get followers for politician
         if set(request.data.keys()) == {"politician_id"}:
 
             try:
                 user = Politician.objects.get(id=request.data["politician_id"]).persona.user
             except:
-                return Response("Politician does not exist", status=status.HTTP_400_BAD_REQUEST)
+                return Response("Politician does not exist", status=status.HTTP_404_NOT_FOUND)
 
             for f in followings:
                 if f.user_id == user.id:
@@ -70,7 +70,7 @@ class Followings(APIView, Meta):
                 try:
                     per = User.objects.get(username=request.data["username"]).persona
                 except:
-                    return Response("User with username " + request.data["username"] + " does not exist", status=status.HTTP_400_BAD_REQUEST)
+                    return Response("User with username " + request.data["username"] + " does not exist", status=status.HTTP_404_NOT_FOUND)
 
             #get following for logged in user
             elif request.user.is_authenticated():
@@ -87,6 +87,7 @@ class Followings(APIView, Meta):
 
 class polFollowings(APIView, Meta):
 
+    #get all politicians following a user
     def get(self, request):
 
         if set(request.data.keys()) == {"politician_id"}:
@@ -94,22 +95,20 @@ class polFollowings(APIView, Meta):
             try:
                 user = Politician.objects.get(id=request.data["politician_id"]).persona.user
             except:
-                return Response("Politician does not exist", status=status.HTTP_400_BAD_REQUEST)
+                return Response("Politician does not exist", status=status.HTTP_404_NOT_FOUND)
 
-            politicians = Politician.objects.raw('SELECT id FROM forward_app_politician WHERE approved IS 1 AND id IS NOT '+str(request.data["politician_id"]))
+            politicians = Politician.objects.filter(approved=1).exclude(id=request.data["politician_id"])
             pol_user_ids = []
             users = []
 
             for p in politicians:
                 pol_user_ids.append(p.persona.id)
-            print(pol_user_ids)
 
             followings = Following.objects.raw('SELECT * FROM forward_app_persona_users')
 
             for f in followings:
-                if f.user_id == user.id:
-                    if f.persona_id in pol_user_ids:
-                        users.append(Persona.objects.get(id=f.persona_id).user)
+                if f.user_id == user.id and f.persona_id in pol_user_ids:
+                    users.append(Persona.objects.get(id=f.persona_id).user)
 
         sz = UsernameSerializer(users, many=True)
         return Response(sz.data, status=status.HTTP_200_OK)
