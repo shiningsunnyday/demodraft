@@ -5,6 +5,7 @@ from .meta import Meta
 from forward_app.serializers import *
 from forward_app.utils.score_system import *
 from django.contrib.auth.models import User
+from forward_app.core_models import Persona
 
 class PersonaV(APIView, Meta):
     def get(self, request):
@@ -77,7 +78,7 @@ class Followings(APIView, Meta):
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
-            #user.persona.user_set.all() figure out a way to use this
+            #users = user.persona_set.all() #figure out a way to use this
             followings = Following.objects.raw('SELECT * FROM forward_app_persona_users WHERE user_id == ' + str(user.id))
 
             for f in followings:
@@ -109,5 +110,7 @@ class polFollowings(APIView, Meta):
                 if u.id in pol_user_ids:
                     users.append(u)
 
-        sz = UsernameSerializer(users, many=True)
-        return Response(sz.data, status=status.HTTP_200_OK)
+            sz = UsernameSerializer(users, many=True)
+            return Response(sz.data, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
