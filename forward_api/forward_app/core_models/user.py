@@ -22,3 +22,8 @@ class Persona(models.Model):
         ordering = ['created']
 
 
+class Following(models.Model):
+    user_id = models.IntegerField(default=0)
+    persona_id = models.IntegerField(default=0)
+
+
