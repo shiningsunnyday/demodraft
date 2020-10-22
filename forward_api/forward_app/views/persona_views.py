@@ -18,7 +18,7 @@ class PersonaV(APIView, Meta):
         # including this under PersonaV because it's the pers's fields being altered
         if set(request.data.keys()) == {"politician_id", "username", "isFollowing"}:
             try:
-                pol = Politician.objects.get(id=int(request.data["politician_id"]))
+                pol = Politician.objects.get(id=int(request.data["politician_id"])).filter(approved=1)
                 user = User.objects.get(username=request.data["username"])
             except:
                 return Response("A non-existent username or politician id was used", status=status.HTTP_404_NOT_FOUND)
